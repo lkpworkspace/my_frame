@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     MyTask.cpp \
     MyList.cpp \
     MyUdp.cpp \
-    MyTcp.cpp
+    MyTcp.cpp \
+    MyBase64.cpp
 
 HEADERS += \
     Common.h \
@@ -32,4 +33,7 @@ HEADERS += \
     MyHelp.h \
     MyTask.h \
     MyUdp.h \
-    MyTcp.h
+    MyTcp.h \
+    MyBase64.h \
+    MyHeap.h \
+    MyHash.h
