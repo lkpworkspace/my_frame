@@ -1,28 +1,7 @@
 #include "MyTcp.h"
 #include "MyApp.h"
-
+#include "MyAllEvent.h"
 using namespace my_master;
-void* callfunc_tcp_server(void* ev)
-{
-    // TODO... need debug
-    MyTcpServer* server = (MyTcpServer*)ev;
-    sockaddr_in addr;
-    socklen_t len;
-    MyTcpSocket* tcpSock;
-
-    while(1)
-    {
-        memset(&addr,0,sizeof(addr));
-        int fd = accept(server->GetEventFd(),(sockaddr*)&addr,&len);
-        if(fd < 0)
-        {
-            MyApp::theApp->AddEvent((MyEvent*)ev);
-            break;
-        }
-        tcpSock = new MyTcpSocket(fd,addr);
-        MyApp::theApp->AddEvent(tcpSock);
-    }
-}
 ////////////////////////////////////////////////////
 /// MyTcpServer
 MyTcpServer::MyTcpServer(std::string ip, uint16_t port)
@@ -47,16 +26,6 @@ int MyTcpServer::Accpet(struct sockaddr_in *addr, socklen_t *addrlen)
     int res = accept(m_sock,(sockaddr*)addr,addrlen);
     return res; // file descriptor
 }
-//MyTcpSocket MyTcpServer::GetConnect()
-//{
-//    sockaddr_in addr;
-//    socklen_t len;
-//    int fd = Accpet(&addr,&len);
-//    MyTcpSocket client(fd,addr);
-//    return client;
-//}
-
-
 ////////////////////////////////////////////////////
 /// MyTcpClient
 MyTcpClient::MyTcpClient(std::string ip,uint16_t port)
@@ -100,6 +69,7 @@ MyTcpSocket::MyTcpSocket(int fd, sockaddr_in addr)
 {
     this->m_sock = fd;
     memcpy(&m_addr,&addr,sizeof(addr));
+    Common::SetNonblock(fd,true);
 }
 MyTcpSocket::MyTcpSocket(const MyTcpSocket& other)
 {
@@ -109,6 +79,12 @@ MyTcpSocket::MyTcpSocket(const MyTcpSocket& other)
 
 MyTcpSocket::~MyTcpSocket()
 {}
+
+void* MyTcpSocket::CallBackFunc(MyEvent *ev)
+{
+    MyAllEvent::BoardEvent(ev);
+    return NULL;
+}
 
 MyTcpSocket& MyTcpSocket::operator=(MyTcpSocket& other)
 {

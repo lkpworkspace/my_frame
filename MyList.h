@@ -11,25 +11,8 @@
  *
  *   int main()
  *   {
- *       MyList<int> list;
- *       list.AddHead(10);
- *       list.AddHead(11);
- *       list.AddHead(12);
- *       cout << "list Count = " << list.Count() << endl;
+ *       MyList list;
  *
- *       for(int i = 0; i < list.Count(); ++i)
- *       {
- *           cout << list.GetData(i) << endl;
- *       }
- *
- *       list.DelWithIndex(0);
- *       list.DelHead();
- *       list.DelTail();
- *
- *       for(int i = 0; i < list.Count(); ++i)
- *       {
- *           cout << list.GetData(i) << endl;
- *       }
  *       return 0;
  *   }
  *   problem:

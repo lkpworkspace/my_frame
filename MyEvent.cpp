@@ -5,6 +5,3 @@ MyEvent::MyEvent()
 
 MyEvent::~MyEvent()
 {}
-
-//void MyEvent::SetCallBack(callback_t cb)
-//{ m_callback = cb; }

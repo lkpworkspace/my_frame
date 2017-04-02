@@ -28,6 +28,7 @@ public:
     EVENT_TYPE GetEventType(){return EVENT_TYPE::TASK;}
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     void* CallBackFunc(MyEvent *){return NULL;}
+    CLASS_TYPE GetClassType(){return CLASS_TYPE::TASKCLASS;}
 
     int SendMsg(const char *buf, int len);      // invoke by MyApp
     int RecvMsg(char *buf, int len);            // invoke by MyApp

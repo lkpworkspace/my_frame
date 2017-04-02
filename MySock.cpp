@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <assert.h>
 #include "MyEvent.h"
+#include "MyAllEvent.h"
 using namespace my_master;
 MySock::MySock(std::string ip, uint16_t port, int type, bool isServer)
     :m_sock(-1),
@@ -30,7 +31,11 @@ MySock::MySock(std::string ip, uint16_t port, int type, bool isServer)
     }
     m_sock = Socket(AF_INET,type,0);
 }
-
+void* MySock::CallBackFunc(MyEvent * ev)
+{
+    MyAllEvent::BoardEvent(ev);
+    return NULL;
+}
 
 /////////////////////////////////////////////////// share
 int MySock::SetNonblock(bool b)

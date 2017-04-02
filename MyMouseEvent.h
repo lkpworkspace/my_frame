@@ -14,9 +14,7 @@ public:
     int GetEventFd(){return m_fd;}
     EVENT_TYPE GetEventType(){return EVENT_TYPE::FILE;}
     uint32_t GetEpollEventType(){return EPOLLIN;}
-    ///////////////////////////////////////
-    /// need override method
-    virtual void* CallBackFunc(MyEvent*);
+    CLASS_TYPE GetClassType(){return CLASS_TYPE::MOUSE;}
 
     /*
      *  0: left button up
@@ -26,7 +24,10 @@ public:
     int GetMouseType();
     int GetRelX();
     int GetRelY();
-
+protected:
+    ///////////////////////////////////////
+    /// override myevent method
+    virtual void* CallBackFunc(MyEvent*);
 private:
     int m_fd;
     char m_buf[3];

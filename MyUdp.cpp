@@ -5,8 +5,6 @@ MyUdp::MyUdp(std::string ip,uint16_t port, bool isServer)
 {
 
 }
-
-
 MyUdpSocket MyUdp::RecvData()
 {// TODO...
     MyUdpSocket res;
@@ -28,6 +26,7 @@ int MyUdp::Write(char*buf,int len)
 }
 
 ////////////////////////////////////////////////////////
+/// MyUdpSocket
 MyUdpSocket::MyUdpSocket()
 {
     memset(&m_remote_addr,0,sizeof(struct sockaddr_in));

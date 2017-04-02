@@ -20,7 +20,7 @@ protected:
 private:
 };
 
-class MyUdpSocket
+class MyUdpSocket //: public my_master::MyEvent
 {
     friend class MyUdp;
 public:

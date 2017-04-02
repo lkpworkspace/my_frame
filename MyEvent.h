@@ -4,11 +4,9 @@
 #include <sys/epoll.h>
 
 namespace my_master {
-//typedef void*(*callback_t)(void*);
 class MyEvent : public MyNode
 {
     friend class MyTask;
-    friend class MyApp;
 public:
     enum EVENT_TYPE{
         FILE,
@@ -16,14 +14,26 @@ public:
         TASK,
         NONE
     };
+    enum CLASS_TYPE{
+        TCPSERVER,
+        TCPCLIENT,
+        TCPSOCKET,
+        UDP,
+        UDPSOCKET,
+        MOUSE,
+        BASECLASS,
+        TASKCLASS
+    };
+
 public:
     MyEvent();
     ~MyEvent();
     virtual int GetEventFd() = 0;
     virtual EVENT_TYPE GetEventType() = 0;
+    virtual CLASS_TYPE GetClassType() = 0;
     virtual uint32_t GetEpollEventType() = 0;
+protected:
     virtual void* CallBackFunc(MyEvent*) = 0;
-    //void SetCallBack(callback_t cb);
 };
 
 } // end namespace

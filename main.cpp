@@ -1,7 +1,7 @@
-#include "Common.h"
-#include "MyTcp.h"
-#include "MyApp.h"
+#include "MyFrame.h"
+
 #include "MyMouseEvent.h"
+#include "MyTcp.h"
 
 using namespace my_master;
 //#define TEST
@@ -43,7 +43,7 @@ int main()
 #if 1
 // server
 class MyRecv : public MyTcpSocket
-{
+{ // maybe do not us the method
 public:
     MyRecv(int fd, sockaddr_in addr)
         :MyTcpSocket(fd,addr)
@@ -74,7 +74,7 @@ public:
 };
 
 class MyServer: public MyTcpServer
-{
+{ // maybe do not us the method
 public:
     MyServer(std::string ip,uint16_t port)
         :MyTcpServer(ip,port)
@@ -103,7 +103,7 @@ public:
 };
 
 class MyMouse : public MyMouseEvent
-{
+{ // maybe do not us the method
 public:
     void* CallBackFunc(MyEvent *ev)
     {
@@ -114,15 +114,77 @@ public:
     }
 };
 
-int main(int argc, char *argv[])
+class AllEv : public MyAllEvent
+{
+public:
+    bool Event(MyEvent *ev)
+    {
+        if(ev->GetClassType() == MyEvent::CLASS_TYPE::TCPSERVER)
+        {
+            MyTcpServer* serv = (MyTcpServer*)ev;
+            sockaddr_in addr;
+            socklen_t len;
+            while(1)
+            {
+                int fd = serv->Accpet(&addr,&len);
+                if(fd < 0)
+                    break;
+                MyTcpSocket *recv = new MyTcpSocket(fd,addr);
+                printf("get client fd : %d\n",fd);
+                MyApp::theApp->AddEvent(recv);
+            }
+            MyApp::theApp->AddEvent(ev);
+        }
+        if(ev->GetClassType() == MyEvent::CLASS_TYPE::TCPSOCKET)
+        {
+            char buf[1024] = {0};
+            int res;
+            /* res:
+             * =0 client quit
+             * >0 data is coming
+             * <0 end of file
+            */
+            MyTcpSocket* sock = (MyTcpSocket*)ev;
+            while(1)
+            {
+                res = sock->Read(buf,1024);
+                if(res < 0)
+                    break;
+                printf("read %d:%s\n",res,buf);
+            }
+            if(res != 0)
+                MyApp::theApp->AddEvent(ev);
+            else
+                printf("client quit\n");
+        }
+        if(ev->GetClassType() == MyEvent::CLASS_TYPE::MOUSE)
+        {
+            MyMouseEvent* e = (MyMouseEvent*)ev;
+            printf("button type = %d, x = %d, y = %d\n",
+                   e->GetMouseType(),e->GetRelX(),e->GetRelY());
+            MyApp::theApp->AddEvent(ev);
+        }
+        return true;
+    }
+};
+
+int main()
 {
     MyApp app{4,1024};
 
-    MyServer *server = new MyServer("",9999);
+    // tcp test
+    MyTcpServer *server = new MyTcpServer("",9999);
+    server->Bind();
+    server->Listen(10);
+    server->SetNonblock(true);
     app.AddEvent(server);
 
-    MyMouse* mouse = new MyMouse;
+    // mouse test
+    MyMouseEvent* mouse = new MyMouseEvent;
     app.AddEvent(mouse);
+
+    // ev procees
+    AllEv* widget = new AllEv;
 
     return app.Exec();
 }

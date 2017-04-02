@@ -11,14 +11,12 @@ public:
     MyTcpServer(std::string ip,uint16_t port);
     ~MyTcpServer();
 
-    //static void* CallFunc(void*);
-    /////////////////////////////////
-    /// virtual method
-    virtual void* CallBackFunc(MyEvent *){return NULL;}
-
-    //MyTcpSocket GetConnect();
     int Listen(int backlog = 10);
     int Accpet(struct sockaddr_in *addr, socklen_t *addrlen);
+protected:
+    /////////////////////////////////
+    /// virtual method
+    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::TCPSERVER;}
 };
 
 class MyTcpClient : public my_master::MySock
@@ -29,7 +27,7 @@ public:
 protected:
     /////////////////////////////////
     /// virtual method
-    virtual void* CallBackFunc(MyEvent *){return NULL;}
+    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::TCPCLIENT;}
 public:
     int Read(char* buf, int len);
     int Write(const char *buf, int len);
@@ -49,7 +47,8 @@ public:
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     ////////////////////////////////////
     /// virtual method
-    virtual void* CallBackFunc(MyEvent *){return NULL;}
+    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::TCPSOCKET;}
+    virtual void* CallBackFunc(MyEvent *);
 
     MyTcpSocket& operator=(MyTcpSocket& other);
     int Read(char*, int);

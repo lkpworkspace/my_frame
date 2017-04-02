@@ -2,7 +2,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
+#include "MyAllEvent.h"
 using namespace my_master;
 
 MyMouseEvent::MyMouseEvent()
@@ -18,10 +18,11 @@ MyMouseEvent::~MyMouseEvent()
         close(m_fd);
 }
 
-void* MyMouseEvent::CallBackFunc(MyEvent*)
+void* MyMouseEvent::CallBackFunc(MyEvent* ev)
 {
     int res = read(m_fd,m_buf,sizeof(m_buf));
     assert(res != -1);
+    MyAllEvent::BoardEvent(ev);
 }
 
 int MyMouseEvent::GetMouseType()
