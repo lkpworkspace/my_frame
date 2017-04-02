@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "MyTcp.h"
 #include "MyApp.h"
+#include "MyMouseEvent.h"
 
 using namespace my_master;
 //#define TEST
@@ -101,12 +102,27 @@ public:
     }
 };
 
+class MyMouse : public MyMouseEvent
+{
+public:
+    void* CallBackFunc(MyEvent *ev)
+    {
+        MyMouseEvent::CallBackFunc(ev);
+        printf("button type = %d, x = %d, y = %d\n",
+               GetMouseType(),GetRelX(),GetRelY());
+        MyApp::theApp->AddEvent(ev);
+    }
+};
+
 int main(int argc, char *argv[])
 {
-    MyApp app{2,1024};
+    MyApp app{4,1024};
 
     MyServer *server = new MyServer("",9999);
     app.AddEvent(server);
+
+    MyMouse* mouse = new MyMouse;
+    app.AddEvent(mouse);
 
     return app.Exec();
 }

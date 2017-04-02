@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     MyList.cpp \
     MyUdp.cpp \
     MyTcp.cpp \
-    MyBase64.cpp
+    MyBase64.cpp \
+    MyMouseEvent.cpp
 
 HEADERS += \
     Common.h \
@@ -36,4 +37,5 @@ HEADERS += \
     MyTcp.h \
     MyBase64.h \
     MyHeap.h \
-    MyHash.h
+    MyHash.h \
+    MyMouseEvent.h
