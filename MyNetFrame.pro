@@ -3,7 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -lpthread
+LIBS += -lpthread -ldl
 
 SOURCES += main.cpp \
     Common.cpp \
@@ -20,7 +20,9 @@ SOURCES += main.cpp \
     MyTcp.cpp \
     MyBase64.cpp \
     MyMouseEvent.cpp \
-    MyAllEvent.cpp
+    MyAllEvent.cpp \
+    3rd_src/Sqlite3/sqlite3.c \
+    MySqlite3.cpp
 
 HEADERS += \
     Common.h \
@@ -41,4 +43,6 @@ HEADERS += \
     MyHash.h \
     MyMouseEvent.h \
     MyAllEvent.h \
-    MyFrame.h
+    MyFrame.h \
+    3rd_src/Sqlite3/sqlite3.h \
+    MySqlite3.h
