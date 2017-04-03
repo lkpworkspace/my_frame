@@ -17,6 +17,7 @@
 #include <queue>
 #include <map>
 #include <fstream>
+#include <mutex>
 // win or linux
 #ifdef WIN32
 #include <Windows.h>
@@ -25,14 +26,8 @@
 #else
 #include <unistd.h>
 #endif
-// my class
-#include "MyLog.h"
-#include "MyHelp.h"
-#include "MyVec.h"
-#include "MyList.h"
-#include "MyEvent.h"
-#include "MyThread.h"
 
+// macro define
 #define USE_LOG
 
 #ifndef DEBUG_INFO

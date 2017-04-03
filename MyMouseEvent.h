@@ -1,9 +1,8 @@
 #ifndef MYMOUSEEVENT_H
 #define MYMOUSEEVENT_H
-#include "Common.h"
+#include <sys/epoll.h>
+#include "MyEvent.h"
 namespace my_master {
-
-
 class MyMouseEvent : public my_master::MyEvent
 {
 public:

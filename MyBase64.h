@@ -1,6 +1,6 @@
 #ifndef __MYBASE64_H__
 #define __MYBASE64_H__
-#include "Common.h"
+#include <stdint.h>
 namespace my_master {
 class MyBase64
 {

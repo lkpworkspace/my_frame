@@ -88,10 +88,9 @@ public:
     {
         MyTcpServer* serv = (MyTcpServer*)ev;
         sockaddr_in addr;
-        socklen_t len;
         while(1)
         {
-            int fd = serv->Accpet(&addr,&len);
+            int fd = serv->Accpet(&addr);
             if(fd < 0)
                 break;
             MyRecv *recv = new MyRecv(fd,addr);
@@ -123,14 +122,15 @@ public:
         {
             MyTcpServer* serv = (MyTcpServer*)ev;
             sockaddr_in addr;
-            socklen_t len;
             while(1)
             {
-                int fd = serv->Accpet(&addr,&len);
+                int fd = serv->Accpet(&addr);
                 if(fd < 0)
                     break;
                 MyTcpSocket *recv = new MyTcpSocket(fd,addr);
-                printf("get client fd : %d\n",fd);
+                printf("get client connect fd : %d, port %u, ip %s\n",fd,
+                       MyNet::GetAddrPort(&addr),
+                       MyNet::GetAddrIp(&addr).c_str());
                 MyApp::theApp->AddEvent(recv);
             }
             MyApp::theApp->AddEvent(ev);
@@ -148,12 +148,14 @@ public:
             while(1)
             {
                 res = sock->Read(buf,1024);
-                if(res < 0)
+                if(res <= 0)
                     break;
-                printf("read %d:%s\n",res,buf);
+                printf("%s:%d: read %d:%s\n",sock->GetIp().c_str(),sock->GetPort(),res,buf);
             }
             if(res != 0)
+            {
                 MyApp::theApp->AddEvent(ev);
+            }
             else
                 printf("client quit\n");
         }
@@ -180,8 +182,8 @@ int main()
     app.AddEvent(server);
 
     // mouse test
-    MyMouseEvent* mouse = new MyMouseEvent;
-    app.AddEvent(mouse);
+    //MyMouseEvent* mouse = new MyMouseEvent;
+    //app.AddEvent(mouse);
 
     // ev procees
     AllEv* widget = new AllEv;

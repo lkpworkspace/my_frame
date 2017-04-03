@@ -20,6 +20,19 @@ MyNet::~MyNet()
 }
 
 
+std::string MyNet::GetAddrIp(sockaddr_in* addr)
+{
+    char ip_buf[64] = {0};
+    inet_ntop(AF_INET,&(addr->sin_addr),ip_buf,sizeof(ip_buf));
+    return std::string(ip_buf);
+}
+
+unsigned short MyNet::GetAddrPort(sockaddr_in* addr)
+{
+    return ntohs(addr->sin_port);
+}
+
+
 std::string MyNet::GetHostName(std::string ipStr)
 {
     struct hostent* host = nullptr;

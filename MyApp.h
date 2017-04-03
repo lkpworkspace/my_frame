@@ -3,6 +3,8 @@
 #include "Common.h"
 #include <sys/epoll.h>
 #include <pthread.h>
+#include "MyEvent.h"
+#include "MyThread.h"
 namespace my_master {
 class MyTask;
 class MyApp : public MyThread

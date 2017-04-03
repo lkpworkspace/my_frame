@@ -1,6 +1,6 @@
 #include "MyApp.h"
 #include "MyTask.h"
-
+#include "MyLog.h"
 using namespace my_master;
 MyApp* MyApp::theApp = nullptr;
 
@@ -99,9 +99,6 @@ int MyApp::Exec()
         res = epoll_wait(m_epollFd,ev,evc,wait);
         if(res > 0)
         {
-#if 1
-            printf("Exec get %d event\n",res);
-#endif
             HandleEvent(ev,res);
         }
     }
@@ -205,6 +202,9 @@ void MyApp::HandleEvent(struct epoll_event* epev, int count)
         case MyEvent::SOCK:
         case MyEvent::FILE:
         default:
+#if DEBUG_ERROR
+            printf("get sock,file... event\n");
+#endif
             this->DelEvent(event);
             m_ev_recv.AddTail(event);
             break;
@@ -227,15 +227,24 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
         if(!task->m_recv.IsEmpty())
         {
             task->m_que.Append(&(task->m_recv));
+#if DEBUG_ERROR
+            printf("trans main event to task %d\n",task->GetThreadId());
+#endif
             task->SendMsg(&ch,MSG_LEN);
         }else if(!m_ev_recv.IsEmpty())
         {
             // change m_idle_tasks to m_ev_recv
             task->m_que.Append(&m_ev_recv);
-            task->SendMsg(&ch,MSG_LEN);
+#if DEBUG_ERROR
+            printf("trans self event to task self %d\n",task->GetThreadId());
+#endif
+            task->SendMsg(&ch,MSG_LEN);      
         }else
         {
             m_idle_tasks.AddTail(task);
+#if DEBUG_ERROR
+            printf("add task %d to idle queue\n",task->GetThreadId());
+#endif
         }
     }
 }

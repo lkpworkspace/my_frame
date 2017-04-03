@@ -1,5 +1,6 @@
 #include "MyTask.h"
 #include "MyApp.h"
+#include "MyLog.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 using namespace my_master;
@@ -21,7 +22,7 @@ void MyTask::Run()
 }
 int MyTask::TaskWork()
 {
-#if 1
+#if DEBUG_ERROR
     printf("task %d work, has %d event\n",GetThreadId(),m_que.Count());
 #endif
     MyEvent* begin = (MyEvent*)m_que.Begin();
@@ -40,7 +41,7 @@ int MyTask::WaitEvent()
     // send to MyApp, this task idle
     m_msgBuf[0] = 0x01;
     write(m_msgFd[0],m_msgBuf,MSG_LEN);
-#if 1
+#if DEBUG_ERROR
     printf("task %d waiting...\n",GetThreadId());
 #endif
     // wait MyApp trans event

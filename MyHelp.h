@@ -1,8 +1,8 @@
 #ifndef __MyHelp_H__
 #define __MyHelp_H__
-#include "Common.h"
 #include <chrono>
-
+#include <string>
+#include <vector>
 class MyHelp
 {
 public:

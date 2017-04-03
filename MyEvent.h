@@ -2,9 +2,10 @@
 #define MYEVENT_H
 #include "Common.h"
 #include <sys/epoll.h>
-
+#include "MyList.h"
 namespace my_master {
-class MyEvent : public MyNode
+
+class MyEvent : public my_master::MyNode
 {
     friend class MyTask;
 public:

@@ -23,6 +23,7 @@ void* MyMouseEvent::CallBackFunc(MyEvent* ev)
     int res = read(m_fd,m_buf,sizeof(m_buf));
     assert(res != -1);
     MyAllEvent::BoardEvent(ev);
+    return NULL;
 }
 
 int MyMouseEvent::GetMouseType()

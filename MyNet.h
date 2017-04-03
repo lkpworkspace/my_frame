@@ -1,6 +1,7 @@
 #ifndef __MYNET_H__
 #define __MYNET_H__
-#include "Common.h"
+#include <string>
+#include <vector>
 #ifdef WIN32
 #include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
@@ -22,6 +23,10 @@ class MyNet
 public:
     MyNet();
     ~MyNet();
+
+    static std::string GetAddrIp(sockaddr_in* addr);
+    static unsigned short GetAddrPort(sockaddr_in* addr);
+
     // get host info
     // method1
     static std::string GetHostName(std::string ipStr);
@@ -29,6 +34,7 @@ public:
     // method2
     static struct in_addr sock_getip(const char* name);
 
+    // can not use this function
     // get server info
     // getservbyname
     // getservbyport
@@ -37,7 +43,6 @@ public:
     // uanme
 
     // getsocketname func
-    //
     static struct in_addr GetNetSeriIp(std::string ipStr);
 private:
 };

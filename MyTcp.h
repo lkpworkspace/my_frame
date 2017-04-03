@@ -12,7 +12,7 @@ public:
     ~MyTcpServer();
 
     int Listen(int backlog = 10);
-    int Accpet(struct sockaddr_in *addr, socklen_t *addrlen);
+    int Accpet(struct sockaddr_in *addr);
 protected:
     /////////////////////////////////
     /// virtual method
@@ -53,6 +53,8 @@ public:
     MyTcpSocket& operator=(MyTcpSocket& other);
     int Read(char*, int);
     int Write(const char*,int);
+    std::string GetIp();
+    unsigned short GetPort();
 private:
     int m_sock;
     sockaddr_in m_addr;

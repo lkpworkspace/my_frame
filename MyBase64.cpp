@@ -1,5 +1,5 @@
 #include "MyBase64.h"
-
+#include <stdlib.h>
 using namespace my_master;
 
 uint8_t g_de_tab[128];

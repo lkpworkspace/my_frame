@@ -1,8 +1,8 @@
 #ifndef __MyLog_H__
 #define __MyLog_H__
-#include "Common.h"
 #include <mutex>
-
+#include <string.h>
+#include "MyHelp.h"
 namespace my_master {
 
 #define LOG_NAME "mynet.log"

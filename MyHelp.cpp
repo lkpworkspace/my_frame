@@ -1,5 +1,5 @@
 #include "MyHelp.h"
-
+#include <string.h>
 int MyHelp::ToInt(const char *str)
 {
 	return atoi(str);

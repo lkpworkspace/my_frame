@@ -1,6 +1,8 @@
 #ifndef MYALLEVENT_H
 #define MYALLEVENT_H
 #include "Common.h"
+#include "MyList.h"
+
 namespace my_master {
 class MyEvent;
 class MyTree;

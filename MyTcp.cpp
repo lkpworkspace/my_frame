@@ -19,11 +19,12 @@ int MyTcpServer::Listen(int backlog)
     return res;
 }
 
-int MyTcpServer::Accpet(struct sockaddr_in *addr, socklen_t *addrlen)
+int MyTcpServer::Accpet(struct sockaddr_in *addr)
 {
     if(!IS_SERVER(m_tcp_ip_type))
         return 0;
-    int res = accept(m_sock,(sockaddr*)addr,addrlen);
+    socklen_t addrlen = sizeof(struct sockaddr_in);
+    int res = accept(m_sock,(sockaddr*)addr,&addrlen);
     return res; // file descriptor
 }
 ////////////////////////////////////////////////////
@@ -75,10 +76,21 @@ MyTcpSocket::MyTcpSocket(const MyTcpSocket& other)
 {
     memcpy(&m_addr,&other.m_addr,sizeof(m_addr));
     m_sock = other.m_sock;
+    Common::SetNonblock(m_sock,true);
 }
 
 MyTcpSocket::~MyTcpSocket()
 {}
+
+std::string MyTcpSocket::GetIp()
+{
+    return MyNet::GetAddrIp(&m_addr);
+}
+
+unsigned short MyTcpSocket::GetPort()
+{
+    return MyNet::GetAddrPort(&m_addr);
+}
 
 void* MyTcpSocket::CallBackFunc(MyEvent *ev)
 {
