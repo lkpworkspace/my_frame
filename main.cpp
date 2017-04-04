@@ -2,9 +2,10 @@
 
 #include "MyMouseEvent.h"
 #include "MyTcp.h"
+#include "MySqlite3.h"
 
 using namespace my_master;
-//#define TEST
+#define TEST
 
 #ifdef TEST
 class A : public MyNode
@@ -18,9 +19,7 @@ public:
 
 int main()
 {
-    int x = 10;
-    MyDebug("okok%d\n",x);
-#if 1
+#if 0
     MyList list;
     list.AddTail(new A(10));
 
@@ -36,6 +35,44 @@ int main()
         printf("begin pointer %p\n",begin);
     }
     std::getchar();
+#endif
+#if 1
+    MySqlite3 db("mydb.db");
+    db.Open();
+    //db.ExecSql("create table test(id, name, age)");
+#if 0
+    for(int i = 0; i < 10; ++i)
+        db.ExecSql("insert into test values(10,'haha',20)");
+#else
+    db.ExecSql("select * from test");
+#if 0
+    while(true)
+    {
+        std::vector<std::string> *row = db.GetRow();
+        if(row)
+        {
+            for(int i = 0; i < row->size(); ++i)
+            {
+                std::cout <<(*row)[i] << " ";
+                //(*db.GetColumnName())[i];
+            }
+            std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "no data"  << std::endl;
+            break;
+        }
+    }
+    for(int i = 0; i < db.GetColCount(); ++i)
+    {
+        std::cout << (*db.GetColumnName())[i] << std::endl;
+    }
+#else
+    std::cout << db.GetValue(0,2);
+#endif
+#endif
+    db.Close();
 #endif
     return 0;
 }

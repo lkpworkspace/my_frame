@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 LIBS += -lpthread -ldl
+QMAKE_CXXFLAGS += -fno-stack-protector
 
 SOURCES += main.cpp \
     Common.cpp \
