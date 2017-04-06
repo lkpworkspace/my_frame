@@ -3,9 +3,10 @@
 #include "MyMouseEvent.h"
 #include "MyTcp.h"
 #include "MySqlite3.h"
+#include "MyUdp.h"
 
 using namespace my_master;
-#define TEST
+//#define TEST
 
 #ifdef TEST
 class A : public MyNode
@@ -203,6 +204,20 @@ public:
                    e->GetMouseType(),e->GetRelX(),e->GetRelY());
             MyApp::theApp->AddEvent(ev);
         }
+        if(ev->GetClassType() == MyEvent::CLASS_TYPE::UDPCLASS)
+        {
+            MyUdp* e = (MyUdp*)ev;
+            char* buf;
+            int len = 0;
+
+            MyAddrInfo addr = e->RecvData(&buf,len);
+            printf("ip : %s, port : %u, recv: %s\n",
+                   addr.GetIp().c_str(),
+                   addr.GetPort(),
+                   buf);
+
+            MyApp::theApp->AddEvent(ev);
+        }
         return true;
     }
 };
@@ -212,11 +227,22 @@ int main()
     MyApp app{4,1024};
 
     // tcp test
-    MyTcpServer *server = new MyTcpServer("",9999);
-    server->Bind();
-    server->Listen(10);
-    server->SetNonblock(true);
-    app.AddEvent(server);
+//    MyTcpServer *server = new MyTcpServer("",9999);
+//    server->Bind();
+//    server->Listen(10);
+//    server->SetNonblock(true);
+//    app.AddEvent(server);
+
+//    MyTcpServer *server1 = new MyTcpServer("",8888);
+//    server1->Bind();
+//    server1->Listen(10);
+//    server1->SetNonblock(true);
+//    app.AddEvent(server1);
+
+    // udp test
+//    MyUdp *server = new MyUdp("",4399,true);
+//    server->Bind();
+//    app.AddEvent(server);
 
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;

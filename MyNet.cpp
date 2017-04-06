@@ -10,15 +10,10 @@ using namespace my_master;
  */
 
 MyNet::MyNet()
-{
-
-}
+{}
 
 MyNet::~MyNet()
-{
-
-}
-
+{}
 
 std::string MyNet::GetAddrIp(sockaddr_in* addr)
 {
@@ -31,7 +26,6 @@ unsigned short MyNet::GetAddrPort(sockaddr_in* addr)
 {
     return ntohs(addr->sin_port);
 }
-
 
 std::string MyNet::GetHostName(std::string ipStr)
 {
@@ -124,6 +118,99 @@ struct in_addr MyNet::GetNetSeriIp(std::string ipStr)
 }
 
 
+////////////////////////////////////////////////////////
+/// MyAddrInfo
+MyAddrInfo::MyAddrInfo()
+{
+    Init();
+}
+MyAddrInfo::MyAddrInfo(struct sockaddr_in addr)
+{
+    Init();
+    memcpy(&m_remote_addr,&addr,sizeof(struct sockaddr_in));
+}
+
+MyAddrInfo::MyAddrInfo(std::string ip, unsigned short port)
+{
+    Init();
+    SetIP(ip);
+    SetPort(port);
+}
+
+MyAddrInfo::~MyAddrInfo()
+{
+    if(m_buf != nullptr)
+        delete []m_buf;
+    m_len = 0;
+}
+
+void MyAddrInfo::Init()
+{
+    m_buf = nullptr;
+    m_len = 0;
+    memset(&m_remote_addr,0,sizeof(struct sockaddr_in));
+    m_remote_addr.sin_family = AF_INET;
+}
+
+MyAddrInfo& MyAddrInfo::operator=(MyAddrInfo& other)
+{
+    if(m_buf != nullptr)
+        delete[] m_buf;
+    m_buf = new char[other.m_len];
+    memcpy(m_buf,other.m_buf,m_len);
+    memcpy(&m_remote_addr,&other.m_remote_addr,sizeof(struct sockaddr_in));
+    m_len = other.m_len;
+    return *this;
+}
+
+int MyAddrInfo::GetData(char** buf)
+{
+    *buf = m_buf;
+    return m_len;
+}
+
+void MyAddrInfo::SetData(char* buf, int len)
+{
+    if(m_buf != nullptr)
+        delete[] m_buf;
+    m_buf = new char[len];
+    memcpy(m_buf,buf,len);
+    m_len = len;
+}
+
+std::string MyAddrInfo::GetIp()
+{
+    return MyNet::GetAddrIp(&m_remote_addr);
+}
+
+unsigned short MyAddrInfo::GetPort()
+{
+    return MyNet::GetAddrPort(&m_remote_addr);
+}
+
+sockaddr_in MyAddrInfo::GetAddr()
+{
+    return m_remote_addr;
+}
+
+void MyAddrInfo::SetIP(std::string ip)
+{
+    if(!ip.empty())
+        inet_pton(AF_INET, ip.c_str(), &m_remote_addr.sin_addr);
+    else
+        m_remote_addr.sin_addr.s_addr = INADDR_ANY;
+}
+
+void MyAddrInfo::SetPort(unsigned short port)
+{
+    m_remote_addr.sin_port = htons(port);
+}
+
+void MyAddrInfo::SetIpAndPort(std::string ip, unsigned short port)
+{
+    SetIP(ip);
+    SetPort(port);
+}
 
 
 

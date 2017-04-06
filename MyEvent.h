@@ -16,14 +16,14 @@ public:
         NONE
     };
     enum CLASS_TYPE{
+        BASECLASS,
+        TASKCLASS,
         TCPSERVER,
         TCPCLIENT,
         TCPSOCKET,
-        UDP,
+        UDPCLASS,
         UDPSOCKET,
-        MOUSE,
-        BASECLASS,
-        TASKCLASS
+        MOUSE
     };
 
 public:

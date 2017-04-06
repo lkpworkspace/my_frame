@@ -2,39 +2,25 @@
 #define MYUDP_H
 #include "Common.h"
 #include "MySock.h"
-
+#include "MyNet.h"
 namespace my_master {
 
 #define RECV_SIZE 4096
-
-class MyUdpSocket;
 class MyUdp : public my_master::MySock
 {
 public:
+    // you need write you local ip and port
     MyUdp(std::string ip,uint16_t port, bool isServer = true);
     ~MyUdp();
+    ////////////////////////////////////////////////
+    /// override virtual method
+    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::UDPCLASS;}
 
-    MyUdpSocket RecvData();
-    int Write(char*buf,int len);
+    MyAddrInfo RecvData(char** buf, int& len);
+    int Write(MyAddrInfo &info, char*buf, int len);
 protected:
 private:
-};
-
-class MyUdpSocket //: public my_master::MyEvent
-{
-    friend class MyUdp;
-public:
-    MyUdpSocket();
-    MyUdpSocket(struct sockaddr_in addr,int fd);
-    ~MyUdpSocket();
-
-    MyUdpSocket& operator=(MyUdpSocket other);
-    int GetData(char** buf);
-private:
-    char* m_buf;
-    int m_len;
-    int m_sock;
-    struct sockaddr_in m_remote_addr;      // remote udp sockaddr
+    char m_buf[RECV_SIZE];
 };
 
 } // end namespace

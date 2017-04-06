@@ -46,6 +46,37 @@ public:
     static struct in_addr GetNetSeriIp(std::string ipStr);
 private:
 };
+
+class MyAddrInfo
+{
+    friend class MyUdp;
+public:
+    MyAddrInfo();
+    MyAddrInfo(struct sockaddr_in addr);
+    MyAddrInfo(std::string ip, unsigned short port);
+    ~MyAddrInfo();
+
+    //////////////////////////////////////////////////
+    /// get method
+    std::string GetIp();
+    unsigned short GetPort();
+    sockaddr_in GetAddr();
+    //////////////////////////////////////////////////
+    /// set method
+    void SetIP(std::string ip);
+    void SetPort(unsigned short port);
+    void SetIpAndPort(std::string ip, unsigned short port);
+
+    MyAddrInfo& operator=(MyAddrInfo& other);
+    int GetData(char** buf);
+    void SetData(char* buf, int len);
+private:
+    void Init();
+    char* m_buf;
+    int m_len;
+
+    struct sockaddr_in m_remote_addr;      // remote udp sockaddr
+};
 /*
  *#include <arpa/inet.h>
  * // 本地序列转换网络字节序列
