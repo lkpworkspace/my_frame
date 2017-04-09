@@ -11,7 +11,7 @@ public:
     ///////////////////////////////////////
     /// override myevent method
     int GetEventFd(){return m_fd;}
-    EVENT_TYPE GetEventType(){return EVENT_TYPE::FILE;}
+    EVENT_TYPE GetEventType(){return EVENT_TYPE::FILEFD;}
     uint32_t GetEpollEventType(){return EPOLLIN;}
     CLASS_TYPE GetClassType(){return CLASS_TYPE::MOUSE;}
 

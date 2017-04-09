@@ -25,7 +25,7 @@ public:
     void OnExit(); // override
     ////////////////////////////////////////////// override MyEvent method
     int GetEventFd(){return m_msgFd[1];}
-    EVENT_TYPE GetEventType(){return EVENT_TYPE::TASK;}
+    EVENT_TYPE GetEventType(){return EVENT_TYPE::TASKFD;}
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     void* CallBackFunc(MyEvent *){return NULL;}
     CLASS_TYPE GetClassType(){return CLASS_TYPE::TASKCLASS;}

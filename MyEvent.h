@@ -10,9 +10,9 @@ class MyEvent : public my_master::MyNode
     friend class MyTask;
 public:
     enum EVENT_TYPE{
-        FILE,
-        SOCK,
-        TASK,
+        FILEFD,
+        SOCKFD,
+        TASKFD,
         NONE
     };
     enum CLASS_TYPE{

@@ -196,11 +196,11 @@ void MyApp::HandleEvent(struct epoll_event* epev, int count)
         event = (MyEvent*)epev[i].data.ptr;
         switch(event->GetEventType())
         {
-        case MyEvent::TASK:
+        case MyEvent::TASKFD:
             HandleTaskEvent(event);
             break;
-        case MyEvent::SOCK:
-        case MyEvent::FILE:
+        case MyEvent::SOCKFD:
+        case MyEvent::FILEFD:
         default:
 #if DEBUG_ERROR
             printf("get sock,file... event\n");

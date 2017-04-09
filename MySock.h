@@ -24,7 +24,7 @@ public:
     ~MySock(){Close();}
     //////////////////////////////////// override MyEvent method
     int GetEventFd(){ return m_sock; }
-    EVENT_TYPE GetEventType(){ return EVENT_TYPE::SOCK; }
+    EVENT_TYPE GetEventType(){ return EVENT_TYPE::SOCKFD; }
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     virtual void* CallBackFunc(MyEvent *);
     virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::BASECLASS;}

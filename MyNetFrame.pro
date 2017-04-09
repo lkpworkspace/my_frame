@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     MyMouseEvent.cpp \
     MyAllEvent.cpp \
     3rd_src/Sqlite3/sqlite3.c \
-    MySqlite3.cpp
+    MySqlite3.cpp \
+    MyTFTP.cpp
 
 HEADERS += \
     Common.h \
@@ -46,4 +47,5 @@ HEADERS += \
     MyAllEvent.h \
     MyFrame.h \
     3rd_src/Sqlite3/sqlite3.h \
-    MySqlite3.h
+    MySqlite3.h \
+    MyTFTP.h

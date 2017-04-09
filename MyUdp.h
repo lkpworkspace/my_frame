@@ -11,7 +11,7 @@ class MyUdp : public my_master::MySock
 public:
     // you need write you local ip and port
     MyUdp(std::string ip,uint16_t port, bool isServer = true);
-    ~MyUdp();
+    ~MyUdp(){}
     ////////////////////////////////////////////////
     /// override virtual method
     virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::UDPCLASS;}
