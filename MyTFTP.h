@@ -4,6 +4,7 @@
 #include "MyUdp.h"
 #include "MyBase64.h"
 #include "MyThread.h"
+#include <semaphore.h>
 /* TFTP protocol:
  * data1:
  *     0x0001 RRQ(read)
@@ -33,9 +34,16 @@ public:
     }recv_t;
     typedef struct
     {
-        // TODO...
-        std::string m_send_filename;
+        std::string filename;
+        MyAddrInfo info;
         FILE* fp;
+        sem_t event;
+
+        uint16_t block_num;
+        int send_block;
+
+        char* file_buf;
+        int file_len;
     }send_t;
 
     MyTFTP(std::string ip,uint16_t port, bool isServer = true);
@@ -50,7 +58,8 @@ public:
     virtual void OnExit();
 
     void SetRootDir(std::string path); // /home/kpli/
-    void SendFile(std::string filename); // TODO...
+    void SendFile(MyAddrInfo& info, std::string filename); // TODO...
+    void GetFile(MyAddrInfo& info, std::string filename);  // TODO...
 private:
     uint16_t GetHead(char* buf);
     uint16_t GetBlockNum(char* buf);
@@ -67,11 +76,50 @@ private:
     int BuildACK(uint16_t block_num);
     int BuildErrMsg(uint16_t err_num, std::string errMsg);
 
+    void InitFileTrans(std::string filename, MyAddrInfo &info);
+    void ReadFile(std::string filename);
+    int GetFileData(char** buf);
+    void CloseFileTrans();
+
     char m_buf[TFTP_BUF_SIZE];
     std::string m_path;
     recv_t m_recv;
     send_t m_send;
 };
+
+/* client send file, server recv file:
+        server: (recv file)
+            recv w request
+            send ack
+
+            recv data
+            send ack
+
+            until data < 512
+            close file
+        client: (send file)
+            initFileTrans
+            build W request
+            wait ack
+
+            loop:
+                send data
+                wait ack
+
+            CloseFileTrans
+
+
+        server: (send file)
+            handle r request (if isExist)
+            send ack
+
+            invoke send method
+                init m_send
+                begin thread
+                    send file data
+
+
+ */
 
 } // end namespace
 #endif // MYTFTP_H

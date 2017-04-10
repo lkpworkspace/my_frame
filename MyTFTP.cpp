@@ -1,4 +1,5 @@
 #include "MyTFTP.h"
+#include "MyApp.h"
 using namespace my_master;
 MyTFTP::MyTFTP(std::string ip,uint16_t port, bool isServer)
     :MyUdp(ip,port,isServer),
@@ -6,29 +7,24 @@ MyTFTP::MyTFTP(std::string ip,uint16_t port, bool isServer)
 {
     m_recv.block_num = 0;
     m_recv.fp = nullptr;
-
-    m_send.fp = nullptr;
 }
 
 MyTFTP::~MyTFTP()
-{
-
-}
-
-void MyTFTP::SendFile(std::string filename)
-{
-    m_send.m_send_filename = filename;
-    this->Start();
-}
+{}
 
 void* MyTFTP::CallBackFunc(MyEvent *ev)
 {
     MyTFTP* client = (MyTFTP*)ev;
     char* buf;
     int len;
-
+#if 1
+    printf("MyTFTP get msg\n");
+#endif
     MyAddrInfo info = client->RecvData(&buf,len);
+
     HandleMsg(info,buf,len);
+
+    MyApp::theApp->AddEvent(ev);
     return NULL;
 }
 
@@ -66,13 +62,12 @@ int MyTFTP::HandleMsg1(MyAddrInfo& info,char* buf, int len)
     strcpy(filename,&buf[TFTP_HEAD_SIZE]);
     fillPath += m_path;
     fillPath += filename;
-    // begin thread to send file
-    // ...
-
-    // open file
-    m_send.fp = fopen(fillPath.c_str(),"r");
+    // send ack
     int sendLen = BuildACK(0);
     this->Write(info,m_buf,sendLen);
+    // send file
+    InitFileTrans(fillPath,info);
+    this->Start();
     return 0;
 }
 
@@ -80,17 +75,17 @@ int MyTFTP::HandleMsg2(MyAddrInfo& info,char* buf, int len)
 { // write request
     char filename[256] = {0};
     std::string fillPath;
-
+    // init m_recv
+    m_recv.block_num = 0;
+    if(m_recv.fp != nullptr)
+        fclose(m_recv.fp);
+    // open file, send ack
     strcpy(filename,&buf[TFTP_HEAD_SIZE]);
     fillPath += m_path;
     fillPath += filename;
     m_recv.fp = fopen(fillPath.c_str(),"w");
     int sendLen = BuildACK(0);
     this->Write(info,m_buf,sendLen);
-    // init m_recv
-    m_recv.block_num = 0;
-    if(m_recv.fp != nullptr)
-        fclose(m_recv.fp);
     return 0;
 }
 
@@ -115,6 +110,7 @@ int MyTFTP::HandleMsg3(MyAddrInfo& info,char* buf, int len)
     }
     if(data_len != TFTP_DATA_SIZE)
     { // recv data end
+        printf("recv file fail...\n");
         fclose(m_recv.fp);
         memset(&m_recv,0,sizeof(recv_t));
     }
@@ -123,12 +119,23 @@ int MyTFTP::HandleMsg3(MyAddrInfo& info,char* buf, int len)
 
 int MyTFTP::HandleMsg4(MyAddrInfo& info,char* buf, int len)
 {
-    switch (GetBlockNum(buf)) {
+    int block_num = GetBlockNum(buf);
+    switch (block_num) {
     case 0x00:
         // TODO...
+        sem_post(&m_send.event);
         break;
     default:
-
+        if(block_num - m_send.block_num == 1)
+        {
+            sem_post(&m_send.event);
+            m_send.block_num++;
+        }else
+        {
+            printf("Send file fail...\n");
+            this->Stop();
+            sem_post(&m_send.event);
+        }
         break;
     }
     return 0;
@@ -206,17 +213,123 @@ void MyTFTP::SetRootDir(std::string path)
 }
 
 /////////////////////////////////////////////////////////
-void MyTFTP::Run()
-{ // loop
-
-}
-
 void MyTFTP::OnInit()
 {
     usleep(1000*100);
+    // read file data
+    ReadFile(m_send.filename);
+    // send file info
+    int sendLen = BuildWRQ(m_send.filename);
+    this->Write(m_send.info,m_buf,sendLen);
+    // wait ack
+    sem_wait(&m_send.event);
+}
+
+void MyTFTP::Run()
+{ // send file data and wait ack
+    char* buf;
+    int data_len = GetFileData(&buf);
+    if(data_len > 0)
+    {
+        int send_len = BuildData(m_send.block_num,buf,data_len);
+        this->Write(m_send.info,m_buf,send_len);
+        sem_wait(&m_send.event);
+    }
+    else
+    {
+        this->Stop();
+    }
 }
 
 void MyTFTP::OnExit()
 {
-
+    CloseFileTrans();
 }
+
+void MyTFTP::GetFile(MyAddrInfo& info, std::string filename)
+{ // TODO...
+    int send_len = BuildRRQ(filename);
+    this->Write(info,m_buf,send_len);
+}
+
+void MyTFTP::SendFile(MyAddrInfo& info, std::string filename)
+{ // TODO...
+    std::string fill_path = m_path + filename;
+    InitFileTrans(fill_path,info);
+
+    this->Start();
+}
+
+int MyTFTP::GetFileData(char** buf)
+{ // if return < 0, end of file
+    *buf = &m_send.file_buf[m_send.send_block * TFTP_DATA_SIZE];
+    int res = (m_send.send_block + 1) * TFTP_DATA_SIZE > m_send.file_len
+            ? m_send.file_len - m_send.send_block * TFTP_DATA_SIZE
+              : TFTP_DATA_SIZE;
+    m_send.send_block++;
+    return res;
+}
+
+void MyTFTP::ReadFile(std::string filename)
+{
+    std::string fill_path = m_path + filename;
+    m_send.file_len = Common::GetFileLen(fill_path.c_str());
+    m_send.file_buf = (char*)malloc(m_send.file_len);
+    fread(m_send.file_buf,m_send.file_len,1,m_send.fp);
+}
+
+void MyTFTP::InitFileTrans(std::string filename, MyAddrInfo& info)
+{
+    if(m_send.fp != nullptr)
+        fclose(m_send.fp);
+    std::string fill_path = m_path + filename;
+    m_send.fp = fopen(fill_path.c_str(),"r");
+    sem_init(&m_send.event,0,0);
+    m_send.filename = filename;
+    m_send.info = info;
+    m_send.block_num = 0;
+    m_send.send_block = 0;
+    if(m_send.file_buf != nullptr)
+        free(m_send.file_buf);
+    m_send.file_buf = nullptr;
+    m_send.file_len = 0;
+}
+
+void MyTFTP::CloseFileTrans()
+{
+    if(m_send.fp != nullptr)
+        fclose(m_send.fp);
+    m_send.fp = nullptr;
+    m_send.filename.clear();
+    m_send.block_num = 0;
+    m_send.send_block = 0;
+    if(m_send.file_buf != nullptr)
+        free(m_send.file_buf);
+    m_send.file_buf = nullptr;
+    m_send.file_len = 0;
+    sem_destroy(&m_send.event);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,6 +4,7 @@
 #include "MyTcp.h"
 #include "MySqlite3.h"
 #include "MyUdp.h"
+#include "MyTFTP.h"
 
 using namespace my_master;
 //#define TEST
@@ -108,6 +109,7 @@ public:
             MyApp::theApp->AddEvent(ev);
         else
             printf("client quit\n");
+        return NULL;
     }
 };
 
@@ -136,6 +138,7 @@ public:
             MyApp::theApp->AddEvent(recv);
         }
         MyApp::theApp->AddEvent(ev);
+        return NULL;
     }
 };
 
@@ -148,6 +151,7 @@ public:
         printf("button type = %d, x = %d, y = %d\n",
                GetMouseType(),GetRelX(),GetRelY());
         MyApp::theApp->AddEvent(ev);
+        return NULL;
     }
 };
 
@@ -247,6 +251,11 @@ int main()
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
+
+    // MyTFTP test
+    MyTFTP* tftp = new MyTFTP("",4399,true);
+    tftp->Bind();
+    app.AddEvent(tftp);
 
     // ev procees
     AllEv* widget = new AllEv;
