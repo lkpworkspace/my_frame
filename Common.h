@@ -18,6 +18,7 @@
 #include <map>
 #include <fstream>
 #include <mutex>
+#include <thread>
 // win or linux
 #ifdef WIN32
 #include <Windows.h>

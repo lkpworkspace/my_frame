@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     MyAllEvent.cpp \
     3rd_src/Sqlite3/sqlite3.c \
     MySqlite3.cpp \
-    MyTFTP.cpp
+    MyTFTP.cpp \
+    MyKeyEvent.cpp
 
 HEADERS += \
     Common.h \
@@ -48,4 +49,5 @@ HEADERS += \
     MyFrame.h \
     3rd_src/Sqlite3/sqlite3.h \
     MySqlite3.h \
-    MyTFTP.h
+    MyTFTP.h \
+    MyKeyEvent.h

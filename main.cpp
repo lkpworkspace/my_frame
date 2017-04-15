@@ -251,12 +251,28 @@ int main()
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
-
+#if 1 // MyTFTP client
     // MyTFTP test
-    MyTFTP* tftp = new MyTFTP("",4399,true);
-    tftp->Bind();
+    MyTFTP* tftp = new MyTFTP("",5555,true);
+    tftp->SetRootDir("./");
+    //tftp->Bind();
     app.AddEvent(tftp);
 
+    std::thread thr([&](){
+        printf("send file begin");
+        sleep(2);
+        MyAddrInfo info;
+        info.SetPort(4399);
+        info.SetIP("127.0.0.1");
+        tftp->SendFile(info,"mynet.log");
+    });
+    thr.detach();
+#else // MyTFTP server
+    MyTFTP* tftp = new MyTFTP("",4399,true);
+    tftp->SetRootDir("./");
+    tftp->Bind();
+    app.AddEvent(tftp);
+#endif
     // ev procees
     AllEv* widget = new AllEv;
 

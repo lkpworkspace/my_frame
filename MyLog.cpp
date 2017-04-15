@@ -1,5 +1,6 @@
 #include "MyLog.h"
 #include <time.h>
+#include <stdio.h>
 using namespace my_master;
 MyLog *MyLog::instance = nullptr;
 char MyLog::m_szLogPath[MAX_PATH] = {0};
@@ -31,6 +32,16 @@ int MyLog::AddLog(std::string pszLogTxt)
     m_log_mutex.unlock();
 	return 0;
 }
+int MyLog::PrintLog(std::string pszLogTxt)
+{
+    time_t t = time(0);
+    char szTime[MAX_PATH];
+    strftime(szTime, sizeof(szTime), "%Y/%m/%d %X", localtime(&t));
+    printf("[%s]%s", szTime, pszLogTxt.c_str());
+    fflush(stdout);
+    return 0;
+}
+
 void MyLog::SetLogPath(const char* path)
 {
     memset(m_szLogPath,0,MAX_PATH);

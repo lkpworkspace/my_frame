@@ -1,5 +1,6 @@
 #include "MyTFTP.h"
 #include "MyApp.h"
+#include "MyLog.h"
 using namespace my_master;
 MyTFTP::MyTFTP(std::string ip,uint16_t port, bool isServer)
     :MyUdp(ip,port,isServer),
@@ -17,8 +18,8 @@ void* MyTFTP::CallBackFunc(MyEvent *ev)
     MyTFTP* client = (MyTFTP*)ev;
     char* buf;
     int len;
-#if 1
-    printf("MyTFTP get msg\n");
+#ifdef DEBUG_TFTP
+    MyDebugPrint("MyTFTP get msg\n");
 #endif
     MyAddrInfo info = client->RecvData(&buf,len);
 
@@ -57,16 +58,13 @@ int MyTFTP::HandleMsg(MyAddrInfo& info, char* buf, int len)
 int MyTFTP::HandleMsg1(MyAddrInfo& info,char* buf, int len)
 { // read request
     char filename[256] = {0};
-    std::string fillPath;
 
     strcpy(filename,&buf[TFTP_HEAD_SIZE]);
-    fillPath += m_path;
-    fillPath += filename;
     // send ack
-    int sendLen = BuildACK(0);
-    this->Write(info,m_buf,sendLen);
+    int send_len = BuildACK(0);
+    this->Write(info,m_buf,send_len);
     // send file
-    InitFileTrans(fillPath,info);
+    InitFileTrans(filename,info);
     this->Start();
     return 0;
 }
@@ -84,8 +82,12 @@ int MyTFTP::HandleMsg2(MyAddrInfo& info,char* buf, int len)
     fillPath += m_path;
     fillPath += filename;
     m_recv.fp = fopen(fillPath.c_str(),"w");
-    int sendLen = BuildACK(0);
-    this->Write(info,m_buf,sendLen);
+    int send_len = BuildACK(0);
+#ifdef DEBUG_TFTP
+    MyDebugPrint("get w file request\t");
+    MyDebugPrint("filename %s\n",filename);
+#endif
+    this->Write(info,m_buf,send_len);
     return 0;
 }
 
@@ -95,22 +97,34 @@ int MyTFTP::HandleMsg3(MyAddrInfo& info,char* buf, int len)
     int data_len;
 
     memcpy(&b_num,&buf[TFTP_HEAD_SIZE],sizeof(uint16_t));
+#ifdef DEBUG_TFTP
+    MyDebugPrint("buf len %d, recv_num %d, cur_block_num %d\n",len,b_num, m_recv.block_num);
+#endif
     if(b_num - m_recv.block_num == 1)
     {
         data_len = strlen(&buf[TFTP_HEAD_SIZE + TFTP_BLOCKNUM_SIZE]);
         fwrite(&buf[4],data_len,1,m_recv.fp);
         int sendLen = BuildACK(b_num);
+        // ack
         Write(info,m_buf,sendLen);
-
+#ifdef DEBUG_TFTP
+    MyDebugPrint("get %d block, data len %d\r", m_recv.block_num, data_len);
+#endif
         m_recv.block_num++;
     }else
     { // send err msg
+#ifdef DEBUG_TFTP
+    MyDebugPrint("recv file erro\n");
+#endif
         int sendLen = BuildErrMsg(0x01,"err block num");
+        // ack
         Write(info,m_buf,sendLen);
     }
     if(data_len != TFTP_DATA_SIZE)
     { // recv data end
-        printf("recv file fail...\n");
+#ifdef DEBUG_TFTP
+    MyDebugPrint("recv file end... data len %d\n",data_len);
+#endif
         fclose(m_recv.fp);
         memset(&m_recv,0,sizeof(recv_t));
     }
@@ -118,21 +132,21 @@ int MyTFTP::HandleMsg3(MyAddrInfo& info,char* buf, int len)
 }
 
 int MyTFTP::HandleMsg4(MyAddrInfo& info,char* buf, int len)
-{
+{ // recv ack
     int block_num = GetBlockNum(buf);
     switch (block_num) {
     case 0x00:
-        // TODO...
         sem_post(&m_send.event);
         break;
     default:
-        if(block_num - m_send.block_num == 1)
+        if(block_num - m_send.block_num == 0)
         {
             sem_post(&m_send.event);
-            m_send.block_num++;
         }else
         {
+#ifdef DEBUG_TFTP
             printf("Send file fail...\n");
+#endif
             this->Stop();
             sem_post(&m_send.event);
         }
@@ -183,7 +197,7 @@ int MyTFTP::BuildData(uint16_t block_num,char* buf, uint16_t len) // len (0-512b
     uint16_t num = 0x03;
     memset(m_buf,0,TFTP_BUF_SIZE);
     memcpy(&m_buf[0],&num,sizeof(uint16_t));
-    memcpy(&buf[TFTP_HEAD_SIZE],&block_num,sizeof(uint16_t));
+    memcpy(&m_buf[TFTP_HEAD_SIZE],&block_num,sizeof(uint16_t));
     memcpy(&m_buf[TFTP_HEAD_SIZE + TFTP_BLOCKNUM_SIZE],buf,len);
     return (TFTP_HEAD_SIZE + TFTP_BLOCKNUM_SIZE + len + 1);
 }
@@ -220,9 +234,15 @@ void MyTFTP::OnInit()
     ReadFile(m_send.filename);
     // send file info
     int sendLen = BuildWRQ(m_send.filename);
+#ifdef DEBUG_TFTP
+    MyDebugPrint("send file info send_len %d, filename %s\n",sendLen,m_send.filename.c_str());
+#endif
     this->Write(m_send.info,m_buf,sendLen);
     // wait ack
     sem_wait(&m_send.event);
+#ifdef DEBUG_TFTP
+    MyDebugPrint("get file info ack\n");
+#endif
 }
 
 void MyTFTP::Run()
@@ -231,7 +251,21 @@ void MyTFTP::Run()
     int data_len = GetFileData(&buf);
     if(data_len > 0)
     {
+        m_send.block_num++;
+#ifdef DEBUG_TFTP
+    MyDebugPrint("file block num %d\n",m_send.block_num);
+#endif
         int send_len = BuildData(m_send.block_num,buf,data_len);
+#ifdef DEBUG_TFTP
+    MyDebugPrint("send file data, data_len %d\n",send_len);
+#endif
+#ifdef DEBUG_TFTP
+    for(int i = 0; i < 10; ++i)
+    {
+        printf("%02x\t",m_buf[i]);
+    }
+#endif
+        // send data
         this->Write(m_send.info,m_buf,send_len);
         sem_wait(&m_send.event);
     }
@@ -254,8 +288,7 @@ void MyTFTP::GetFile(MyAddrInfo& info, std::string filename)
 
 void MyTFTP::SendFile(MyAddrInfo& info, std::string filename)
 { // TODO...
-    std::string fill_path = m_path + filename;
-    InitFileTrans(fill_path,info);
+    InitFileTrans(filename,info);
 
     this->Start();
 }

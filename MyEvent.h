@@ -23,14 +23,15 @@ public:
         TCPSOCKET,
         UDPCLASS,
         UDPSOCKET,
-        MOUSE
+        MOUSE,
+        KEY
     };
 
 public:
     MyEvent();
     ~MyEvent();
     virtual int GetEventFd() = 0;
-    virtual EVENT_TYPE GetEventType() = 0;
+    virtual EVENT_TYPE GetEventType() = 0;     // maybe not most need
     virtual CLASS_TYPE GetClassType() = 0;
     virtual uint32_t GetEpollEventType() = 0;
 protected:

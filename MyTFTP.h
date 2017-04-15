@@ -24,6 +24,7 @@ namespace my_master {
 #define TFTP_HEAD_SIZE 2
 #define TFTP_BLOCKNUM_SIZE 2
 #define TFTP_ERRNUM_SIZE 2
+#define DEBUG_TFTP
 class MyTFTP : public my_master::MyUdp , public my_master::MyThread
 {
 public:
@@ -88,7 +89,7 @@ private:
 };
 
 /* client send file, server recv file:
-        server: (recv file)
+        server: (recv file) // ok
             recv w request
             send ack
 
@@ -97,7 +98,7 @@ private:
 
             until data < 512
             close file
-        client: (send file)
+        client: (send file) // ok
             initFileTrans
             build W request
             wait ack
