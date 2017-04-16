@@ -260,11 +260,19 @@ int main()
 
     std::thread thr([&](){
         printf("send file begin");
-        sleep(2);
+        sleep(1);
         MyAddrInfo info;
         info.SetPort(4399);
         info.SetIP("127.0.0.1");
-        tftp->SendFile(info,"mynet.log");
+#if 0
+        // get file
+        tftp->GetFile(info,"Ymodem.c");
+        printf("Get File OKOKOKOKOKOKOK..........................................\n");
+#else
+        // upload file
+        tftp->SendFile(info,"Ymodem.c");
+        printf("Send File OKOKOKOKOKOKOK..........................................\n");
+#endif
     });
     thr.detach();
 #else // MyTFTP server

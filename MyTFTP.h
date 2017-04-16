@@ -15,6 +15,12 @@
  *     0x0004 block_num(2byte)
  * data4:(error)
  *     0x0005 error_num(2byte) error_msg(nbyte) 0
+ *
+ *
+ * TFTP features:
+ *      send and recv *.txt file
+ *      using SendFile()
+ *      using GetFile() function
  */
 namespace my_master {
 
@@ -32,6 +38,8 @@ public:
     {
         uint16_t block_num;
         FILE* fp;
+        sem_t event_ok;
+        bool use_func;
     }recv_t;
     typedef struct
     {
@@ -39,9 +47,11 @@ public:
         MyAddrInfo info;
         FILE* fp;
         sem_t event;
+        sem_t event_ok;
+        bool use_func;
 
-        uint16_t block_num;
-        int send_block;
+        uint16_t block_num;    // record recv data num
+        int send_block;        // record cur file data block
 
         char* file_buf;
         int file_len;
@@ -59,8 +69,8 @@ public:
     virtual void OnExit();
 
     void SetRootDir(std::string path); // /home/kpli/
-    void SendFile(MyAddrInfo& info, std::string filename); // TODO...
-    void GetFile(MyAddrInfo& info, std::string filename);  // TODO...
+    void SendFile(MyAddrInfo& info, std::string filename);
+    void GetFile(MyAddrInfo& info, std::string filename);
 private:
     uint16_t GetHead(char* buf);
     uint16_t GetBlockNum(char* buf);
@@ -81,6 +91,9 @@ private:
     void ReadFile(std::string filename);
     int GetFileData(char** buf);
     void CloseFileTrans();
+
+    void InitRecvStruct();
+    void InitSendStruct();
 
     char m_buf[TFTP_BUF_SIZE];
     std::string m_path;
@@ -110,7 +123,7 @@ private:
             CloseFileTrans
 
 
-        server: (send file)
+        server: (send file) // ok
             handle r request (if isExist)
             send ack
 
@@ -118,8 +131,8 @@ private:
                 init m_send
                 begin thread
                     send file data
-
-
+        client: (recv file) // ok
+            send r request
  */
 
 } // end namespace

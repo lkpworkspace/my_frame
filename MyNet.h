@@ -56,6 +56,7 @@ public:
     MyAddrInfo(std::string ip, unsigned short port);
     ~MyAddrInfo();
 
+    void Init();
     //////////////////////////////////////////////////
     /// get method
     std::string GetIp();
@@ -71,7 +72,6 @@ public:
     int GetData(char** buf);
     void SetData(char* buf, int len);
 private:
-    void Init();
     char* m_buf;
     int m_len;
 
