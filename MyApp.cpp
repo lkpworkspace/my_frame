@@ -96,7 +96,9 @@ int MyApp::Exec()
     int evc = 10;
     int wait = 0;
     struct epoll_event* ev = (struct epoll_event*)malloc(sizeof(struct epoll_event) * evc);
+#if USE_CONFIG
     this->Start();
+#endif
     while(m_cur_thread_size)
     {
         CheckStopTask();
@@ -110,7 +112,9 @@ int MyApp::Exec()
 
     // quit MyApp
     free(ev);
+#if USE_CONFIG
     this->Stop();
+#endif
     return 0;
 }
 /////////////////////////////////////////////////////
@@ -133,7 +137,6 @@ void MyApp::CheckStopTask()
         // move MyTask recv queue to MyTask work queue
         // delete from idle task queue
         // weakup this task, continue
-        // TODO...
         if(!begin->m_recv.IsEmpty())
         {
             begin->m_que.Append(&begin->m_recv);
@@ -145,7 +148,6 @@ void MyApp::CheckStopTask()
         }
         // move MyApp recv queue to MyTask work queue
         // weak up this task
-        // TODO...
         if(!m_ev_recv.IsEmpty())
         {
             begin->m_que.Append(&m_ev_recv);
@@ -256,6 +258,7 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
 }
 ////////////////////////////////////////////////////
 /// thread virtual method (use msg config our server)
+#if USE_CONFIG
 typedef struct my_config_t
 {
 #if 0
@@ -280,9 +283,10 @@ typedef struct my_config_t
 #endif
 }my_config_t;
 static my_config_t g_config;
-
+#endif
 void MyApp::OnInit()
 {
+#if USE_CONFIG
 #if 0
     g_config.msg_queue = mq_open(" ",O_RDWR | O_CREAT);
     perror("mq_open");
@@ -291,9 +295,11 @@ void MyApp::OnInit()
     g_config.key_id = msgget(MSG_KEY,IPC_CREAT);
     assert(g_config.key_id != -1);
 #endif
+#endif
 }
 void MyApp::Run()
 {
+#if USE_CONFIG
 #if 0
     if(!mq_receive(g_config.msg_queue, g_config.buf, sizeof(g_config.buf),NULL))
     {
@@ -308,15 +314,18 @@ void MyApp::Run()
 
     printf("%s\n",g_config.msgstru.msgtext);
 #endif
+#endif
 }
 void MyApp::OnExit()
 {
+#if USE_CONFIG
 #if 0
     if(g_config.msg_queue != 0)
         mq_close(g_config.msg_queue);
     mq_unlink(g_config.msg_queue_name.c_str());
 #else
     msgctl(g_config.key_id,IPC_RMID,0);
+#endif
 #endif
 }
 ////////////////////////////////////////////////////// test func

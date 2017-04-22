@@ -48,6 +48,8 @@
 
 #define MSG_LEN 1
 
+#define USE_CONFIG 0
+
 class Common
 {
 public:

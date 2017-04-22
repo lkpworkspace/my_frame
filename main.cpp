@@ -310,9 +310,6 @@ int main()
     });
     thr.detach();
 #endif
-
-
-
     // ev procees
     AllEv* widget = new AllEv;
 
