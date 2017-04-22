@@ -1,6 +1,11 @@
 #include "MyApp.h"
 #include "MyTask.h"
 #include "MyLog.h"
+
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
 using namespace my_master;
 MyApp* MyApp::theApp = nullptr;
 
@@ -24,7 +29,7 @@ int MyApp::InitApp()
     MyDebug("Get Epoll fd = %d", m_epollFd);
 #endif
 #if DEBUG_INFO
-    printf("Get Epoll fd = %d\n", m_epollFd);
+    MyDebugPrint("Get Epoll fd = %d\n", m_epollFd);
 #endif
     // task create
     for(int i = 0; i < m_threadSize; ++i)
@@ -63,7 +68,7 @@ int MyApp::AddEvent(MyEvent* ev)
 #endif
 #if DEBUG_INFO
     if(res)
-        printf("add event fail %d\n",res);
+        MyDebugPrint("add event fail %d\n",res);
 #endif
     ++m_cur_ev_size;
     pthread_mutex_unlock(&m_app_mutex);
@@ -79,7 +84,7 @@ int MyApp::DelEvent(MyEvent* ev)
 #endif
 #if DEBUG_INFO
     if(res)
-        printf("del event fail %d\n", res);
+        MyDebugPrint("del event fail %d\n", res);
 #endif
     --m_cur_ev_size;
     pthread_mutex_unlock(&m_app_mutex);
@@ -91,7 +96,7 @@ int MyApp::Exec()
     int evc = 10;
     int wait = 0;
     struct epoll_event* ev = (struct epoll_event*)malloc(sizeof(struct epoll_event) * evc);
-
+    this->Start();
     while(m_cur_thread_size)
     {
         CheckStopTask();
@@ -105,6 +110,7 @@ int MyApp::Exec()
 
     // quit MyApp
     free(ev);
+    this->Stop();
     return 0;
 }
 /////////////////////////////////////////////////////
@@ -203,7 +209,7 @@ void MyApp::HandleEvent(struct epoll_event* epev, int count)
         case MyEvent::FILEFD:
         default:
 #if DEBUG_ERROR
-            printf("get sock,file... event\n");
+            MyDebugPrint("get sock,file... event\n");
 #endif
             this->DelEvent(event);
             m_ev_recv.AddTail(event);
@@ -249,13 +255,70 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
     }
 }
 ////////////////////////////////////////////////////
-/// thread virtual method (do nothing)
-void MyApp::Run()
-{}
+/// thread virtual method (use msg config our server)
+typedef struct my_config_t
+{
+#if 0
+    mqd_t msg_queue;
+    std::string msg_queue_name;
+    char buf[10];
+    my_config_t()
+    {
+        msg_queue = 0;
+        msg_queue_name = "my_frame_msg_queue";
+        memset(buf,0,sizeof(buf));
+    }
+#else
+    char buf[10];
+    key_t key_id;
+    typedef struct msgstru_t
+    {
+        long msgtype;
+        char msgtext[1024];
+    }msgstru_t;
+    msgstru_t msgstru;
+#endif
+}my_config_t;
+static my_config_t g_config;
+
 void MyApp::OnInit()
-{}
+{
+#if 0
+    g_config.msg_queue = mq_open(" ",O_RDWR | O_CREAT);
+    perror("mq_open");
+    assert(g_config.msg_queue != -1);
+#else // use system V
+    g_config.key_id = msgget(MSG_KEY,IPC_CREAT);
+    assert(g_config.key_id != -1);
+#endif
+}
+void MyApp::Run()
+{
+#if 0
+    if(!mq_receive(g_config.msg_queue, g_config.buf, sizeof(g_config.buf),NULL))
+    {
+        printf("%s\n",g_config.buf);
+        memset(g_config.buf,0,sizeof(g_config.buf));
+    }
+#else
+    int res = msgrcv(g_config.key_id,(void*)&g_config.msgstru,(size_t)sizeof(g_config.msgstru),0,0);
+    perror("msgrcv");
+    assert(res != -1);
+    // TODO...
+
+    printf("%s\n",g_config.msgstru.msgtext);
+#endif
+}
 void MyApp::OnExit()
-{}
+{
+#if 0
+    if(g_config.msg_queue != 0)
+        mq_close(g_config.msg_queue);
+    mq_unlink(g_config.msg_queue_name.c_str());
+#else
+    msgctl(g_config.key_id,IPC_RMID,0);
+#endif
+}
 ////////////////////////////////////////////////////// test func
 void TestRun()
 {

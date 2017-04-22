@@ -80,7 +80,9 @@ MyTcpSocket::MyTcpSocket(const MyTcpSocket& other)
 }
 
 MyTcpSocket::~MyTcpSocket()
-{}
+{
+    close(m_sock);
+}
 
 std::string MyTcpSocket::GetIp()
 {

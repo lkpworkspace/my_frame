@@ -3,7 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -lpthread -ldl
+LIBS += -lpthread -ldl -lrt
 QMAKE_CXXFLAGS += -fno-stack-protector
 
 SOURCES += main.cpp \
@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     3rd_src/Sqlite3/sqlite3.c \
     MySqlite3.cpp \
     MyTFTP.cpp \
-    MyKeyEvent.cpp
+    MyKeyEvent.cpp \
+    MyNormalEvent.cpp
 
 HEADERS += \
     Common.h \
@@ -50,4 +51,8 @@ HEADERS += \
     3rd_src/Sqlite3/sqlite3.h \
     MySqlite3.h \
     MyTFTP.h \
-    MyKeyEvent.h
+    MyKeyEvent.h \
+    3rd_src/Sqlite3/sqlite3ext.h \
+    MyNormalEvent.h
+
+DISTFILES +=

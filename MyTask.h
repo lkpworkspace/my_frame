@@ -6,7 +6,7 @@
 #include <semaphore.h>
 
 namespace my_master {
-#define MSG_LEN 1
+
 class MyTask : public my_master::MyThread, public my_master::MyEvent
 {
     friend class MyApp;

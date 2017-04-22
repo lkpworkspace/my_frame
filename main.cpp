@@ -5,6 +5,7 @@
 #include "MySqlite3.h"
 #include "MyUdp.h"
 #include "MyTFTP.h"
+#include "MyNormalEvent.h"
 
 using namespace my_master;
 //#define TEST
@@ -86,9 +87,7 @@ class MyRecv : public MyTcpSocket
 public:
     MyRecv(int fd, sockaddr_in addr)
         :MyTcpSocket(fd,addr)
-    {
-        Common::SetNonblock(fd,true);
-    }
+    {}
 
     void* CallBackFunc(MyEvent *ev)
     {
@@ -155,6 +154,18 @@ public:
     }
 };
 
+class Normal : public MyNormalEvent
+{
+public:
+    void* CallBackFunc(MyEvent *ev)
+    {
+        // TODO...
+        printf("normal task worked...\n");
+
+        MyNormalEvent::CallBackFunc(ev);
+    }
+};
+
 class AllEv : public MyAllEvent
 {
 public:
@@ -199,8 +210,12 @@ public:
                 MyApp::theApp->AddEvent(ev);
             }
             else
+            {
+                delete sock;
                 printf("client quit\n");
+            }
         }
+#if 0
         if(ev->GetClassType() == MyEvent::CLASS_TYPE::MOUSE)
         {
             MyMouseEvent* e = (MyMouseEvent*)ev;
@@ -222,6 +237,7 @@ public:
 
             MyApp::theApp->AddEvent(ev);
         }
+#endif
         return true;
     }
 };
@@ -240,7 +256,7 @@ int main()
 //    MyTcpServer *server1 = new MyTcpServer("",8888);
 //    server1->Bind();
 //    server1->Listen(10);
-//    server1->SetNonblock(true);
+//    server1->SetNonblock(true); // it's must invoke
 //    app.AddEvent(server1);
 
     // udp test
@@ -251,7 +267,7 @@ int main()
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
-#if 1 // MyTFTP client
+#if 0 // MyTFTP client
     // MyTFTP test
     MyTFTP* tftp = new MyTFTP("",5555,true);
     tftp->SetRootDir("./");
@@ -281,6 +297,22 @@ int main()
     tftp->Bind();
     app.AddEvent(tftp);
 #endif
+
+#if 1  // test MyNormalEvent
+    Normal *normal = new Normal();
+    std::thread thr([&](){
+        char ch;
+        while((ch = getchar()) != 'q')
+        {
+            printf("thread work...\n");
+            normal->Work();
+        }
+    });
+    thr.detach();
+#endif
+
+
+
     // ev procees
     AllEv* widget = new AllEv;
 

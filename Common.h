@@ -43,6 +43,11 @@
 #define DEBUG_ERROR 1
 #endif
 
+// system V (msg key id)
+#define MSG_KEY 1024
+
+#define MSG_LEN 1
+
 class Common
 {
 public:
