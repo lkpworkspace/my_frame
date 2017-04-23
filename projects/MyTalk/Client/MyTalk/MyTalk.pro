@@ -50,7 +50,8 @@ SOURCES += MyMainWidget.cpp \
     ../../../../MyTFTP.cpp \
     ../../../../MyKeyEvent.cpp \
     ../../../../MyNormalEvent.cpp \
-    main.cpp
+    main.cpp \
+    MyTalkClient.cpp
 
 HEADERS += MyMainWidget.h \
     ../../../../Common.h \
@@ -77,4 +78,5 @@ HEADERS += MyMainWidget.h \
     ../../../../MyTFTP.h \
     ../../../../MyKeyEvent.h \
     ../../../../3rd_src/Sqlite3/sqlite3ext.h \
-    ../../../../MyNormalEvent.h
+    ../../../../MyNormalEvent.h \
+    MyTalkClient.h

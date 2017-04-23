@@ -67,6 +67,7 @@ public:
     void SetIP(std::string ip);
     void SetPort(unsigned short port);
     void SetIpAndPort(std::string ip, unsigned short port);
+    void SetBoardAddr(unsigned short port);
 
     MyAddrInfo& operator=(MyAddrInfo& other);
     int GetData(char** buf);

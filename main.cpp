@@ -10,76 +10,7 @@
 using namespace my_master;
 //#define TEST
 
-#ifdef TEST
-class A : public MyNode
-{
-public:
-    A(int a){
-        this->a = a;
-    }
-    int a;
-};
-
-int main()
-{
-#if 0
-    MyList list;
-    list.AddTail(new A(10));
-
-    A* begin = (A*)list.Begin();
-    A* end = (A*)list.End();
-    printf("begin pointer %p\n",begin);
-    printf("end pointer %p\n",end);
-    while(begin != end)
-    {
-        std::cout << ((A*)begin)->a << std::endl;
-        printf("begin pointer %p\n",begin);
-        begin = (A*)(begin->next);
-        printf("begin pointer %p\n",begin);
-    }
-    std::getchar();
-#endif
-#if 1
-    MySqlite3 db("mydb.db");
-    db.Open();
-    //db.ExecSql("create table test(id, name, age)");
-#if 0
-    for(int i = 0; i < 10; ++i)
-        db.ExecSql("insert into test values(10,'haha',20)");
-#else
-    db.ExecSql("select * from test");
-#if 0
-    while(true)
-    {
-        std::vector<std::string> *row = db.GetRow();
-        if(row)
-        {
-            for(int i = 0; i < row->size(); ++i)
-            {
-                std::cout <<(*row)[i] << " ";
-                //(*db.GetColumnName())[i];
-            }
-            std::cout << std::endl;
-        }
-        else
-        {
-            std::cout << "no data"  << std::endl;
-            break;
-        }
-    }
-    for(int i = 0; i < db.GetColCount(); ++i)
-    {
-        std::cout << (*db.GetColumnName())[i] << std::endl;
-    }
-#else
-    std::cout << db.GetValue(0,2);
-#endif
-#endif
-    db.Close();
-#endif
-    return 0;
-}
-#else
+#ifndef TEST
 #if 1
 // server
 class MyRecv : public MyTcpSocket
@@ -163,6 +94,7 @@ public:
         printf("normal task worked...\n");
 
         MyNormalEvent::CallBackFunc(ev);
+        return NULL;
     }
 };
 
@@ -214,8 +146,8 @@ public:
                 delete sock;
                 printf("client quit\n");
             }
+            return true;
         }
-#if 0
         if(ev->GetClassType() == MyEvent::CLASS_TYPE::MOUSE)
         {
             MyMouseEvent* e = (MyMouseEvent*)ev;
@@ -237,7 +169,6 @@ public:
 
             MyApp::theApp->AddEvent(ev);
         }
-#endif
         return true;
     }
 };
@@ -334,4 +265,76 @@ int main(int argc, char *argv[])
     return 0;
 }
 #endif
+#endif
+
+
+#ifdef TEST
+class A : public MyNode
+{
+public:
+    A(int a){
+        this->a = a;
+    }
+    int a;
+};
+
+int main()
+{
+#if 0
+    MyList list;
+    list.AddTail(new A(10));
+
+    A* begin = (A*)list.Begin();
+    A* end = (A*)list.End();
+    printf("begin pointer %p\n",begin);
+    printf("end pointer %p\n",end);
+    while(begin != end)
+    {
+        std::cout << ((A*)begin)->a << std::endl;
+        printf("begin pointer %p\n",begin);
+        begin = (A*)(begin->next);
+        printf("begin pointer %p\n",begin);
+    }
+    std::getchar();
+#endif
+#if 1
+    MySqlite3 db("mydb.db");
+    db.Open();
+    //db.ExecSql("create table test(id, name, age)");
+#if 0
+    for(int i = 0; i < 10; ++i)
+        db.ExecSql("insert into test values(10,'haha',20)");
+#else
+    db.ExecSql("select * from test");
+#if 0
+    while(true)
+    {
+        std::vector<std::string> *row = db.GetRow();
+        if(row)
+        {
+            for(int i = 0; i < row->size(); ++i)
+            {
+                std::cout <<(*row)[i] << " ";
+                //(*db.GetColumnName())[i];
+            }
+            std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "no data"  << std::endl;
+            break;
+        }
+    }
+    for(int i = 0; i < db.GetColCount(); ++i)
+    {
+        std::cout << (*db.GetColumnName())[i] << std::endl;
+    }
+#else
+    std::cout << db.GetValue(0,2);
+#endif
+#endif
+    db.Close();
+#endif
+    return 0;
+}
 #endif

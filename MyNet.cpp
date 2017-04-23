@@ -212,6 +212,13 @@ void MyAddrInfo::SetIpAndPort(std::string ip, unsigned short port)
     SetPort(port);
 }
 
+void MyAddrInfo::SetBoardAddr(unsigned short port)
+{
+    m_remote_addr.sin_family=AF_INET;
+    m_remote_addr.sin_addr.s_addr=htonl(INADDR_BROADCAST);
+    m_remote_addr.sin_port=htons(port);
+}
+
 
 
 

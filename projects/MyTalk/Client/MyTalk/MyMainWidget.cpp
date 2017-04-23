@@ -7,13 +7,16 @@ MyMainWidget::MyMainWidget(QWidget *parent) :
     ui->setupUi(this);
     m_normal = new MyNormalEvent();
 
-    connect(ui->pushButton,SIGNAL(clicked(bool)),this,SLOT(PushBegin()));
+    connect(ui->pushButton_send,SIGNAL(clicked(bool)),this,SLOT(PushBegin()));
+    connect(ui->pushButton_close,SIGNAL(clicked(bool)),this,SLOT(hide()));
 }
 
 MyMainWidget::~MyMainWidget()
 {
     delete ui;
 }
+
+
 
 void MyMainWidget::PushBegin()
 {

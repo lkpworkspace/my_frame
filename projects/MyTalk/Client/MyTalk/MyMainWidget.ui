@@ -6,24 +6,63 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>651</width>
+    <height>556</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MyMainWidget</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="pushButton_send">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>170</y>
-     <width>221</width>
-     <height>91</height>
+     <x>360</x>
+     <y>510</y>
+     <width>131</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>begin</string>
+    <string>send</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_close">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>510</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>close</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_talk_text">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>461</width>
+     <height>331</height>
+    </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::ActionsContextMenu</enum>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_send_text">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>410</y>
+     <width>461</width>
+     <height>81</height>
+    </rect>
    </property>
   </widget>
  </widget>
