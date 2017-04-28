@@ -29,7 +29,7 @@ public:
 
 public:
     MyEvent();
-    ~MyEvent();
+    virtual ~MyEvent();
     virtual int GetEventFd() = 0;
     virtual EVENT_TYPE GetEventType() = 0;     // maybe not most need
     virtual CLASS_TYPE GetClassType() = 0;

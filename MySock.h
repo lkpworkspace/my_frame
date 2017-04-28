@@ -21,7 +21,7 @@ class MySock : public MyEvent
 public:
 public:
     MySock(std::string ip,uint16_t port,int type, bool isServer = true);
-    ~MySock(){Close();}
+    virtual ~MySock(){Close();}
     //////////////////////////////////// override MyEvent method
     int GetEventFd(){ return m_sock; }
     EVENT_TYPE GetEventType(){ return EVENT_TYPE::SOCKFD; }

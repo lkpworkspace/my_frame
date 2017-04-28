@@ -9,7 +9,7 @@ class MyTcpServer : public my_master::MySock
 {
 public:
     MyTcpServer(std::string ip,uint16_t port);
-    ~MyTcpServer();
+    virtual ~MyTcpServer();
 
     int Listen(int backlog = 10);
     int Accpet(struct sockaddr_in *addr);
@@ -23,7 +23,7 @@ class MyTcpClient : public my_master::MySock
 {
 public:
     MyTcpClient(std::string ip,uint16_t port);
-    ~MyTcpClient();
+    virtual ~MyTcpClient();
 protected:
     /////////////////////////////////
     /// virtual method
@@ -39,7 +39,7 @@ class MyTcpSocket : public my_master::MyEvent
 public:
     MyTcpSocket(int fd, sockaddr_in addr);
     MyTcpSocket(const MyTcpSocket& other);
-    ~MyTcpSocket();
+    virtual ~MyTcpSocket();
     ////////////////////////////////////
     /// override MyEvent method
     int GetEventFd(){ return m_sock; }

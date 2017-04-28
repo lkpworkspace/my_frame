@@ -19,9 +19,12 @@ MyAddrInfo MyUdp::RecvData(char** buf, int& len)
 
 int MyUdp::Write(MyAddrInfo& info,char*buf,int len)
 {
+    m_mutex.lock();
     socklen_t addr_len = sizeof(sockaddr_in);
     sockaddr_in addr = info.GetAddr();
-    return sendto(m_sock,buf,len,0,(sockaddr*)&addr,addr_len);
+    int res = sendto(m_sock,buf,len,0,(sockaddr*)&addr,addr_len);
+    m_mutex.unlock();
+    return res;
 }
 
 int MyUdp::SetBoardCast()
@@ -77,33 +80,65 @@ uint8_t MySelfProtocol::HandleChar(int offset, char* buf, int len)
     return data_len;
 }
 
+std::string MySelfProtocol::HandleString(int offset, char* buf, int len)
+{
+    char temp_buf[MYPROTO_MAX_BUF_SIZE] = {0};
+    int str_len = strlen(&buf[offset]);
+    memcpy(temp_buf,&buf[offset],str_len);
+    return std::string(temp_buf);
+}
+
+data_t MySelfProtocol::HandleData(int offset, char* buf, int len)
+{
+    data_t my_data;
+
+    my_data.len = HandleLen(offset,buf,len);
+    memcpy(my_data.buf,&buf[offset + sizeof(uint16_t)],my_data.len);
+    return my_data;
+}
+
 ////////////////////////////////////////////////
 /// build
-void MySelfProtocol::BuildHeader(uint16_t head, char* buf, int len)
+int MySelfProtocol::BuildHeader(uint16_t head, char* buf, int len)
 {
     memset(buf,0,len);
     memcpy(buf,&head,sizeof(head));
+    return sizeof(head);
 }
 
-bool MySelfProtocol::BuildLen(uint16_t datalen, int offset, char* buf, int len)
+int MySelfProtocol::BuildLen(uint16_t datalen, int offset, char* buf, int len)
 {
     if(offset + sizeof(datalen) > len)
-        return false;
+        return 0;
     memcpy(&buf[offset],&datalen,sizeof(datalen));
-    return true;
+    return sizeof(datalen);
 }
 
-bool MySelfProtocol::BuildChar(uint8_t ch,int offset, char* buf, int len)
+int MySelfProtocol::BuildChar(uint8_t ch,int offset, char* buf, int len)
 {
     if(offset + sizeof(ch) > len)
-        return false;
+        return 0;
     memcpy(&buf[offset],&ch,sizeof(ch));
-    return true;
+    return sizeof(ch);
 }
 
+int MySelfProtocol::BuildString(const char* str, int offset, char* buf, int len)
+{
+    int str_len = strlen(str);
+    if(str_len + 1 + offset > len)
+        return 0;
+    memcpy(&buf[offset],str,str_len);
+    return (str_len + 1);
+}
 
-
-
+int MySelfProtocol::BuildData(const char* data, int data_len, int offset, char* buf, int len)
+{
+    int len_offset = BuildLen(data_len,offset,buf,len);
+    if(data_len + offset + len_offset > len)
+        return 0;
+    memcpy(&buf[offset + len_offset],data,data_len);
+    return data_len;
+}
 
 
 

@@ -6,32 +6,34 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>651</width>
-    <height>556</height>
+    <width>400</width>
+    <height>800</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>400</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>MyMainWidget</string>
   </property>
-  <widget class="QPushButton" name="pushButton_send">
+  <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>510</y>
-     <width>131</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>send</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_close">
-   <property name="geometry">
-    <rect>
-     <x>510</x>
-     <y>510</y>
-     <width>131</width>
+     <x>270</x>
+     <y>750</y>
+     <width>121</width>
      <height>41</height>
     </rect>
    </property>
@@ -39,31 +41,42 @@
     <string>close</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_talk_text">
+  <widget class="QLabel" name="label_photo">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>60</y>
-     <width>461</width>
-     <height>331</height>
+     <x>20</x>
+     <y>30</y>
+     <width>67</width>
+     <height>71</height>
     </rect>
    </property>
-   <property name="contextMenuPolicy">
-    <enum>Qt::ActionsContextMenu</enum>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
+   <property name="text">
+    <string>my_name</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_send_text">
+  <widget class="QLabel" name="label_info">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>410</y>
-     <width>461</width>
-     <height>81</height>
+     <x>130</x>
+     <y>50</y>
+     <width>241</width>
+     <height>51</height>
     </rect>
    </property>
+   <property name="text">
+    <string>my_info</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>120</y>
+     <width>401</width>
+     <height>611</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="vLayout"/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

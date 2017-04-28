@@ -69,7 +69,7 @@ int MySqlite3::ExecSql(const std::string sql)
 
 std::vector<std::string>* MySqlite3::GetRow()
 {
-    if(m_result.size() < m_cur_index)
+    if(m_result.size() <= m_cur_index)
     {
         return nullptr;
     }

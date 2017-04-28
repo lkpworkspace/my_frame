@@ -7,7 +7,7 @@ class MyMouseEvent : public my_master::MyEvent
 {
 public:
     MyMouseEvent();
-    ~MyMouseEvent();
+    virtual ~MyMouseEvent();
     ///////////////////////////////////////
     /// override myevent method
     int GetEventFd(){return m_fd;}

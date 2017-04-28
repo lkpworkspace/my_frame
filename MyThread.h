@@ -9,7 +9,7 @@ class MyThread
 {
 public:
     MyThread();
-    ~MyThread();
+    virtual ~MyThread();
     virtual void Run() = 0;
     virtual void OnInit(){m_id = syscall(SYS_gettid);}
     virtual void OnExit(){}

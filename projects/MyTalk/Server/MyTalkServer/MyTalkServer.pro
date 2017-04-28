@@ -29,7 +29,8 @@ SOURCES += \
     ../../../../MyTFTP.cpp \
     ../../../../MyKeyEvent.cpp \
     ../../../../MyNormalEvent.cpp \
-    main.cpp
+    main.cpp \
+    MyTalkServer.cpp
 
 HEADERS += \
     ../../../../Common.h \
@@ -56,4 +57,5 @@ HEADERS += \
     ../../../../MyTFTP.h \
     ../../../../MyKeyEvent.h \
     ../../../../3rd_src/Sqlite3/sqlite3ext.h \
-    ../../../../MyNormalEvent.h
+    ../../../../MyNormalEvent.h \
+    MyTalkServer.h

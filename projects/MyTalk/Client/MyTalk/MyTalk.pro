@@ -22,7 +22,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-FORMS    += MyMainWidget.ui
+FORMS    += MyMainWidget.ui \
+    MyTalkWidget.ui
 
 # add by myself
 INCLUDEPATH += ../../../../
@@ -51,7 +52,11 @@ SOURCES += MyMainWidget.cpp \
     ../../../../MyKeyEvent.cpp \
     ../../../../MyNormalEvent.cpp \
     main.cpp \
-    MyTalkClient.cpp
+    MyTalkClient.cpp \
+    MyTalkWidget.cpp \
+    MyPeopleList.cpp \
+    MyPeopleItem.cpp \
+    MyLogin.cpp
 
 HEADERS += MyMainWidget.h \
     ../../../../Common.h \
@@ -79,4 +84,11 @@ HEADERS += MyMainWidget.h \
     ../../../../MyKeyEvent.h \
     ../../../../3rd_src/Sqlite3/sqlite3ext.h \
     ../../../../MyNormalEvent.h \
-    MyTalkClient.h
+    MyTalkClient.h \
+    MyTalkWidget.h \
+    MyPeopleList.h \
+    MyPeopleItem.h \
+    MyLogin.h
+
+RESOURCES += \
+    myrc.qrc

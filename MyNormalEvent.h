@@ -8,7 +8,7 @@ class MyNormalEvent : public my_master::MyEvent
 {
 public:
     MyNormalEvent();
-    ~MyNormalEvent();
+    virtual ~MyNormalEvent();
     ////////////////////////////////////////////// override MyEvent method
     int GetEventFd(){return m_msgFd[1];}
     EVENT_TYPE GetEventType(){return EVENT_TYPE::FILEFD;}

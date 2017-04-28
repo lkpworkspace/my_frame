@@ -93,9 +93,9 @@ IDE:
 1. 添加MySelfprotcol类
 2. 添加设置udp 广播属性，可以发送广播包
 
-	
-
-
+04月28号
+1. MyUdp Write方法添加mutex互斥量
+2. 设置MyEvent的类以及继承Myevent类的析构函数为虚函数
 
 
 

@@ -19,7 +19,7 @@ public:
     };
 public:
     MyTask();
-    ~MyTask();
+    virtual ~MyTask();
     void Run();    // override
     void OnInit(); // override
     void OnExit(); // override

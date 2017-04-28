@@ -8,7 +8,7 @@ class MyKeyEvent : public my_master::MyEvent
 {
 public:
     MyKeyEvent();
-    ~MyKeyEvent();
+    virtual ~MyKeyEvent();
     /////////////////////////////////////////////////
     /// override MyEvent virtual method
     virtual int GetEventFd(){return m_fd;}
