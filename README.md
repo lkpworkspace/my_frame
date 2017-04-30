@@ -96,7 +96,12 @@ IDE:
 04月28号
 1. MyUdp Write方法添加mutex互斥量
 2. 设置MyEvent的类以及继承Myevent类的析构函数为虚函数
+3. 修复MySqlite3的一个BUG(GetRow判断的bug，修改 < 为 <=)
+4. 编写MyTalk项目， 实现了登录的功能
 
+04月30号
+1. 编写Mytalk项目，实现传输好友的功能; 需要添加选项ip，在线状态 // mark 
+2. 用户登录过程中，服务需要记录用户的ip，并标记在线 //TODO...
 
 
 

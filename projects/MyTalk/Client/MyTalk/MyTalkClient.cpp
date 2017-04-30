@@ -1,4 +1,5 @@
 #include "MyTalkClient.h"
+std::map<std::string, mytalk_friend_t*> MyTalkClient::m_friends;
 std::string MyTalkClient::m_account;
 std::string MyTalkClient::m_password;
 std::mutex MyTalkClient::m_mutex;
@@ -76,6 +77,11 @@ void MyTalkClient::HandleMsg(MyAddrInfo info, char* buf, int len)
     case MYTALK_ACK:
         HandleLogin(buf,len);
         break;
+    case MYTALK_FRIEND:
+        HandleFriend(info,buf,len);
+        break;
+    default:
+        break;
     }
 }
 
@@ -90,6 +96,56 @@ bool MyTalkClient::HandleLogin(char *buf, int len)
     return m_is_ok;
 }
 
+void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
+{
+    int index = 0;
+    std::string account = MySelfProtocol::HandleString(MYTALK_HEAD_SIZE,buf,len);
+    index += (MYTALK_HEAD_SIZE + account.size() + 1);
+    std::string name = MySelfProtocol::HandleString(index,buf, len);
+    index += (name.size() + 1);
+    std::string mark = MySelfProtocol::HandleString(index,buf,len);
+
+    if(m_friends.find(account) != m_friends.end())
+    {
+        // send ack
+        int len = 0;
+        char* buf = BuildAck(0x03,&len);
+        g_udp->Write(info,buf,len);
+        MySelfProtocol::FreeBuf(buf);
+        return;
+    }
+    mytalk_friend_t* myfriend = new mytalk_friend_t;
+    myfriend->account = account;
+    myfriend->name = name;
+    myfriend->mark = mark;
+    myfriend->info = info;
+    m_friends.insert(std::make_pair(account,myfriend));
+#if 1
+    printf("get friend %s,%s,%s\n",
+           account.c_str(),
+           name.c_str(),
+           mark.c_str());
+#endif
+    // notify ui update myfriend
+    // TODO...
+
+    // send ack
+    int lenx = 0;
+    char* bufx = BuildAck(0x02,&lenx);
+    g_udp->Write(m_server_info,bufx,lenx);
+    MySelfProtocol::FreeBuf(bufx);
+}
+
 ///////////////////////////////////////////////////////
 /// build msg
-
+///
+char* MyTalkClient::BuildAck(char num, int* outlen)
+{
+    int len = 0;
+    int index = 0;
+    char* buf = MySelfProtocol::GetBuf(&len);
+    index += MySelfProtocol::BuildHeader(MYTALK_ACK,buf,len);
+    index += MySelfProtocol::BuildChar(num,index,buf,len);
+    *outlen = index;
+    return buf;
+}
