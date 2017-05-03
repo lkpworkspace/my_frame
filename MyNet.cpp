@@ -155,9 +155,16 @@ void MyAddrInfo::Init()
 MyAddrInfo& MyAddrInfo::operator=(MyAddrInfo& other)
 {
     if(m_buf != nullptr)
+    {
         delete[] m_buf;
-    m_buf = new char[other.m_len];
-    memcpy(m_buf,other.m_buf,m_len);
+        m_buf = nullptr;
+    }
+    if(other.m_buf != nullptr)
+    {
+        m_buf = new char[other.m_len];
+        memcpy(m_buf,other.m_buf,m_len);
+    }
+
     memcpy(&m_remote_addr,&other.m_remote_addr,sizeof(struct sockaddr_in));
     m_len = other.m_len;
     return *this;

@@ -25,7 +25,7 @@ void MyMainWidget::PushBegin()
 {
     m_normal->Work();
     MyAddrInfo info;
-    MyTalkWidget* x = new MyTalkWidget(info,"kpli","easy coding on linux");
+    MyTalkWidget* x = new MyTalkWidget(info,"kpli","kpli","easy coding on linux");
     x->show();
 }
 

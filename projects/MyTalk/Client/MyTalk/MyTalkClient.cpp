@@ -67,6 +67,14 @@ bool MyTalkClient::CheckLogin()
     return isok;
 }
 
+int MyTalkClient::SendTalkMsg(std::string to, std::string msg)
+{
+    int len = 0;
+    char* buf = BuildTalkMsg(m_account,to,msg,&len);
+    g_udp->Write(m_server_info,buf,len);
+    return len;
+}
+
 ///////////////////////////////////////////////////////
 /// handle msg
 void MyTalkClient::HandleMsg(MyAddrInfo info, char* buf, int len)
@@ -104,6 +112,12 @@ void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
     std::string name = MySelfProtocol::HandleString(index,buf, len);
     index += (name.size() + 1);
     std::string mark = MySelfProtocol::HandleString(index,buf,len);
+    index += (mark.size() + 1);
+    uint8_t online = MySelfProtocol::HandleChar(index,buf,len);
+    index += 1;
+    std::string ip = MySelfProtocol::HandleString(index,buf,len);
+    index += (ip.size() + 1);
+    uint16_t port = MySelfProtocol::HandleLen(index,buf,len);
 
     if(m_friends.find(account) != m_friends.end())
     {
@@ -118,13 +132,21 @@ void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
     myfriend->account = account;
     myfriend->name = name;
     myfriend->mark = mark;
-    myfriend->info = info;
+    //myfriend->info = info;
+    if(online == MYTALK_ONLINE)
+    {
+        myfriend->online = MYTALK_ONLINE;
+        myfriend->info.SetIP(ip);
+        myfriend->info.SetPort(port);
+    }
     m_friends.insert(std::make_pair(account,myfriend));
 #if 1
-    printf("get friend %s,%s,%s\n",
+    printf("get friend %s,%s,%s,%s:%d\n",
            account.c_str(),
            name.c_str(),
-           mark.c_str());
+           mark.c_str(),
+           myfriend->info.GetIp().c_str(),
+           myfriend->info.GetPort());
 #endif
     // notify ui update myfriend
     // TODO...
@@ -134,6 +156,21 @@ void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
     char* bufx = BuildAck(0x02,&lenx);
     g_udp->Write(m_server_info,bufx,lenx);
     MySelfProtocol::FreeBuf(bufx);
+}
+
+void MyTalkClient::HandleTalkMsg(MyAddrInfo info, char* buf, int len)
+{
+    // TODO...
+    int index = MYTALK_HEAD_SIZE;
+    std::string src = MySelfProtocol::HandleString(index,buf,len);
+    index += (src.size() + 1);
+    std::string dst = MySelfProtocol::HandleString(index,buf,len);
+    index += (dst.size() + 1);
+    std::string msg = MySelfProtocol::HandleString(index,buf,len);
+    index += (msg.size() + 1);
+#if 1
+    MyDebugPrint("%s : %s\n",src.c_str(),msg.c_str());
+#endif
 }
 
 ///////////////////////////////////////////////////////
@@ -146,6 +183,23 @@ char* MyTalkClient::BuildAck(char num, int* outlen)
     char* buf = MySelfProtocol::GetBuf(&len);
     index += MySelfProtocol::BuildHeader(MYTALK_ACK,buf,len);
     index += MySelfProtocol::BuildChar(num,index,buf,len);
+    *outlen = index;
+    return buf;
+}
+
+char* MyTalkClient::BuildTalkMsg(std::string src,
+                                 std::string dst,
+                                 std::string msg,
+                                 int* outlen)
+{
+    int len = 0;
+    int index = 0;
+    char* buf = MySelfProtocol::GetBuf(&len);
+
+    index += MySelfProtocol::BuildHeader(MTTALK_MSG,buf,len);
+    index += MySelfProtocol::BuildString(src.c_str(),index,buf,len);
+    index += MySelfProtocol::BuildString(dst.c_str(),index,buf,len);
+    index += MySelfProtocol::BuildString(msg.c_str(),index,buf,len);
     *outlen = index;
     return buf;
 }

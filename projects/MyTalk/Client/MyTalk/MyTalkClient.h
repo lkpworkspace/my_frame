@@ -19,11 +19,19 @@ extern MyUdp* g_udp;
  */
 #define MYTALK_ACK 0x0002
 #define MYTALK_FRIEND 0x0003
+#define MTTALK_MSG 0x0004
+
+#define MYTALK_ONLINE 0x01
+#define MYTALK_OFFLINE 0x00
 typedef struct mytalk_friend_t
 {
     std::string account;
     std::string name;
     std::string mark;
+    /*  0x00 offline;
+     *  0x01 online;
+     */
+    uint8_t online;
     MyAddrInfo info;
 }mytalk_friend_t;
 
@@ -37,16 +45,19 @@ public:
     static void Init();
     static void SendLogin(std::string account, std::string password);
     static bool CheckLogin();
+    static int SendTalkMsg(std::string to, std::string msg);
     ///////////////////////////////////////
     /// handle method
     /// TODO...
     static void HandleMsg(MyAddrInfo info, char* buf, int len);
     static bool HandleLogin(char* buf, int len);
     static void HandleFriend(MyAddrInfo info,char* buf, int len);
+    static void HandleTalkMsg(MyAddrInfo info, char* buf, int len); // TODO...
     ///////////////////////////////////////
     /// build method
     /// TODO...
     static char* BuildAck(char num, int *outlen);
+    static char* BuildTalkMsg(std::string src, std::string dst, std::string msg, int* outlen);
 private:
     static std::map<std::string, mytalk_friend_t*> m_friends;
     static std::string m_account;

@@ -6,7 +6,7 @@ MyPeopleItem::MyPeopleItem(QWidget *parent) :
     QWidget(parent)
 {
     initUi();
-    m_talk = new MyTalkWidget(m_info, "kpli", "easy coding on linux");
+    m_talk = new MyTalkWidget(m_info, "kpli", "kpli","easy coding on linux");
     m_talk->hide();
     headPath="../photo.png";
 }

@@ -98,7 +98,11 @@ select * from member;
 
 select  member.* from member, friend where member.account=friend.friend and friend.account='kpli';
 
+insert into member values('kpli','kpli','123456','easy coding on linux');
 insert into member values('xiaoming','xiaoming','123456','easy coding on linux');
+insert into member values('xiaohong','xiaohong','123456','easy coding on linux');
+insert into friend values('kpli','root','xiaohong');
+insert into friend values('xiaohong','root','kpli');
 insert into friend values('kpli','root','xiaoming');
 insert into friend values('xiaoming','root','kpli');
 #endif

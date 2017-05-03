@@ -4,7 +4,7 @@
 #include "MyTalkClient.h"
 using namespace my_master;
 
-MyTalkWidget::MyTalkWidget(MyAddrInfo info, std::string name, std::string mark, QWidget *parent) :
+MyTalkWidget::MyTalkWidget(MyAddrInfo info, std::string name, std::string account, std::string mark, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MyTalkWidget)
 {
@@ -16,6 +16,7 @@ MyTalkWidget::MyTalkWidget(MyAddrInfo info, std::string name, std::string mark, 
     m_info = info;
     m_name = name;
     m_mark = mark;
+    m_account = account;
     InitWindow();
 }
 
@@ -45,8 +46,8 @@ void MyTalkWidget::SendMsg()
         ui->textEdit_text->setAlignment(Qt::AlignRight);
         ui->textEdit_text->append(msg.c_str());
         ui->textEdit_send_text->clear();
-#if 0// TODO send msg to server
-        MyTalkClient::SendMsg(...);
+#if 1// TODO send msg to server
+        MyTalkClient::SendTalkMsg(m_name,msg);
 #endif
     }
 }

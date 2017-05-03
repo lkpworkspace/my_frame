@@ -12,7 +12,7 @@ bool MyTalkServer::Event(MyEvent* ev)
     if(ev->GetClassType() == MyEvent::UDPCLASS)
     {
 #if 0
-        printf("get udp msg\n");
+        MyDebugPrint("get udp msg\n");
 #endif
         MyUdp* udp = (MyUdp*)ev;
         char* buf;
@@ -23,7 +23,8 @@ bool MyTalkServer::Event(MyEvent* ev)
     }
     return false;
 }
-
+////////////////////////////////////////////////////////////////////
+/// handle msg
 void MyTalkServer::HandleMsg(MyAddrInfo info,char* buf, int len)
 {
     uint16_t header = MySelfProtocol::HandleHeader(buf);
@@ -35,16 +36,21 @@ void MyTalkServer::HandleMsg(MyAddrInfo info,char* buf, int len)
     case MYTALK_ACK:
         HandleAck(info,buf,len);
         break;
+    case MTTALK_MSG:
+        HandleTalkMsg(info,buf,len);
+        break;
     default:
         break;
     }
 }
 
+void MyTalkServer::HandleTalkMsg(MyAddrInfo info,char* buf, int len)
+{
+
+}
+
 void MyTalkServer::HandleLogin(MyAddrInfo info,char* buf, int len)
 {
-#if 1
-    printf("get login msg\n");
-#endif
     // handle info
     std::string account;
     std::string password;
@@ -53,7 +59,7 @@ void MyTalkServer::HandleLogin(MyAddrInfo info,char* buf, int len)
     index += MYTALK_HEAD_SIZE + account.size() + 1;
     password = MySelfProtocol::HandleString(index,buf,len);
 #if 1
-    printf("get member %s,%s\n",account.c_str(),password.c_str());
+    MyDebugPrint("get member %s,%s\n",account.c_str(),password.c_str());
 #endif
     // check is right
     std::string sql;
@@ -69,7 +75,7 @@ void MyTalkServer::HandleLogin(MyAddrInfo info,char* buf, int len)
     if(row == nullptr)
     {
 #if 1
-        printf("no member...\n");
+        MyDebugPrint("no member...\n");
 #endif
         int lenx = 0;
         char* bufx = BuildAck(0x00,&lenx);
@@ -78,8 +84,23 @@ void MyTalkServer::HandleLogin(MyAddrInfo info,char* buf, int len)
     }else
     {
 #if 1
-        printf("right member\n");
+        MyDebugPrint("right member\n");
 #endif
+        // add to online map
+        if(m_mem_status.find(account) == m_mem_status.end())
+        {
+            member_t mem;
+            mem.account = account;
+            //mem.name =
+            mem.online = 1;
+            mem.info = info;
+            m_mem_status.insert(std::make_pair(account,mem));
+        }else
+        {
+            // modify online info
+            // TODO...
+        }
+        // send ack
         int lenx = 0;
         char* bufx = BuildAck(0x01,&lenx);
         g_udp->Write(info,bufx,lenx);
@@ -93,18 +114,10 @@ void MyTalkServer::HandleLogin(MyAddrInfo info,char* buf, int len)
         for(;begin != end; ++begin)
         {
             mytalk_friend_t b = (mytalk_friend_t)*begin;
-#if 1
-            printf("get friend %s,%s,%s\n",
-                   b.account.c_str(),
-                   b.name.c_str(),
-                   b.mark.c_str());
-#endif
             char* bufy = BuildFriend(b.account,b.name,b.mark,&leny);
             g_udp->Write(info,bufy,leny);
-
             // bad code
             //sem_wait(&m_sem);          // should not block, wtf...
-
             MySelfProtocol::FreeBuf(bufy);
         }
     }
@@ -113,7 +126,7 @@ void MyTalkServer::HandleLogin(MyAddrInfo info,char* buf, int len)
 void MyTalkServer::HandleAck(MyAddrInfo info, char* buf, int len)
 {
 #if 1
-    printf("handle ack msg\n");
+    MyDebugPrint("handle ack msg\n");
 #endif
     uint8_t ack_num = MySelfProtocol::HandleChar(MYTALK_HEAD_SIZE,buf,len);
     switch(ack_num)
@@ -151,6 +164,14 @@ char* MyTalkServer::BuildFriend(std::string account,
     index += MySelfProtocol::BuildString(account.c_str(),index,buf,len);
     index += MySelfProtocol::BuildString(name.c_str(),index,buf,len);
     index += MySelfProtocol::BuildString(mark.c_str(),index,buf,len);
+    // build online status
+    std::map<std::string,member_t>::iterator it = m_mem_status.find(account);
+    if(it != m_mem_status.end())
+    {
+        index += MySelfProtocol::BuildChar(it->second.online,index,buf,len);
+        index += MySelfProtocol::BuildString(it->second.info.GetIp().c_str(),index,buf,len);
+        index += MySelfProtocol::BuildLen(it->second.info.GetPort(),index,buf,len);
+    }
     *outlen = index;
     return buf;
 }
@@ -173,6 +194,29 @@ std::vector<mytalk_friend_t> MyTalkServer::GetFriends(std::string account)
         myfriend.account = begin[0];
         myfriend.name = begin[1];
         myfriend.mark = begin[3];
+#if 1
+            MyDebugPrint("get friend %s,%s,%s\n",
+                   myfriend.account.c_str(),
+                   myfriend.name.c_str(),
+                   myfriend.mark.c_str());
+#endif
+        // is online
+        std::map<std::string,member_t>::iterator it = m_mem_status.find(myfriend.account);
+        if(it != m_mem_status.end())
+        {
+//            myfriend.online = it->second.online;
+//            myfriend.ip = it->second.info.GetIp();
+//            myfriend.port = it->second.info.GetPort();
+#if 1
+            MyDebugPrint("online friend %d\tip %s\tport %d\n",
+                         it->second.online,
+                         it->second.info.GetIp().c_str(),
+                         it->second.info.GetPort());
+#endif
+        }else
+        {
+            //myfriend.online = MYTALK_OFFLINE;
+        }
         friends.push_back(myfriend);
     }
     return friends;

@@ -4,6 +4,7 @@
 #include "MyUdp.h"
 #include "MySqlite3.h"
 #include <semaphore.h>
+#include <map>
 
 using namespace my_master;
 #define MYTALK_HEAD_SIZE 2
@@ -17,6 +18,10 @@ using namespace my_master;
  */
 #define MYTALK_ACK 0x0002
 #define MYTALK_FRIEND 0x0003
+#define MTTALK_MSG 0x0004
+
+#define MYTALK_ONLINE 0x01
+#define MYTALK_OFFLINE 0x00
 typedef struct mytalk_friend_t
 {
     std::string account;
@@ -27,6 +32,15 @@ typedef struct mytalk_friend_t
 class MyTalkServer : public my_master::MyAllEvent
 {
 public:
+    typedef struct member_t
+    {
+        std::string account;
+        std::string name;
+        std::string mark;
+        uint8_t online;
+        MyAddrInfo info;
+    }member_t;
+
     MyTalkServer();
 
     virtual bool Event(MyEvent*);
@@ -41,10 +55,12 @@ public:
     //////////////////////////////////////
     /// handle msg
     void HandleMsg(MyAddrInfo info,char* buf, int len);
+    void HandleTalkMsg(MyAddrInfo info,char* buf, int len);
     void HandleLogin(MyAddrInfo info,char* buf, int len);
     void HandleAck(MyAddrInfo info, char* buf, int len);
 private:
     sem_t m_sem;
+    std::map<std::string,member_t> m_mem_status;
 };
 
 #endif // MYTALKSERVER_H

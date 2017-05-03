@@ -16,6 +16,7 @@ class MyTalkWidget : public QWidget
 public:
     MyTalkWidget(MyAddrInfo info,
                           std::string name,
+                          std::string account,
                           std::string mark,
                           QWidget *parent = 0);
     ~MyTalkWidget();
@@ -32,6 +33,7 @@ private:
     Ui::MyTalkWidget *ui;
 
     MyAddrInfo m_info;
+    std::string m_account;
     std::string m_name;
     std::string m_mark;
 };
