@@ -36,7 +36,7 @@ void MyTalkServer::HandleMsg(MyAddrInfo info,char* buf, int len)
     case MYTALK_ACK:
         HandleAck(info,buf,len);
         break;
-    case MTTALK_MSG:
+    case MYTALK_MSG:
         HandleTalkMsg(info,buf,len);
         break;
     default:
@@ -46,7 +46,28 @@ void MyTalkServer::HandleMsg(MyAddrInfo info,char* buf, int len)
 
 void MyTalkServer::HandleTalkMsg(MyAddrInfo info,char* buf, int len)
 {
-
+#if 1
+    printf("get msg from %s\n",info.GetIp().c_str());
+#endif
+    int index = MYTALK_HEAD_SIZE;
+    std::string src_account = MySelfProtocol::HandleString(index,buf,len);
+    index += (src_account.size() + 1);
+    std::string dst_account = MySelfProtocol::HandleString(index,buf,len);
+    // index += (dst_account.size() + 1);
+    // std::string msg = MySelfProtocol::HandleString(index,buf,len);
+    // is dst account online ?
+    std::map<std::string,member_t>::iterator it = m_mem_status.find(dst_account);
+    if(it != m_mem_status.end())
+    {
+        // send to dst account
+#if 1
+        MyDebugPrint("send to online friend %d\tip %s\tport %d\n",
+                     it->second.online,
+                     it->second.info.GetIp().c_str(),
+                     it->second.info.GetPort());
+#endif
+        g_udp->Write(it->second.info,buf,len);
+    }
 }
 
 void MyTalkServer::HandleLogin(MyAddrInfo info,char* buf, int len)

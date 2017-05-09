@@ -18,7 +18,7 @@ using namespace my_master;
  */
 #define MYTALK_ACK 0x0002
 #define MYTALK_FRIEND 0x0003
-#define MTTALK_MSG 0x0004
+#define MYTALK_MSG 0x0004
 
 #define MYTALK_ONLINE 0x01
 #define MYTALK_OFFLINE 0x00

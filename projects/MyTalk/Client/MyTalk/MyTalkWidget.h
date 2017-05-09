@@ -25,6 +25,8 @@ public:
     void SetName(std::string name){m_name = name; Update();}
     void SetMark(std::string mark){m_mark = mark;}
 
+    void AppendMsg(std::string msg);
+
 public slots:
     void SendMsg();
 private:

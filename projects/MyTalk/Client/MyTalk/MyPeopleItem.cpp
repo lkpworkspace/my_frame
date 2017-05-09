@@ -2,11 +2,15 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-MyPeopleItem::MyPeopleItem(QWidget *parent) :
+MyPeopleItem::MyPeopleItem(MyAddrInfo info,
+                           std::__cxx11::string name,
+                           std::__cxx11::string account,
+                           std::__cxx11::string mark,
+                           QWidget *parent) :
     QWidget(parent)
 {
     initUi();
-    m_talk = new MyTalkWidget(m_info, "kpli", "kpli","easy coding on linux");
+    m_talk = new MyTalkWidget(info, name, account,mark);
     m_talk->hide();
     headPath="../photo.png";
 }

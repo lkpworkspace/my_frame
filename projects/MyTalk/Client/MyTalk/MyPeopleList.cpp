@@ -1,7 +1,6 @@
 #include "MyPeopleList.h"
 #include <QAction>
 #include <QIcon>
-#include "MyPeopleItem.h"
 MyPersonList::MyPersonList(QListWidget *parent) :
     QListWidget(parent)
 {
@@ -94,17 +93,19 @@ void MyPersonList::contextMenuEvent(QContextMenuEvent *event)
 //添加组
 void MyPersonList::slotAddGroup()
 {
-    QListWidgetItem *newItem=new QListWidgetItem(QIcon("../arrowRight.png"),"未命名");    //创建一个Item
+    QListWidgetItem *newItem=new QListWidgetItem(QIcon("../arrowRight.png"),"我的好友");    //创建一个Item
     newItem->setSizeHint(QSize(this->width(),25));//设置宽度、高度
     this->addItem(newItem);         //加到QListWidget中
     groupMap.insert(newItem,newItem);//加到容器groupMap里，key和value都为组
     isHideMap.insert(newItem,true);  //设置该组隐藏状态
+#if 0
     groupNameEdit->raise();
     groupNameEdit->setText(tr("未命名")); //设置默认内容
     groupNameEdit->selectAll();        //设置全选
     groupNameEdit->setGeometry(this->visualItemRect(newItem).left()+15,this->visualItemRect(newItem).top()+1,this->visualItemRect(newItem).width(),this->visualItemRect(newItem).height()-2);//出现的位置
     groupNameEdit->show();              //显示
     groupNameEdit->setFocus();          //获取焦点
+#endif
     currentItem = newItem;	   // 因为要给group命名，所以当前的currentItem设为该group
 }
 //删除组
@@ -127,10 +128,44 @@ void MyPersonList::slotRename()
     groupNameEdit->selectAll();                   //全选
     groupNameEdit->setFocus();                        //获取焦点
 }
+
+MyPeopleItem *MyPersonList::GetTalkWidget(std::string account)
+{
+    if(m_talk_widgets.find(account) != m_talk_widgets.end())
+    {
+        return (MyPeopleItem*)m_talk_widgets[account];
+    }
+    return nullptr;
+}
+
+void MyPersonList::slotAddFriend(MyAddrInfo info,
+                   std::string name,
+                   std::string account,
+                   std::string mark)
+{
+    MyPeopleItem *buddy=new MyPeopleItem(info,name,account,mark);   //创建一个自己定义的信息类
+
+    buddy->SetAddr(info);
+    buddy->SetName(name);
+    buddy->SetAccount(account);
+    buddy->SetMark(mark);
+    m_talk_widgets.insert(std::make_pair(account,buddy));
+    QList<QListWidgetItem*> tem = groupMap.keys(currentItem);//当前组对应的项（包括组本身和好友）复制给tem
+    //关键代码
+    QListWidgetItem *newItem = new QListWidgetItem();       //创建一个newItem
+    this->insertItem(row(currentItem)+tem.count(),newItem); //将该newItem插入到后面
+    this->setItemWidget(newItem, buddy); //将buddy赋给该newItem
+    groupMap.insert(newItem,currentItem);   //加进容器，key为好友，value为组
+    if(isHideMap.value(currentItem))          //如果该组是隐藏，则加进去的好友设置为隐藏
+        newItem->setHidden(true);
+    else                                      //否则，该好友设置为显示
+        newItem->setHidden(false);
+}
+
 //添加好友，主要是为了测试功能，实际工程里可以改成动态读取数据库进行添加好友
 void MyPersonList::slotAddBuddy()
 {
-    MyPeopleItem *buddy=new MyPeopleItem();   //创建一个自己定义的信息类
+    MyPeopleItem *buddy=new MyPeopleItem(MyAddrInfo(),"kpli","account","hehda");   //创建一个自己定义的信息类
 #if 0
     buddy->headPath="../photo.png";                          //设置头像路径
     buddy->name->setText("kpli");                  //设置用户名

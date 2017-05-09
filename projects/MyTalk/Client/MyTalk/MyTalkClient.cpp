@@ -1,4 +1,6 @@
 #include "MyTalkClient.h"
+#include "MyDelegate.h"
+
 std::map<std::string, mytalk_friend_t*> MyTalkClient::m_friends;
 std::string MyTalkClient::m_account;
 std::string MyTalkClient::m_password;
@@ -12,15 +14,14 @@ MyTalkClient::MyTalkClient()
 
 bool MyTalkClient::Event(MyEvent* ev)
 {
-    printf("class type %d\n", ev->GetClassType());
     if(ev->GetClassType() == MyEvent::UDPCLASS)
     {
         MyUdp* udp = (MyUdp*)ev;
         char* buf;
         int len;
         MyAddrInfo info = udp->RecvData(&buf,len);
-#if 1
-        printf("addr %s:%d\tmsg: %s\n",
+#if MYTALK_DEBUG
+        MyDebugPrint("get addr %s:%d\tmsg: %s\n",
                info.GetIp().c_str(),
                info.GetPort(),
                buf);
@@ -54,22 +55,19 @@ void MyTalkClient::SendLogin(std::string account, std::string password)
 }
 bool MyTalkClient::CheckLogin()
 {
-#if 0
-    printf("check ok befer\n");
-#endif
     bool isok = false;
     sem_wait(&m_sem);
     isok = m_is_ok;
     m_is_ok = false;
-#if 0
-    printf("check ok end\n");
-#endif
     return isok;
 }
 
 int MyTalkClient::SendTalkMsg(std::string to, std::string msg)
 {
     int len = 0;
+#if MYTALK_DEBUG
+    MyDebugPrint("src %s dst %s\n",m_account.c_str(),to.c_str());
+#endif
     char* buf = BuildTalkMsg(m_account,to,msg,&len);
     g_udp->Write(m_server_info,buf,len);
     return len;
@@ -88,6 +86,9 @@ void MyTalkClient::HandleMsg(MyAddrInfo info, char* buf, int len)
     case MYTALK_FRIEND:
         HandleFriend(info,buf,len);
         break;
+    case MYTALK_MSG:
+        HandleTalkMsg(info,buf,len);
+        break;
     default:
         break;
     }
@@ -103,10 +104,10 @@ bool MyTalkClient::HandleLogin(char *buf, int len)
     sem_post(&m_sem);
     return m_is_ok;
 }
-
 void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
 {
     int index = 0;
+    // decode buf
     std::string account = MySelfProtocol::HandleString(MYTALK_HEAD_SIZE,buf,len);
     index += (MYTALK_HEAD_SIZE + account.size() + 1);
     std::string name = MySelfProtocol::HandleString(index,buf, len);
@@ -118,10 +119,11 @@ void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
     std::string ip = MySelfProtocol::HandleString(index,buf,len);
     index += (ip.size() + 1);
     uint16_t port = MySelfProtocol::HandleLen(index,buf,len);
-
+    // save friend info
+    m_mutex.lock();
     if(m_friends.find(account) != m_friends.end())
     {
-        // send ack
+        // send repeat ack
         int len = 0;
         char* buf = BuildAck(0x03,&len);
         g_udp->Write(info,buf,len);
@@ -132,7 +134,6 @@ void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
     myfriend->account = account;
     myfriend->name = name;
     myfriend->mark = mark;
-    //myfriend->info = info;
     if(online == MYTALK_ONLINE)
     {
         myfriend->online = MYTALK_ONLINE;
@@ -140,27 +141,29 @@ void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
         myfriend->info.SetPort(port);
     }
     m_friends.insert(std::make_pair(account,myfriend));
-#if 1
-    printf("get friend %s,%s,%s,%s:%d\n",
+    m_mutex.unlock();
+#if MYTALK_DEBUG
+    printf("get friend account %s, name %s, mark %s, ip %s:%d\n",
            account.c_str(),
            name.c_str(),
            mark.c_str(),
            myfriend->info.GetIp().c_str(),
            myfriend->info.GetPort());
 #endif
-    // notify ui update myfriend
-    // TODO...
-
-    // send ack
+    // update ui
+    // problely ui init later than this function, so sleep to wait ui init
+    // bad code, wtf...
+    usleep(1000 * 100);
+    MyDelegate::GetInstance()->AddFriend(myfriend->info,myfriend->name,myfriend->account,myfriend->mark);
+    // send ok ack
     int lenx = 0;
     char* bufx = BuildAck(0x02,&lenx);
     g_udp->Write(m_server_info,bufx,lenx);
     MySelfProtocol::FreeBuf(bufx);
 }
-
 void MyTalkClient::HandleTalkMsg(MyAddrInfo info, char* buf, int len)
 {
-    // TODO...
+    // decode buf
     int index = MYTALK_HEAD_SIZE;
     std::string src = MySelfProtocol::HandleString(index,buf,len);
     index += (src.size() + 1);
@@ -168,11 +171,12 @@ void MyTalkClient::HandleTalkMsg(MyAddrInfo info, char* buf, int len)
     index += (dst.size() + 1);
     std::string msg = MySelfProtocol::HandleString(index,buf,len);
     index += (msg.size() + 1);
-#if 1
+#if MYTALK_DEBUG
     MyDebugPrint("%s : %s\n",src.c_str(),msg.c_str());
 #endif
+    // update ui
+    MyDelegate::GetInstance()->AppendMsg(src,msg);
 }
-
 ///////////////////////////////////////////////////////
 /// build msg
 ///
@@ -196,7 +200,7 @@ char* MyTalkClient::BuildTalkMsg(std::string src,
     int index = 0;
     char* buf = MySelfProtocol::GetBuf(&len);
 
-    index += MySelfProtocol::BuildHeader(MTTALK_MSG,buf,len);
+    index += MySelfProtocol::BuildHeader(MYTALK_MSG,buf,len);
     index += MySelfProtocol::BuildString(src.c_str(),index,buf,len);
     index += MySelfProtocol::BuildString(dst.c_str(),index,buf,len);
     index += MySelfProtocol::BuildString(msg.c_str(),index,buf,len);

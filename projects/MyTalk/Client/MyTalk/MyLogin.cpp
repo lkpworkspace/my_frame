@@ -5,7 +5,7 @@
 #include "MyTalkClient.h"
 using namespace my_master;
 
-
+extern MyMainWidget *g_main_widget;
 MyLogin::MyLogin(QWidget *parent) : QWidget(parent)
 {
     //add background picture
@@ -52,8 +52,8 @@ void MyLogin::slotLoginButtonClicked(bool)
     if(MyTalkClient::CheckLogin())
     {
         this->close();
-        MyMainWidget* main= new MyMainWidget();
-        main->show();
+        g_main_widget= new MyMainWidget();
+        g_main_widget->show();
     }else
     {
         QMessageBox::information(NULL, "Error",

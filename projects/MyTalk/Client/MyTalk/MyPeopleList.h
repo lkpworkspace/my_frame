@@ -4,6 +4,12 @@
 #include <QMenu>
 #include <QMouseEvent>
 #include <QLineEdit>
+#include <string>
+#include <map>
+#include "MyNet.h"
+#include "MyPeopleItem.h"
+using namespace my_master;
+
 //自定义QListWidget
 class MyPersonList : public QListWidget //继承QListWidget，可以使用它本身自带的函数，更方便
 {
@@ -13,6 +19,9 @@ public:
     void mousePressEvent(QMouseEvent *event);//鼠标点击事件
     void contextMenuEvent(QContextMenuEvent*);//菜单事件，为了显示菜单
     void initMenu();//初始化菜单
+
+    MyPeopleItem* GetTalkWidget(std::string account);
+
     QMenu *blankMenu;//点击空白上的菜单
     QMenu *groupMenu;//点击组上的菜单
     QMenu *personMenu;//点击人上的菜单
@@ -27,9 +36,14 @@ public slots:
     void slotAddGroup();   //添加组
     void slotDelGroup();   //删除组
     void slotAddBuddy();   //添加好友
+    void slotAddFriend(MyAddrInfo info,
+                       std::string name,
+                       std::string account,
+                       std::string mark);   //添加好友
     void slotDelBuddy();   //删除好友
     void slotRename();     //重命名组
     void slotRenameEditFshed();//命名完成
-    
+private:
+    std::map<std::string,MyPeopleItem*> m_talk_widgets;
 };
 #endif // PERSONLIST_H

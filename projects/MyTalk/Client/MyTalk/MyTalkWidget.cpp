@@ -25,17 +25,43 @@ MyTalkWidget::~MyTalkWidget()
     delete ui;
 }
 
+void MyTalkWidget::AppendMsg(std::string msg)
+{
+    qDebug("append msg\n");
+    std::string who;
+    std::string tmp;
+    tmp += "<font size=5>";
+    tmp += msg;
+    tmp += "</font>";
+
+    who += "<font size=8><font color=darkgray>";
+    who += m_name;
+    who += ":";
+    who += "</font></font>";
+
+    if(!msg.empty())
+    {
+        ui->textEdit_text->setAlignment(Qt::AlignLeft);
+        ui->textEdit_text->append(who.c_str());
+        ui->textEdit_text->setAlignment(Qt::AlignLeft);
+        ui->textEdit_text->append(tmp.c_str());
+        ui->textEdit_text->setAlignment(Qt::AlignLeft);
+    }
+}
+
 void MyTalkWidget::SendMsg()
 {
     qDebug("send msg\n");
     std::string msg;
     std::string who;
+    std::string tmp;
     msg += "<font size=5>";
     msg += ui->textEdit_send_text->toPlainText().toStdString();
+    tmp += ui->textEdit_send_text->toPlainText().toStdString();
     msg += "</font>";
 
     who += "<font size=8><font color=darkgray>";
-    who += m_name;
+    who += MyTalkClient::m_account;
     who += ":";
     who += "</font></font>";
 
@@ -45,9 +71,10 @@ void MyTalkWidget::SendMsg()
         ui->textEdit_text->append(who.c_str());
         ui->textEdit_text->setAlignment(Qt::AlignRight);
         ui->textEdit_text->append(msg.c_str());
+        ui->textEdit_text->setAlignment(Qt::AlignRight);
         ui->textEdit_send_text->clear();
 #if 1// TODO send msg to server
-        MyTalkClient::SendTalkMsg(m_name,msg);
+        MyTalkClient::SendTalkMsg(m_account,tmp);
 #endif
     }
 }

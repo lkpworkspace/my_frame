@@ -56,7 +56,8 @@ SOURCES += MyMainWidget.cpp \
     MyTalkWidget.cpp \
     MyPeopleList.cpp \
     MyPeopleItem.cpp \
-    MyLogin.cpp
+    MyLogin.cpp \
+    MyDelegate.cpp
 
 HEADERS += MyMainWidget.h \
     ../../../../Common.h \
@@ -88,7 +89,8 @@ HEADERS += MyMainWidget.h \
     MyTalkWidget.h \
     MyPeopleList.h \
     MyPeopleItem.h \
-    MyLogin.h
+    MyLogin.h \
+    MyDelegate.h
 
 RESOURCES += \
     myrc.qrc

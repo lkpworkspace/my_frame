@@ -7,7 +7,8 @@
 
 using namespace my_master;
 MyUdp *g_udp = nullptr;
-#if 1
+MyMainWidget *g_main_widget = nullptr;
+#if 0
 #include "MyPeopleItem.h"
 #include "MyTalkWidget.h"
 #endif
