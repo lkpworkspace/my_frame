@@ -9,7 +9,6 @@ MyTask::MyTask()
     m_msgFd[0] = -1;
     m_msgFd[1] = -1;
     memset(m_msgBuf,0,MSG_LEN);
-    //sem_init(&m_event,0,0);
     CreateSockPair();
     this->Start();
 }
@@ -23,7 +22,7 @@ void MyTask::Run()
 int MyTask::TaskWork()
 {
 #if DEBUG_ERROR
-    printf("task %d work, has %d event\n",GetThreadId(),m_que.Count());
+    MyDebugPrint("task %d work, has %d event\n",GetThreadId(),m_que.Count());
 #endif
     MyEvent* begin = (MyEvent*)m_que.Begin();
     MyEvent* end = (MyEvent*)m_que.End();
@@ -42,7 +41,7 @@ int MyTask::WaitEvent()
     m_msgBuf[0] = 0x01;
     write(m_msgFd[0],m_msgBuf,MSG_LEN);
 #if DEBUG_ERROR
-    printf("task %d waiting...\n",GetThreadId());
+    MyDebugPrint("task %d waiting...\n",GetThreadId());
 #endif
     // wait MyApp trans event
     return read(m_msgFd[0],m_msgBuf,MSG_LEN);
@@ -54,7 +53,7 @@ void MyTask::OnInit()
     MyDebug("thread %u begin", GetThreadId());
 #endif
 #if DEBUG_INFO
-    printf("thread %u begin\n", GetThreadId());
+    MyDebugPrint("thread %u begin\n", GetThreadId());
 #endif
 }
 void MyTask::OnExit()
@@ -64,7 +63,7 @@ void MyTask::OnExit()
     MyDebug("thread %u quit", GetThreadId());
 #endif
 #if DEBUG_INFO
-    printf("thread %u quit\n", GetThreadId());
+    MyDebugPrint("thread %u quit\n", GetThreadId());
 #endif
 }
 int MyTask::CreateSockPair()
@@ -75,7 +74,7 @@ int MyTask::CreateSockPair()
     MyDebug("create socketpair %d",res);
 #endif
 #if DEBUG_INFO
-    printf("create socketpair %d\n",res);
+    MyDebugPrint("create socketpair %d\n",res);
 #endif
     Common::SetNonblock(m_msgFd[0],false);
     Common::SetNonblock(m_msgFd[1],false);
@@ -98,7 +97,6 @@ void MyTask::ClearResource()
     this->Stop();
     close(m_msgFd[0]);
     close(m_msgFd[1]);
-    //sem_destroy(&m_event);
 }
 
 

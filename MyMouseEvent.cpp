@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "MyAllEvent.h"
+#include <string.h>
 using namespace my_master;
 
 MyMouseEvent::MyMouseEvent()

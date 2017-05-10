@@ -2,17 +2,16 @@
 #define MYALLEVENT_H
 #include "Common.h"
 #include "MyList.h"
-
+#include <mutex>
 namespace my_master {
 class MyEvent;
-class MyTree;
 class MyNode;
 class MyList;
 class MyAllEvent : public my_master::MyNode
 {
 public:
     MyAllEvent();
-    ~MyAllEvent();
+    virtual ~MyAllEvent();
     ///////////////////////////////////////
     /// need override method
     virtual bool Event(MyEvent*) = 0;

@@ -14,6 +14,7 @@ int MyTcpServer::Listen(int backlog)
     if(!IS_SERVER(m_tcp_ip_type))
         return 0;
     int res = -1;
+    SetNonblock(true);
     res = listen(m_sock,backlog);
     assert(res == 0);
     return res;
@@ -58,7 +59,7 @@ int MyTcpClient::Connect()
     m_addr.sin_family = AF_INET;
     m_addr.sin_port = htons(m_port);
     inet_pton(AF_INET, m_ip.c_str(), &m_addr.sin_addr);
-
+    SetNonblock(true);
     ret = connect(m_sock, (struct sockaddr*)&m_addr, sizeof(m_addr));
     assert(ret == 0);
     return ret;

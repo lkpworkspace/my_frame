@@ -74,8 +74,17 @@ int MyTFTP::HandleMsg(MyAddrInfo& info, char* buf, int len)
 int MyTFTP::HandleMsg1(MyAddrInfo& info,char* buf, int len)
 { // read request
     char filename[256] = {0};
+    std::string fill_path;
 
     strcpy(filename,&buf[TFTP_HEAD_SIZE]);
+    fill_path += m_path;
+    fill_path += filename;
+    if(Common::IsFileExist(fill_path.c_str()))
+    {
+        // send error msg
+        // TODO
+        return -1;
+    }
     // send file
     InitFileTrans(filename,info);
     this->Start();

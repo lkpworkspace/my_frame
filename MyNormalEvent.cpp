@@ -2,7 +2,7 @@
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 #include <MyApp.h>
-
+#include <string.h>
 using namespace my_master;
 
 MyNormalEvent::MyNormalEvent()

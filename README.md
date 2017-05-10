@@ -30,13 +30,24 @@ push an existing repo:
     git push -u origin master
 
 
+Event类：           block            说明                    是否让MyAllEvent接收此事件
+MyEvent               no         抽象事件类                    no
+MyKeyEvent            yes        监听键盘消息的事件类           yes
+MyMouseEvent          yes        监听鼠标消息的事件类           yes
+MyNormalEvent         no         通用的事件类                   yes
+MySock                           抽象套接字类，继承MyEvent      yes
+MyUdp                 yes        Udp事件类，继承MySock类        yes      可通过继承该类，重写CallBackFunc，并不调用父类CallBackFunc让MyAllEvent接收不到此事件（实际并没有必要）
+MyTcpServer           no         Tcp事件类，继承MySock类        yes      可通过继承该类，重写CallBackFunc，并不调用父类CallBackFunc让MyAllEvent接收不到此事件
+MyTcpClient           no         Tcp事件类，继承MySock类        yes      可通过继承该类，重写CallBackFunc，并不调用父类CallBackFunc让MyAllEvent接收不到此事件
+MyTcpSocket           no         Tcp事件类，继承MyEvent类       yes      可通过继承该类，重写CallBackFunc，并不调用父类CallBackFunc让MyAllEvent接收不到此事件
+MyTFTP                yes        TFTP事件类，继承MyUdp类        no
+MyRawSock                        // TODO...
 
 
-
-
-
-
-
+数据结构类：
+MyList                           双向循环链表
+MyVec                            动态数组
+MyHeap                           堆
 
 
 OS:

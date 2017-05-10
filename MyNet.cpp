@@ -1,4 +1,5 @@
 #include "MyNet.h"
+#include <assert.h>
 using namespace my_master;
 /*
  *  net error: h_error
@@ -27,6 +28,30 @@ unsigned short MyNet::GetAddrPort(sockaddr_in* addr)
     return ntohs(addr->sin_port);
 }
 
+MyAddrInfo MyNet::GetSockInfo(const int fd)
+{
+    struct sockaddr_in addr;
+    socklen_t len = 0;
+    int res = 0;
+
+    memset(&addr,0,sizeof(addr));
+    res = getsockname(fd,(sockaddr*)&addr,&len);
+    assert(res != -1);
+    return MyAddrInfo(addr);
+}
+
+MyAddrInfo MyNet::GetRemoteSockInfo(const int fd)
+{
+    struct sockaddr_in addr;
+    socklen_t len = 0;
+    int res = 0;
+
+    memset(&addr,0,sizeof(addr));
+    res = getpeername(fd,(sockaddr*)&addr,&len);
+    assert(res != -1);
+    return MyAddrInfo(addr);
+}
+#if 0
 std::string MyNet::GetHostName(std::string ipStr)
 {
     struct hostent* host = nullptr;
@@ -116,7 +141,7 @@ struct in_addr MyNet::GetNetSeriIp(std::string ipStr)
     inet_pton(AF_INET,ipStr.c_str(),&net4.s_addr);
     return net4;
 }
-
+#endif
 
 ////////////////////////////////////////////////////////
 /// MyAddrInfo
@@ -130,7 +155,7 @@ MyAddrInfo::MyAddrInfo(struct sockaddr_in addr)
     memcpy(&m_remote_addr,&addr,sizeof(struct sockaddr_in));
 }
 
-MyAddrInfo::MyAddrInfo(std::string ip, unsigned short port)
+MyAddrInfo::MyAddrInfo(const std::string ip, const unsigned short port)
 {
     Init();
     SetIP(ip);
@@ -200,7 +225,7 @@ sockaddr_in MyAddrInfo::GetAddr()
     return m_remote_addr;
 }
 
-void MyAddrInfo::SetIP(std::string ip)
+void MyAddrInfo::SetIP(const std::string ip)
 {
     if(!ip.empty())
         inet_pton(AF_INET, ip.c_str(), &m_remote_addr.sin_addr);
@@ -208,18 +233,18 @@ void MyAddrInfo::SetIP(std::string ip)
         m_remote_addr.sin_addr.s_addr = INADDR_ANY;
 }
 
-void MyAddrInfo::SetPort(unsigned short port)
+void MyAddrInfo::SetPort(const unsigned short port)
 {
     m_remote_addr.sin_port = htons(port);
 }
 
-void MyAddrInfo::SetIpAndPort(std::string ip, unsigned short port)
+void MyAddrInfo::SetIpAndPort(const std::string ip, const unsigned short port)
 {
     SetIP(ip);
     SetPort(port);
 }
 
-void MyAddrInfo::SetBoardAddr(unsigned short port)
+void MyAddrInfo::SetBoardAddr(const unsigned short port)
 {
     m_remote_addr.sin_family=AF_INET;
     m_remote_addr.sin_addr.s_addr=htonl(INADDR_BROADCAST);

@@ -2,6 +2,7 @@
 #define MYSQLITE3_H
 #include "Common.h"
 #include "3rd_src/Sqlite3/sqlite3.h"
+#include <vector>
 namespace my_master {
 typedef std::vector<std::string> row_t;
 class MySqlite3

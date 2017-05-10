@@ -18,15 +18,35 @@
 
 namespace my_master {
 // only support IPv4
+class MyAddrInfo;
 class MyNet
 {
 public:
     MyNet();
     ~MyNet();
 
+    // useful
     static std::string GetAddrIp(sockaddr_in* addr);
     static unsigned short GetAddrPort(sockaddr_in* addr);
-
+    /*
+    补充：getsockname和getpeername调度时机很重要，如果调用时机不对，则无法正确获得地址和端口。
+    TCP
+    对于服务器来说，在bind以后就可以调用getsockname来获取本地地址和端口，虽然这没有什么太多的意义。
+    getpeername只有在链接建立以后才调用，否则不能正确获得对方地址和端口，所以他的参数描述字一般是链接描述字而非监听套接口描述字。
+    对于客户端来说，在调用socket时候内核还不会分配IP和端口，此时调用getsockname不会获得正确的端口和地址
+    (当然链接没建立更不可能调用getpeername)，
+    当然如果调用了bind 以后可以使用getsockname。想要正确的到对方地址（一般客户端不需要这个功能），
+    则必须在链接建立以后，同样链接建立以后，此时客户端地址和端口就已经被指定，此时是调用getsockname的时机。
+    UDP
+    UDP分为链接和没有链接2种(这个到UDP与connect可以找到相关内容）
+    没有链接的UDP不能调用getpeername，但是可以调用getsockname,和TCP一样，他的地址和端口不是在调用socket就指定了，
+    而是在第一次调用sendto函数以后
+    已经链接的UDP，在调用connect以后，这2个函数都是可以用的
+    (同样，getpeername也没太大意义。如果你不知道对方的地址和端口，不可能会调用connect)。
+   */
+    static MyAddrInfo GetSockInfo(const int fd);
+    static MyAddrInfo GetRemoteSockInfo(const int fd);
+#if 0
     // get host info
     // method1
     static std::string GetHostName(std::string ipStr);
@@ -44,6 +64,7 @@ public:
 
     // getsocketname func
     static struct in_addr GetNetSeriIp(std::string ipStr);
+#endif
 private:
 };
 
@@ -53,7 +74,7 @@ class MyAddrInfo
 public:
     MyAddrInfo();
     MyAddrInfo(struct sockaddr_in addr);
-    MyAddrInfo(std::string ip, unsigned short port);
+    MyAddrInfo(const std::string ip, const unsigned short port);
     ~MyAddrInfo();
 
     void Init();
@@ -64,10 +85,10 @@ public:
     sockaddr_in GetAddr();
     //////////////////////////////////////////////////
     /// set method
-    void SetIP(std::string ip);
-    void SetPort(unsigned short port);
-    void SetIpAndPort(std::string ip, unsigned short port);
-    void SetBoardAddr(unsigned short port);
+    void SetIP(const std::string ip);
+    void SetPort(const unsigned short port);
+    void SetIpAndPort(const std::string ip, const unsigned short port);
+    void SetBoardAddr(const unsigned short port);
 
     MyAddrInfo& operator=(MyAddrInfo& other);
     int GetData(char** buf);

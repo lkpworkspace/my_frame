@@ -3,7 +3,6 @@
 #include "Common.h"
 #include "MyThread.h"
 #include "MyEvent.h"
-#include <semaphore.h>
 
 namespace my_master {
 
@@ -45,7 +44,6 @@ private:
     //TASK_STATUS m_status;                // current thread runing status
     int m_msgFd[2];                      // 0 used by myself, 1 used by MyApp
     uint8_t m_msgBuf[MSG_LEN];
-    //sem_t m_event;
 };
 
 } // end namespace

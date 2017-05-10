@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include "MyEvent.h"
 #include "MyThread.h"
+#include <vector>
 namespace my_master {
 class MyTask;
 class MyApp : public MyThread

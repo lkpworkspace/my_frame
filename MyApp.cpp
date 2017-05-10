@@ -229,6 +229,9 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
     {
         // thread stop
         // TODO... nothing
+#if DEBUG_ERROR
+            MyDebugPrint("task error %d\n",task->GetThreadId());
+#endif
     }else
     {
         // task need event
@@ -236,7 +239,7 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
         {
             task->m_que.Append(&(task->m_recv));
 #if DEBUG_ERROR
-            printf("trans main event to task %d\n",task->GetThreadId());
+            MyDebugPrint("trans main event to task %d\n",task->GetThreadId());
 #endif
             task->SendMsg(&ch,MSG_LEN);
         }else if(!m_ev_recv.IsEmpty())
@@ -244,14 +247,14 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
             // change m_idle_tasks to m_ev_recv
             task->m_que.Append(&m_ev_recv);
 #if DEBUG_ERROR
-            printf("trans self event to task self %d\n",task->GetThreadId());
+            MyDebugPrint("trans self event to task self %d\n",task->GetThreadId());
 #endif
             task->SendMsg(&ch,MSG_LEN);      
         }else
         {
             m_idle_tasks.AddTail(task);
 #if DEBUG_ERROR
-            printf("add task %d to idle queue\n",task->GetThreadId());
+            MyDebugPrint("add task %d to idle queue\n",task->GetThreadId());
 #endif
         }
     }

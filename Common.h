@@ -2,23 +2,11 @@
 #define __COMMON_H__
 // c normal
 #include <stdio.h>
+#include <stdint.h>
+#include <assert.h>
 // c++ normal
 #include <iostream>
-#include <cstdio>
 #include <string>
-#include <cassert>
-#include <cstdint>
-#include <string>
-#include <cstdlib>
-#include <cstring>
-// c++ stl
-#include <list>
-#include <vector>
-#include <queue>
-#include <map>
-#include <fstream>
-#include <mutex>
-#include <thread>
 // win or linux
 #ifdef WIN32
 #include <Windows.h>
