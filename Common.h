@@ -28,7 +28,7 @@
 #endif
 
 #ifndef DEBUG_ERROR
-#define DEBUG_ERROR 1
+#define DEBUG_ERROR 0
 #endif
 
 // system V (msg key id)

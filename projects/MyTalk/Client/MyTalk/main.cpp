@@ -4,6 +4,7 @@
 #include "MyUdp.h"
 #include "MyLogin.h"
 #include "MyTalkClient.h"
+#include <thread>
 
 using namespace my_master;
 MyUdp *g_udp = nullptr;

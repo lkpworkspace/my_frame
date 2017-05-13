@@ -40,7 +40,7 @@ bool Common::IsFileExist(const char* path)
     struct stat st;
     int ret = lstat(path, &st);
     if(ret < 0)
-        return 0;
+        return false;
 
     if(S_ISREG(st.st_mode))
         return true;

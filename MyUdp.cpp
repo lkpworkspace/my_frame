@@ -131,13 +131,13 @@ int MySelfProtocol::BuildString(const char* str, int offset, char* buf, int len)
     return (str_len + 1);
 }
 
-int MySelfProtocol::BuildData(const char* data, int data_len, int offset, char* buf, int len)
+int MySelfProtocol::BuildData(const char* data, uint16_t data_len, int offset, char* buf, int len)
 {
     int len_offset = BuildLen(data_len,offset,buf,len);
     if(data_len + offset + len_offset > len)
         return 0;
     memcpy(&buf[offset + len_offset],data,data_len);
-    return data_len;
+    return (data_len + len_offset);
 }
 
 

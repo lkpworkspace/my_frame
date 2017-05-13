@@ -16,8 +16,6 @@ public:
     void Start();
     void Stop();
 
-    void Lock();
-    void Unlock();
     pid_t GetThreadId() {return m_id;}
     pthread_t GetPosixThreadId(){return m_thread;}
 protected:
@@ -26,6 +24,9 @@ protected:
     pid_t m_id;                          // thread id
     pthread_mutex_t m_mutex;
 private:
+    void Lock();
+    void Unlock();
+    bool CheckStatus();
     bool m_isRuning;
 };
 

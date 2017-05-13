@@ -195,6 +195,13 @@ MyAddrInfo& MyAddrInfo::operator=(MyAddrInfo& other)
     return *this;
 }
 
+bool MyAddrInfo::operator==(const MyAddrInfo& other) const
+{
+    if(!memcmp(&other.m_remote_addr,&m_remote_addr,sizeof(m_remote_addr)))
+        return true;
+    return false;
+}
+
 int MyAddrInfo::GetData(char** buf)
 {
     *buf = m_buf;

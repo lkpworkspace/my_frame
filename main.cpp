@@ -102,74 +102,6 @@ class AllEv : public MyAllEvent
 public:
     bool Event(MyEvent *ev)
     {
-#if 0
-        if(ev->GetClassType() == MyEvent::CLASS_TYPE::TCPSERVER)
-        {
-            MyTcpServer* serv = (MyTcpServer*)ev;
-            sockaddr_in addr;
-            while(1)
-            {
-                int fd = serv->Accpet(&addr);
-                if(fd < 0)
-                    break;
-                MyTcpSocket *recv = new MyTcpSocket(fd,addr);
-                printf("get client connect fd : %d, port %u, ip %s\n",fd,
-                       MyNet::GetAddrPort(&addr),
-                       MyNet::GetAddrIp(&addr).c_str());
-                MyApp::theApp->AddEvent(recv);
-            }
-            MyApp::theApp->AddEvent(ev);
-        }
-        if(ev->GetClassType() == MyEvent::CLASS_TYPE::TCPSOCKET)
-        {
-            char buf[1024] = {0};
-            int res;
-            /* res:
-             * =0 client quit
-             * >0 data is coming
-             * <0 end of file
-            */
-            MyTcpSocket* sock = (MyTcpSocket*)ev;
-            while(1)
-            {
-                res = sock->Read(buf,1024);
-                if(res <= 0)
-                    break;
-                printf("%s:%d: read %d:%s\n",sock->GetIp().c_str(),sock->GetPort(),res,buf);
-            }
-            if(res != 0)
-            {
-                MyApp::theApp->AddEvent(ev);
-            }
-            else
-            {
-                delete sock;
-                printf("client quit\n");
-            }
-            return true;
-        }
-        if(ev->GetClassType() == MyEvent::CLASS_TYPE::MOUSE)
-        {
-            MyMouseEvent* e = (MyMouseEvent*)ev;
-            printf("button type = %d, x = %d, y = %d\n",
-                   e->GetMouseType(),e->GetRelX(),e->GetRelY());
-            MyApp::theApp->AddEvent(ev);
-        }
-        if(ev->GetClassType() == MyEvent::CLASS_TYPE::UDPCLASS)
-        {
-            MyUdp* e = (MyUdp*)ev;
-            char* buf;
-            int len = 0;
-
-            MyAddrInfo addr = e->RecvData(&buf,len);
-            printf("ip : %s, port : %u, recv: %s\n",
-                   addr.GetIp().c_str(),
-                   addr.GetPort(),
-                   buf);
-
-            MyApp::theApp->AddEvent(ev);
-        }
-#else
         switch (ev->GetClassType()) {
         case MyEvent::CLASS_TYPE::TCPSERVER:
         {
@@ -243,12 +175,11 @@ public:
         default:
             break;
         }
-#endif
         return true;
     }
 };
 
-int main()
+int main(int argc, char** argv)
 {
     MyApp app{2,1024};
 
@@ -271,28 +202,33 @@ int main()
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
-#if 0 // MyTFTP client
+#if 1 // MyTFTP client
     // MyTFTP test
     MyTFTP* tftp = new MyTFTP("",5555,true);
     tftp->SetRootDir("./");
-    //tftp->Bind();
     app.AddEvent(tftp);
 
     std::thread thr([&](){
-        printf("send file begin");
         sleep(1);
         MyAddrInfo info;
         info.SetPort(4399);
         info.SetIP("127.0.0.1");
-#if 0
-        // get file
-        tftp->GetFile(info,"Ymodem.c");
-        printf("Get File OKOKOKOKOKOKOK..........................................\n");
-#else
-        // upload file
-        tftp->SendFile(info,"Ymodem.c");
-        printf("Send File OKOKOKOKOKOKOK..........................................\n");
-#endif
+        printf("argc %d\n",argc);
+        if(argc >= 3)
+        {
+            if(!strcmp(argv[1],"get"))
+            {
+                // get file
+                tftp->GetFile(info,argv[2]);
+            }
+            if(!strcmp(argv[1],"post"))
+            {
+                // upload file
+                tftp->SendFile(info,argv[2]);
+            }
+            sleep(1);
+            exit(0);
+        }
     });
     thr.detach();
 #else // MyTFTP server

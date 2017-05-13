@@ -91,8 +91,9 @@ public:
     void SetBoardAddr(const unsigned short port);
 
     MyAddrInfo& operator=(MyAddrInfo& other);
-    int GetData(char** buf);
-    void SetData(char* buf, int len);
+    bool operator==(const MyAddrInfo& other) const;
+    int GetData(char** buf);           // no use
+    void SetData(char* buf, int len);  // no use
 private:
     char* m_buf;
     int m_len;

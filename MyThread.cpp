@@ -31,7 +31,9 @@ void MyThread::Stop()
 {
     Lock();
     m_isRuning = false;
+#if 0
     pthread_cancel(m_thread);
+#endif
     Unlock();
 }
 
@@ -45,12 +47,22 @@ void MyThread::Unlock()
     pthread_mutex_unlock(&m_mutex);
 }
 
+bool MyThread::CheckStatus()
+{
+    Lock();
+    bool is_run = m_isRuning;
+    Unlock();
+    return is_run;
+}
+
 void* MyThread::ListenThread(void* obj)
 {
 	MyThread* t = (MyThread*)obj;
     t->OnInit();
-    while (t->m_isRuning)
+    while (1)
 	{
+        if(!t->CheckStatus())
+            break;
 		t->Run();
 	}
 	t->OnExit();

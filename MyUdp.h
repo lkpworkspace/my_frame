@@ -70,7 +70,8 @@ public:
     static int BuildChar(uint8_t ch,int offset, char* buf, int len);
 
     static int BuildString(const char* str, int offset, char* buf, int len);
-    static int BuildData(const char* data, int data_len, int offset, char* buf, int len);
+    // return value : data_len size + data's length
+    static int BuildData(const char* data, uint16_t data_len, int offset, char* buf, int len);
 protected:
 private:
 };

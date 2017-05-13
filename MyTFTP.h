@@ -30,7 +30,9 @@ namespace my_master {
 #define TFTP_HEAD_SIZE 2
 #define TFTP_BLOCKNUM_SIZE 2
 #define TFTP_ERRNUM_SIZE 2
-#define DEBUG_TFTP
+//#define DEBUG_TFTP
+#define TFTP_INFO
+
 class MyTFTP : public my_master::MyUdp , public my_master::MyThread
 {
 public:
@@ -38,8 +40,11 @@ public:
     {
         uint16_t block_num;
         FILE* fp;
+
         sem_t event_ok;
         bool use_func;
+        // 0 is ok, other is error
+        uint16_t err_num;
     }recv_t;
     typedef struct
     {
@@ -55,10 +60,12 @@ public:
 
         char* file_buf;
         int file_len;
+        // 0 is ok, other is error
+        uint16_t err_num;
     }send_t;
 
     MyTFTP(std::string ip,uint16_t port, bool isServer = true);
-    ~MyTFTP();
+    virtual ~MyTFTP();
     ///////////////////////////////////////////////
     /// override MyUdp virtual method
     virtual void* CallBackFunc(MyEvent *ev);
