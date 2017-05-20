@@ -29,6 +29,7 @@ public:
     void* CallBackFunc(MyEvent *){return NULL;}
     CLASS_TYPE GetClassType(){return CLASS_TYPE::TASKCLASS;}
 
+    void Quit();                                // task quit
     int SendMsg(const char *buf, int len);      // invoke by MyApp
     int RecvMsg(char *buf, int len);            // invoke by MyApp
     int WaitEvent();                            // invoke by myself
@@ -44,6 +45,7 @@ private:
     //TASK_STATUS m_status;                // current thread runing status
     int m_msgFd[2];                      // 0 used by myself, 1 used by MyApp
     uint8_t m_msgBuf[MSG_LEN];
+    bool m_isQuit;
 };
 
 } // end namespace

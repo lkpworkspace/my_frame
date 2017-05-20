@@ -38,6 +38,7 @@
 
 #define USE_CONFIG 0
 
+typedef void*(*common_func_t)(void *);
 class Common
 {
 public:

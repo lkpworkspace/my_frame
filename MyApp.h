@@ -6,6 +6,7 @@
 #include "MyEvent.h"
 #include "MyThread.h"
 #include <vector>
+#include "MyNormalEvent.h"
 namespace my_master {
 class MyTask;
 class MyApp : public MyThread
@@ -17,7 +18,9 @@ public:
 
     int AddEvent(MyEvent* ev);
     int DelEvent(MyEvent* ev);
+    void SetQuitFunc(common_func_t func){m_quit_func = func;}
     int Exec();                        // mainloop
+    int Quit();                        // exit this app
 private:
     int InitApp();
     void Run();                        // override Mythread method (do nothing)
@@ -25,6 +28,7 @@ private:
     void OnExit();                     // override Mythread method (do nothing)
     int CreateTask();                  // create thread
     int TimerCheck();                  // get most nearly timer
+    void QuitCheck();                  // TODO...
 
     void CheckStopTask();
     void HandleEvent(struct epoll_event* epev, int count);
@@ -37,6 +41,10 @@ private:
     int m_epollFd;                     // listen Event file des
     int m_evSize;                      // can be listened (const var)
     int m_threadSize;                  // thread size (const var)
+
+    MyNormalEvent* m_quit_event;       // quit event
+    bool m_isQuit;                     // quit flag
+    common_func_t m_quit_func;        // quit func
 
     int m_cur_thread_size;             // how many task was create
     int m_cur_ev_size;                 // how many ev was create

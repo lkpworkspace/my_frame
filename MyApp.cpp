@@ -23,12 +23,17 @@ MyApp::~MyApp()
 int MyApp::InitApp()
 {
     pthread_mutex_init(&m_app_mutex,NULL);
+    m_isQuit = false;
+    m_quit_event = nullptr;
+    m_quit_func = nullptr;
     // epoll create
     m_epollFd = epoll_create(m_evSize);
 #ifdef USE_LOG
+    MyDebug("MyApp Begin");
     MyDebug("Get Epoll fd = %d", m_epollFd);
 #endif
 #if DEBUG_INFO
+    MyDebugPrint("MyApp Begin\n");
     MyDebugPrint("Get Epoll fd = %d\n", m_epollFd);
 #endif
     // task create
@@ -101,6 +106,7 @@ int MyApp::Exec()
 #endif
     while(m_cur_thread_size)
     {
+        QuitCheck();
         CheckStopTask();
         wait = TimerCheck();
         res = epoll_wait(m_epollFd,ev,evc,wait);
@@ -111,22 +117,65 @@ int MyApp::Exec()
     }
 
     // quit MyApp
+    if(m_quit_event)
+        delete m_quit_event;
+    if(m_quit_func)
+        m_quit_func(NULL);
     free(ev);
+    close(m_epollFd);
 #if USE_CONFIG
     this->Stop();
 #endif
+#ifdef USE_LOG
+    MyDebug("MyApp Quit");
+#endif
+#if DEBUG_INFO
+    MyDebugPrint("MyApp Quit\n");
+#endif
     return 0;
 }
+int MyApp::Quit()
+{
+    // set quit flag
+    pthread_mutex_lock(&m_app_mutex);
+    m_isQuit = true;
+    pthread_mutex_unlock(&m_app_mutex);
+    // weakup mainloop to check quit flag
+    m_quit_event = new MyNormalEvent;
+    m_quit_event->Work();
+    return 0;
+}
+
 /////////////////////////////////////////////////////
 int MyApp::TimerCheck()
 {
     // TODO...
     return 1000*60;
 }
+void MyApp::QuitCheck()
+{
+    // TODO...
+    pthread_mutex_lock(&m_app_mutex);
+    if(m_isQuit)
+    {
+        MyNode* begin = m_idle_tasks.Begin();
+        MyNode* end = m_idle_tasks.End();
+        for(;begin != end;)
+        {
+            MyTask *task = (MyTask*)begin;
+            task->Quit();
+            m_idle_tasks.Del(begin);
+            begin = begin->next;
+        }
+    }
+    pthread_mutex_unlock(&m_app_mutex);
+    return;
+}
+
 void MyApp::CheckStopTask()
 {
     char ch = 'y';
-#if 1
+
     MyTask* begin;
     MyTask* end;
 
@@ -157,43 +206,6 @@ void MyApp::CheckStopTask()
         }
         begin = (MyTask*)(begin->next);
     }
-#else
-    MyNode* begin;
-    MyNode* end;
-
-    begin= m_idle_tasks.Begin();
-    end = m_idle_tasks.End();
-    printf("end pointer %p\n",end);
-    for(;begin != end;)
-    {
-        // move MyTask recv queue to MyTask work queue
-        // delete from idle task queue
-        // weakup this task, continue
-        // TODO...
-        if(!((MyTask*)begin)->m_recv.IsEmpty())
-        {
-            ((MyTask*)begin)->m_que.Append(&((MyTask*)begin)->m_recv);
-            // be careful with this operator
-            m_idle_tasks.Del(begin,false);
-            ((MyTask*)begin)->SendMsg(&ch,MSG_LEN);
-            begin = begin->next;
-            continue;
-        }
-        // move MyApp recv queue to MyTask work queue
-        // weak up this task
-        // TODO...
-        if(!m_ev_recv.IsEmpty())
-        {
-            ((MyTask*)begin)->m_que.Append(&m_ev_recv);
-            m_idle_tasks.Del(begin,false);
-            // be careful with this operator
-            ((MyTask*)begin)->SendMsg(&ch,MSG_LEN);
-        }
-        printf("begin pointer %p\n",begin);
-        begin = begin->next;
-        printf("begin pointer %p\n",begin);
-    }
-#endif
 }
 void MyApp::HandleEvent(struct epoll_event* epev, int count)
 {
@@ -229,9 +241,9 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
     {
         // thread stop
         // TODO... nothing
-#if DEBUG_ERROR
-            MyDebugPrint("task error %d\n",task->GetThreadId());
-#endif
+        MyDebugPrint("main thread : get task %d quit msg\n",task->GetThreadId());
+        delete task;
+        m_cur_thread_size--;
     }else
     {
         // task need event

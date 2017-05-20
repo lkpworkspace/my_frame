@@ -125,7 +125,10 @@ IDE:
 2. 完善MyTask类的错误处理 // TODO...
 3. 实现RawSocket类       // TODO...
 
-
+05月20号
+1. 已完善MyTFTP的错误处理
+2. 已完善MyTask的错误处理
+3. 实现了MyApp的退出清理功能
 
 
 

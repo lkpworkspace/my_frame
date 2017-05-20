@@ -19,13 +19,13 @@ public:
     pid_t GetThreadId() {return m_id;}
     pthread_t GetPosixThreadId(){return m_thread;}
 protected:
+    void Lock();
+    void Unlock();
     static void* ListenThread(void*);
     pthread_t m_thread;                  // posix thread id
     pid_t m_id;                          // thread id
     pthread_mutex_t m_mutex;
 private:
-    void Lock();
-    void Unlock();
     bool CheckStatus();
     bool m_isRuning;
 };

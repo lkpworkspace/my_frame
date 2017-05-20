@@ -178,10 +178,16 @@ public:
         return true;
     }
 };
+void* QuitFunc(void*)
+{
+    printf("ok this app was exit\n");
+    return nullptr;
+}
 
 int main(int argc, char** argv)
 {
     MyApp app{2,1024};
+    app.SetQuitFunc(QuitFunc);
 
     // tcp test
 //    MyTcpServer *server = new MyTcpServer("",9999);
@@ -202,7 +208,7 @@ int main(int argc, char** argv)
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
-#if 1 // MyTFTP client
+#if 0 // MyTFTP client
     // MyTFTP test
     MyTFTP* tftp = new MyTFTP("",5555,true);
     tftp->SetRootDir("./");
@@ -250,6 +256,21 @@ int main(int argc, char** argv)
     });
     thr.detach();
 #endif
+
+
+#if 1  // test MyApp quit
+    std::thread thr([&](){
+        char ch;
+        sleep(1);
+        while((ch = getchar()) == 'q')
+        {
+            MyApp::theApp->Quit();
+            break;
+        }
+    });
+    thr.detach();
+#endif
+
     // ev procees
     AllEv* widget = new AllEv;
     widget = widget;
