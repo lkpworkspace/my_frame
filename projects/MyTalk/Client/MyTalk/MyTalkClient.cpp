@@ -153,7 +153,7 @@ void MyTalkClient::HandleFriend(MyAddrInfo info,char* buf, int len)
     // update ui
     // problely ui init later than this function, so sleep to wait ui init
     // bad code, wtf...
-    usleep(1000 * 100);
+    usleep(1000 * 500);
     MyDelegate::GetInstance()->AddFriend(myfriend->info,myfriend->name,myfriend->account,myfriend->mark);
     // send ok ack
     int lenx = 0;

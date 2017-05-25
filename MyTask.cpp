@@ -37,13 +37,23 @@ int MyTask::TaskWork()
 #if DEBUG_ERROR
     MyDebugPrint("task %d work, has %d event\n",GetThreadId(),m_que.Count());
 #endif
+    MyEvent* temp;
     MyEvent* begin = (MyEvent*)m_que.Begin();
     MyEvent* end = (MyEvent*)m_que.End();
     while(begin != end)
     {
+#if 0
+        static void* b = begin;
+        if(begin != b)
+        {
+            printf("begin %p m_recv %p\n",b,m_recv.End());
+            //assert(false);
+        }
+#endif
+        temp = (MyEvent*)(begin->next);
         begin->CallBackFunc(begin);
         m_que.Del((MyNode*)begin,false);
-        begin = (MyEvent*)(begin->next);
+        begin = (MyEvent*)(temp);
     }
     return 0;
 }

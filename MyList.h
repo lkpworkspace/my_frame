@@ -48,14 +48,14 @@ public:
     void Del(MyNode* node, bool b = false);
     void DelHead(bool b = false);
     void DelTail(bool b = false);
-    void DelWithIndex(int index,bool b = false);
+    void DelWithIndex(int index,bool b = false); // not useful
     void MoveHead(MyNode* node);
     void MoveTail(MyNode* node);
     void Append(MyList* from);
-    MyNode* Begin(){return GetData(0);}
+    MyNode* Begin(){return m_root.next;}
     MyNode* End(){return &m_root;}
 public:
-    MyNode* GetData(int index);
+    MyNode* GetData(int index);    // not useful
     int Count(){return m_count;}
     bool IsEmpty(){return &m_root == m_root.next;}
     void Clear(bool b = false);

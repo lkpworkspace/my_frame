@@ -158,14 +158,16 @@ void MyApp::QuitCheck()
     pthread_mutex_lock(&m_app_mutex);
     if(m_isQuit)
     {
+        MyNode* temp;
         MyNode* begin = m_idle_tasks.Begin();
         MyNode* end = m_idle_tasks.End();
         for(;begin != end;)
         {
+            temp = begin->next;
             MyTask *task = (MyTask*)begin;
             task->Quit();
             m_idle_tasks.Del(begin);
-            begin = begin->next;
+            begin = temp;
         }
     }
     pthread_mutex_unlock(&m_app_mutex);
@@ -178,11 +180,13 @@ void MyApp::CheckStopTask()
 
     MyTask* begin;
     MyTask* end;
+    MyTask* temp;
 
     begin= (MyTask*)m_idle_tasks.Begin();
     end = (MyTask*)m_idle_tasks.End();
     for(;begin != end;)
     {
+        temp = (MyTask*)(begin->next);
         // move MyTask recv queue to MyTask work queue
         // delete from idle task queue
         // weakup this task, continue
@@ -192,7 +196,7 @@ void MyApp::CheckStopTask()
             // be careful with this operator
             m_idle_tasks.Del((MyNode*)begin,false);
             begin->SendMsg(&ch,MSG_LEN);
-            begin = (MyTask*)(begin->next);
+            begin = (MyTask*)(temp);
             continue;
         }
         // move MyApp recv queue to MyTask work queue
@@ -200,11 +204,13 @@ void MyApp::CheckStopTask()
         if(!m_ev_recv.IsEmpty())
         {
             begin->m_que.Append(&m_ev_recv);
-            m_idle_tasks.Del((MyNode*)begin,false);
             // be careful with this operator
+            m_idle_tasks.Del((MyNode*)begin,false);
             begin->SendMsg(&ch,MSG_LEN);
+            begin = (MyTask*)(temp);
+            continue;
         }
-        begin = (MyTask*)(begin->next);
+        begin = (MyTask*)(temp);
     }
 }
 void MyApp::HandleEvent(struct epoll_event* epev, int count)

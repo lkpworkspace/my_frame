@@ -14,9 +14,9 @@ void MyList::__Add(MyNode* prev, MyNode* next, MyNode* node)
     if(!node) return;
     ++m_count;
     prev->next = node;
+    next->prev = node;
     node->prev = prev;
     node->next = next;
-    next->prev = node;
 }
 void MyList::AddHead(MyNode* node)
 {
@@ -39,16 +39,19 @@ void MyList::__Del(MyNode *prev, MyNode *next,bool b)
 void MyList::Del(MyNode *node,bool b)
 {
     __Del(node->prev,node->next,b);
+    node->prev = node->next = node;
 }
 void MyList::DelHead(bool b)
 {
     if(IsEmpty()) return;
-    __Del(&m_root,m_root.next->next,b);
+    //__Del(&m_root,m_root.next->next,b);
+    Del(m_root.next,b);
 }
 void MyList::DelTail(bool b)
 {
     if(IsEmpty()) return;
-    __Del(m_root.prev->prev,&m_root,b);
+    //__Del(m_root.prev->prev,&m_root,b);
+    Del(m_root.prev,b);
 }
 void MyList::DelWithIndex(int index,bool b)
 {
@@ -72,6 +75,7 @@ void MyList::MoveTail(MyNode* node)
 }
 void MyList::Append(MyList *from)
 {
+    if(from->IsEmpty()) return;
     MyNode* f_head = from->m_root.next;
     MyNode* f_tail = from->m_root.prev;
 

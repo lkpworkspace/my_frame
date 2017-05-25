@@ -259,9 +259,10 @@ int MyTFTP::HandleMsg3(MyAddrInfo& info,char* buf, int len)
         data_len = strlen(&buf[TFTP_HEAD_SIZE + TFTP_BLOCKNUM_SIZE]);
         fwrite(&buf[4],data_len,1,m_recv.fp);
         // send ack
+        MyDebugPrint("send ack num %d\n",b_num);
         int sendLen = BuildACK(b_num);
         Write(info,m_buf,sendLen);
-#ifdef TFTP_INFO
+#if 0
         MyDebugPrint("get 0x%04x block, data len %d\r", b_num, data_len);
 #endif
         m_recv.block_num++;
@@ -284,7 +285,7 @@ int MyTFTP::HandleMsg3(MyAddrInfo& info,char* buf, int len)
             sem_post(&m_recv.event_ok);
         InitRecvStruct();
 #ifdef TFTP_INFO
-        MyDebugPrint("get 0x%04x block, data len %d\r", b_num, data_len);
+        MyDebugPrint("trans file end\n");
 #endif
     }
     return (TFTP_HEAD_SIZE + TFTP_BLOCKNUM_SIZE + TFTP_DATA_SIZE + 1);
@@ -301,6 +302,7 @@ int MyTFTP::HandleMsg4(MyAddrInfo& info,char* buf, int len)
         if(block_num - m_send.block_num == 0)
         {
             sem_post(&m_send.event);
+            MyDebugPrint("get ack %d\n",block_num);
         }else
         {
             m_send.err_num = tftp_errmsgs[10].e_code;
@@ -395,7 +397,7 @@ void MyTFTP::Run()
             this->Stop();
             return;
         }
-        //MyDebugPrint("file block num %d, data_len %d\n",m_send.block_num, send_len);
+        MyDebugPrint("send block %d data_len %d\n",m_send.block_num,data_len);
     }
     else if(data_len == 0)
     {
@@ -403,8 +405,10 @@ void MyTFTP::Run()
         int send_len = BuildData(m_send.block_num,buf,data_len);
         this->Write(m_send.info,m_buf,send_len);
         this->Stop();
+        MyDebugPrint("file trans data_len %d\n",data_len);
     }else
     {
+        MyDebugPrint("file trans error data_len %d\n",data_len);
         this->Stop();
     }
 }

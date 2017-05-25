@@ -159,16 +159,17 @@ public:
             break;
         case MyEvent::CLASS_TYPE::UDPCLASS:
         {
+            static int count = 0;
             MyUdp* e = (MyUdp*)ev;
             char* buf;
             int len = 0;
 
             MyAddrInfo addr = e->RecvData(&buf,len);
-            printf("ip : %s, port : %u, recv: %s\n",
-                   addr.GetIp().c_str(),
-                   addr.GetPort(),
-                   buf);
-
+//            printf("ip : %s, port : %u, recv: %s\n",
+//                   addr.GetIp().c_str(),
+//                   addr.GetPort(),
+//                   buf);
+            MyDebugPrint("count %d\r",count++);
             MyApp::theApp->AddEvent(ev);
         }
             break;
@@ -186,7 +187,7 @@ void* QuitFunc(void*)
 
 int main(int argc, char** argv)
 {
-    MyApp app{2,1024};
+    MyApp app{1,1024};
     app.SetQuitFunc(QuitFunc);
 
     // tcp test
@@ -199,15 +200,35 @@ int main(int argc, char** argv)
 //    server1->Bind();
 //    server1->Listen(10);
 //    app.AddEvent(server1);
-
+#if 0
+#if 0
     // udp test
-//    MyUdp *server = new MyUdp("",4399,true);
-//    server->Bind();
-//    app.AddEvent(server);
-
+    MyUdp *server = new MyUdp("",4399,true);
+    server->Bind();
+    app.AddEvent(server);
+#else
+    MyUdp *client = new MyUdp("",5555,false);
+    app.AddEvent(client);
+    std::thread thr([&](){
+        sleep(1);
+        MyAddrInfo info;
+        info.SetPort(4399);
+        info.SetIP("127.0.0.1");
+        char buf[500];
+        memset(buf,1,sizeof(buf));
+        while(true)
+        {
+            usleep(1000*1);
+            client->Write(info,buf,500);
+        }
+    });
+    thr.detach();
+#endif
+#endif
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
+#if 1
 #if 0 // MyTFTP client
     // MyTFTP test
     MyTFTP* tftp = new MyTFTP("",5555,true);
@@ -232,8 +253,7 @@ int main(int argc, char** argv)
                 // upload file
                 tftp->SendFile(info,argv[2]);
             }
-            sleep(1);
-            exit(0);
+            MyApp::theApp->Quit();
         }
     });
     thr.detach();
@@ -242,6 +262,7 @@ int main(int argc, char** argv)
     tftp->SetRootDir("./");
     tftp->Bind();
     app.AddEvent(tftp);
+#endif
 #endif
 
 #if 0  // test MyNormalEvent
@@ -258,7 +279,7 @@ int main(int argc, char** argv)
 #endif
 
 
-#if 1  // test MyApp quit
+#if 0  // test MyApp quit
     std::thread thr([&](){
         char ch;
         sleep(1);

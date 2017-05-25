@@ -23,6 +23,7 @@ int MyUdp::Write(MyAddrInfo& info,char*buf,int len)
     socklen_t addr_len = sizeof(sockaddr_in);
     sockaddr_in addr = info.GetAddr();
     int res = sendto(m_sock,buf,len,0,(sockaddr*)&addr,addr_len);
+    assert(res == len);
     m_mutex.unlock();
     return res;
 }
