@@ -17,13 +17,15 @@ public:
     CLASS_TYPE GetClassType(){return CLASS_TYPE::BASECLASS;}
 
     int Work();                                        // invoke by child class
+    void SetFunc(void(*func)(my_master::MyEvent*)){m_event_func = func;}
 private:
-    int RecvMsg(char** buf, int len);                  // invoke by myself
+    int RecvMsg(char *buf, int len);                  // invoke by myself
     int SendMsg(const char* buf, int len);             // invoke by child class
     int CreateSockPair();   // communication between thread
     void Close(){close(m_msgFd[0]);close(m_msgFd[1]);}
     int m_msgFd[2];
     uint8_t m_msgBuf[MSG_LEN];
+    void (*m_event_func)(my_master::MyEvent* ev);
 };
 
 } // end namespace

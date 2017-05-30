@@ -21,6 +21,8 @@ public:
     void SetQuitFunc(common_func_t func){m_quit_func = func;}
     int Exec();                        // mainloop
     int Quit();                        // exit this app
+
+    MyNormalEvent* GetNormalEvent(){return m_quit_event;}
 private:
     int InitApp();
     void Run();                        // override Mythread method (do nothing)

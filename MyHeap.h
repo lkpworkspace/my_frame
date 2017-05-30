@@ -43,7 +43,161 @@ namespace my_master {
     while(!heap.IsEmpty())
         cout << heap.Pop() << endl;
 */
+#if 0
+template<typename T>
+class MyHeap
+{
+public:
+    // size: 定义数组的大小， cmp： 比较函数(可以使用蓝不达表达式), isBigHeap: 默认是大顶堆
+    MyHeap(int size, bool (*cmp)(const void* max, const void* min) = NULL, bool isBigHeap = true);
+    ~MyHeap(){__Destory();}
 
+    void Add(T data);                          // 往堆中添加元素
+    T Pop();                                   // 获得数组中的元素
+    T GetData(int index){return ((T*)m_data)[index];}
+    int Count(){return m_count;}               // 获得堆中的数量
+    bool IsEmpty() {return m_count == 0;}      // 是否为空
+private:
+    void __Del();                    // 删除堆顶元素
+    void __Destory();                // 清除函数
+    void __AdjustAdd(int i);         // 添加函数
+    void __AdjustDel();              // 删除函数
+    void __HeapAdjust(int idx);      // 堆调整函数
+    // true: a > b; false: a < b;
+    bool __cmp(T a, T b){return a > b;} /* 默认的比较函数 */
+
+    void** m_data;          /* T类型的数组指针 */
+    int m_size;             /* 数组总大小 */
+    int m_count;            /* 已使用的数量 */
+    bool m_isBigHeap;       /* 是否使用大顶堆 */
+    /* true: max > min; false: max < min */
+    bool (*m_cmp)(const void* max, const void* min);
+};
+
+template<typename T>
+MyHeap<T>::MyHeap(int size, bool (*cmp)(const void *max, const void *min), bool isBigHeap)
+{
+    m_size = size;
+    m_count = 0;
+    m_cmp = cmp;
+    m_isBigHeap = isBigHeap;
+    m_data = new void*[size];
+}
+
+template<typename T>
+void MyHeap<T>::__Destory()
+{
+    delete[] m_data;
+}
+
+// parent: 传入要调整元素的下标
+template<typename T>
+void MyHeap<T>::__HeapAdjust(int parent)
+{
+    T temp = ((T*)m_data)[parent];
+    int child = parent * 2 + 1;
+    if(m_isBigHeap)
+    {// 大顶堆
+        while(child < m_count)
+        {
+            temp = ((T*)m_data)[parent];
+            // 如果没有右节点，并且左节点小于父节点，不需要调整，返回
+            //if(child + 1 >= m_count && m_data[child] <= m_data[parent])
+            if(child + 1 >= m_count && m_cmp(((T*)m_data)[parent],((T*)m_data)[child]))
+                break;
+            // 如果有右节点，并且右孩子比左孩子大，则孩子节点换为右孩子
+            //if(child + 1 < m_count && m_data[child] < m_data[child + 1])
+            if(child + 1 < m_count && m_cmp(((T*)m_data)[child+1],((T*)m_data)[child]))
+                ++child;
+            // 如果父节点小于孩子节点，则将孩子赋值给父节点
+            //if(m_data[parent] < m_data[child])
+            if(m_cmp(((T*)m_data)[child],((T*)m_data)[parent]))
+                ((T*)m_data)[parent] = ((T*)m_data)[child];
+            parent = child;
+            child = 2 * child + 1;
+        }
+    }else
+    {// 小顶堆
+        while(child < m_count)
+        {
+            temp = ((T*)m_data)[parent];
+            // 如果没有右节点，并且左节点大于父节点，不需要调整，返回
+            if(child + 1 >= m_count && ((T*)m_data)[child] > ((T*)m_data)[parent])
+                break;
+            // 如果有右节点，并且右孩子比左孩子小，则孩子节点换为右孩子
+            if(child + 1 < m_count && ((T*)m_data)[child] > ((T*)m_data)[child + 1])
+                ++child;
+            // 如果父节点大于孩子节点，则将孩子赋值给父节点
+            if(((T*)m_data)[parent] > ((T*)m_data)[child])
+                ((T*)m_data)[parent] = ((T*)m_data)[child];
+            parent = child;
+            child = 2 * child + 1;
+        }
+    }
+    ((T*)m_data)[parent] = temp;
+
+}
+
+template<typename T>
+T MyHeap<T>::Pop()
+{
+    if(IsEmpty()) return NULL;
+    T temp = ((T*)m_data)[0];
+    __Del();
+    return temp;
+}
+
+template<typename T>
+void MyHeap<T>::Add(T data)
+{
+    /* 扩大内存 */
+    if(m_count == m_size)
+    {
+        void** temp = new void*[m_size + 32];
+        for(int i = 0; i < m_size; ++i)
+        {
+            ((T*)temp)[i] = ((T*)m_data)[i];
+        }
+        delete[] m_data;
+        m_data = temp;
+        m_size += 32;
+    }
+    // 加入堆
+    ((T*)m_data)[m_count++] = data;
+    __AdjustAdd(m_count - 1);
+}
+
+// 将元素加入最后，然后自低向上调整堆(i是插入数据的下标)
+template<typename T>
+void MyHeap<T>::__AdjustAdd(int i)
+{/* i = {0...(n-1)/2} */
+    int p;//父节点的下标
+
+    while(i > 0)
+    {
+        p = (i - 1) / 2;
+        __HeapAdjust(p);
+        i = p;
+    }
+}
+
+// 删除0下标的元素
+template<typename T>
+void MyHeap<T>::__Del()
+{
+    if(IsEmpty()) return;
+    __AdjustDel();
+}
+
+// 删除0下标的元素
+template<typename T>
+void MyHeap<T>::__AdjustDel()
+{
+    ((T*)m_data)[0] = ((T*)m_data)[m_count - 1];
+    --m_count;
+    __HeapAdjust(0);
+}
+#else
 template<typename T>
 class MyHeap
 {
@@ -194,7 +348,6 @@ void MyHeap<T>::__AdjustDel()
     --m_count;
     __HeapAdjust(0);
 }
-
-
+#endif
 } // end namespace
 #endif

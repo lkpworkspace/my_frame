@@ -6,6 +6,7 @@
 #include "MyUdp.h"
 #include "MyTFTP.h"
 #include "MyNormalEvent.h"
+#include "MyTimer.h"
 #include <thread>
 using namespace my_master;
 //#define TEST
@@ -190,6 +191,18 @@ int main(int argc, char** argv)
     MyApp app{1,1024};
     app.SetQuitFunc(QuitFunc);
 
+#if 1
+    // timer test
+    std::thread thr([&](){
+        sleep(1);
+        MyTimer* timer = new MyTimer(500);
+        timer->Start();
+        sleep(5);
+        timer->Stop();
+    });
+    thr.detach();
+#endif
+
     // tcp test
 //    MyTcpServer *server = new MyTcpServer("",9999);
 //    server->Bind();
@@ -200,6 +213,7 @@ int main(int argc, char** argv)
 //    server1->Bind();
 //    server1->Listen(10);
 //    app.AddEvent(server1);
+
 #if 0
 #if 0
     // udp test
@@ -225,10 +239,12 @@ int main(int argc, char** argv)
     thr.detach();
 #endif
 #endif
+
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
-#if 1
+
+#if 0
 #if 0 // MyTFTP client
     // MyTFTP test
     MyTFTP* tftp = new MyTFTP("",5555,true);
@@ -277,7 +293,6 @@ int main(int argc, char** argv)
     });
     thr.detach();
 #endif
-
 
 #if 0  // test MyApp quit
     std::thread thr([&](){
@@ -329,10 +344,58 @@ public:
     }
     int a;
 };
+class B
+{
+public:
+    B(int v){value = v;}
+    static bool Cmp(const void* max, const void* min)
+    {
+        B* ma = (B*)max;
+        B* mi = (B*)min;
+        if(ma->value >= mi->value)
+            return true;
+        return false;
+    }
+public:
+    int value;
+};
 
 int main()
 {
 #if 0
+    MyHeap<B*> heap(1024,&B::Cmp,true);
+    B* b1 = new B(2);
+    B* b2 = new B(5);
+    B* b3 = new B(4);
+    B* b4 = new B(9);
+    B* b5 = new B(3);
+    heap.Add(b1);
+    heap.Add(b2);
+    heap.Add(b3);
+//    heap.Add(b4);
+//    heap.Add(b5);
+    for(int i = 0; i < heap.Count();++i)
+    {
+        printf("%d\n",heap.GetData(i)->value);
+    }
+#endif
+    MyHeap<int> heap(10);
+    heap.Add(10);
+    heap.Add(20);
+    heap.Add(56);
+    heap.Add(30);
+    for(int i = 0; i < heap.Count(); ++i)
+    {
+        std::cout << heap.GetData(i) << std::endl;
+    }
+    std::cout << std::endl;
+    while(!heap.IsEmpty())
+        std::cout << heap.Pop() << std::endl;
+    return 0;
+}
+
+int main1()
+{
     MyList list;
     list.AddTail(new A(10));
 
@@ -348,7 +411,12 @@ int main()
         printf("begin pointer %p\n",begin);
     }
     std::getchar();
-#endif
+
+    return 0;
+}
+
+int main2()
+{
 #if 1
     MySqlite3 db("mydb.db");
     db.Open();
@@ -389,4 +457,5 @@ int main()
 #endif
     return 0;
 }
+
 #endif

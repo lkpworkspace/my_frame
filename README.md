@@ -129,6 +129,10 @@ IDE:
 1. 已完善MyTFTP的错误处理
 2. 已完善MyTask的错误处理
 3. 实现了MyApp的退出清理功能
+05月30号
+1. 修复MyNormalEvent中 多次调用Work方法，只响应一次的BUG
+2. MyTFTP还存在丢帧异常处理功能未完成
+3. 添加Timer类，哈哈哈， biubiubiu
 
 
 

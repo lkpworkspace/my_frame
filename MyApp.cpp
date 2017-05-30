@@ -1,6 +1,7 @@
 #include "MyApp.h"
 #include "MyTask.h"
 #include "MyLog.h"
+#include "MyTimer.h"
 
 #include <sys/types.h>
 #include <sys/ipc.h>
@@ -24,7 +25,6 @@ int MyApp::InitApp()
 {
     pthread_mutex_init(&m_app_mutex,NULL);
     m_isQuit = false;
-    m_quit_event = nullptr;
     m_quit_func = nullptr;
     // epoll create
     m_epollFd = epoll_create(m_evSize);
@@ -41,6 +41,8 @@ int MyApp::InitApp()
     {
         CreateTask();
     }
+    // init normal event
+    m_quit_event = new MyNormalEvent;
     return 0;
 }
 int MyApp::CreateTask()
@@ -141,7 +143,6 @@ int MyApp::Quit()
     m_isQuit = true;
     pthread_mutex_unlock(&m_app_mutex);
     // weakup mainloop to check quit flag
-    m_quit_event = new MyNormalEvent;
     m_quit_event->Work();
     return 0;
 }
@@ -150,7 +151,8 @@ int MyApp::Quit()
 int MyApp::TimerCheck()
 {
     // TODO...
-    return 1000*60;
+    // return  millisecond
+    return MyTimer::TimerCheck();
 }
 void MyApp::QuitCheck()
 {

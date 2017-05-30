@@ -1,4 +1,5 @@
 #include "MyNormalEvent.h"
+#include "MyLog.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 #include <MyApp.h>
@@ -7,6 +8,7 @@ using namespace my_master;
 
 MyNormalEvent::MyNormalEvent()
 {
+    m_event_func = nullptr;
     m_msgFd[0] = -1;
     m_msgFd[1] = -1;
     memset(m_msgBuf,0,1);
@@ -22,9 +24,14 @@ MyNormalEvent::~MyNormalEvent()
 void* MyNormalEvent::CallBackFunc(MyEvent *ev)
 {
     MyNormalEvent* ne = (MyNormalEvent*)ev;
-    char *buf;
+    char ch;
 
-    ne->RecvMsg(&buf,MSG_LEN);
+    while(ne->RecvMsg(&ch,MSG_LEN) == 1)
+    {
+        if(m_event_func != nullptr)
+            m_event_func(ev);
+        //MyDebugPrint("normal event\n");
+    }
     MyApp::theApp->AddEvent(ev);
     return NULL;
 }
@@ -35,7 +42,7 @@ int MyNormalEvent::Work()
     return SendMsg(&ch,MSG_LEN);
 }
 
-int MyNormalEvent::RecvMsg(char** buf, int len)
+int MyNormalEvent::RecvMsg(char* buf, int len)
 {
     return read(m_msgFd[1],buf,len);
 }

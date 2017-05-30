@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     MySqlite3.cpp \
     MyTFTP.cpp \
     MyKeyEvent.cpp \
-    MyNormalEvent.cpp
+    MyNormalEvent.cpp \
+    MyTimer.cpp
 
 HEADERS += \
     Common.h \
@@ -53,6 +54,7 @@ HEADERS += \
     MyTFTP.h \
     MyKeyEvent.h \
     3rd_src/Sqlite3/sqlite3ext.h \
-    MyNormalEvent.h
+    MyNormalEvent.h \
+    MyTimer.h
 
 DISTFILES +=
