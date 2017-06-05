@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#define CALL(name) MyCtrls::GetInst()->Get(name)
+#define CALL_CTRL(name) MyCtrls::GetInst()->Get(name)
 
 /*  maybe the UI control need inherit this class
  */
@@ -17,6 +17,7 @@ public:
     std::string& GetTypeName();
 
     virtual int Call(int num){}
+    virtual int Call(int num,void*){}
 private:
     std::string m_obj_name;
     std::string m_type_name;

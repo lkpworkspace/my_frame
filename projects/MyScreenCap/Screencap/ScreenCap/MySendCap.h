@@ -10,7 +10,7 @@ class MySendCap : public MyCtrlObj
 public:
     MySendCap(std::string key, MyAddrInfo info);
 
-    void Send(char *data, int len);
+    void Send(const char *data, int len);
 
 private:
     MyUdp* m_udp;

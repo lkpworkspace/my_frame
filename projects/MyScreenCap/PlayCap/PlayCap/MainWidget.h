@@ -14,8 +14,8 @@ class MainWidget : public QWidget, public MyCtrlObj
 public:
     explicit MainWidget(std::string key,QWidget *parent = 0);
     ~MainWidget();
-
-    void SetPic(const char* data);
+public slots:
+    void SetPic(QByteArray);
 private:
     Ui::MainWidget *ui;
 };

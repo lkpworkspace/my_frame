@@ -41,11 +41,11 @@ void MainWidget::BeginCap()
     cap.save(&buf,"png",20);
 
     // send to play client
-    MySendCap* sc = (MySendCap*)MyCtrls::GetInst()->Get("sendcap");
+    MySendCap* sc = (MySendCap*)CALL_CTRL("sendcap");
     qDebug("%d",ba.size());
-    //if(sc != NULL)
-    //    sc->Send(ba.data(),ba.size());
-
+    if(sc != NULL)
+        sc->Send(ba.data(),ba.size());
+#if 0
     // load pic from bytearray
     QPixmap temp;
     temp.loadFromData(ba,"png");
@@ -53,6 +53,7 @@ void MainWidget::BeginCap()
     // display to window
     ui->label->setPixmap(temp);
     ui->label->setScaledContents(true);
+#endif
 }
 
 void MainWidget::ButtonStartStop()

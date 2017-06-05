@@ -24,7 +24,7 @@ template<typename T>
 class MyVec
 {
 public:
-    MyVec(int step)
+    MyVec(int step = 64)
         :m_count(0), m_size(step), m_step(step), m_vs(NULL)
     { Create(); }
     ~MyVec(){ Destory(); }
@@ -33,6 +33,7 @@ public:
     void Remove(int index);
     int Count(){return m_count;}
     T Get(int index);
+    T* GetBuf(){ return m_vs; }
 private:
     void Create();
     void Destory();
