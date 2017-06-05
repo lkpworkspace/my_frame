@@ -82,45 +82,47 @@ uint64_t MyTimer::TimerCheck()
             temp = timer->m_time;
             if (timer != NULL && timer->m_time <= Common::GetTimerNow())
             {
-                timer->Work();
-                timer->m_time += timer->m_period;
-                temp_iter.push_back(iter);
-
                 if(!timer->IsStop())
+                {
+                    timer->Work();
+                    timer->m_time += timer->m_period;
+                    temp_iter.push_back(iter);
                     l_timers.insert(std::pair<uint64_t, MyTimer*>(
                         timer->m_time, timer));
+                }else
+                {
+                    temp_iter.push_back(iter);
+                }
             }else
             {
                 // 删除过期的定时器
-                for (temp_begin = temp_iter.begin(),temp_end = temp_iter.end();
-                    temp_begin != temp_end;
-                    ++temp_begin)
+                if(!temp_iter.empty())
                 {
-                    l_timers.erase(*temp_begin);
+                    for (temp_begin = temp_iter.begin(),temp_end = temp_iter.end();
+                        temp_begin != temp_end;
+                        ++temp_begin)
+                    {
+                        l_timers.erase(*temp_begin);
+                    }
+                    temp_iter.clear();
                 }
-                temp_iter.clear();
                 l_mutex.unlock();
                 return (temp - Common::GetTimerNow());
             }
         }
         // 删除过期的定时器
-        for (temp_begin = temp_iter.begin(),temp_end = temp_iter.end();
-            temp_begin != temp_end;
-            ++temp_begin)
+        if(!temp_iter.empty())
         {
-            l_timers.erase(*temp_begin);
+            for (temp_begin = temp_iter.begin(),temp_end = temp_iter.end();
+                temp_begin != temp_end;
+                ++temp_begin)
+            {
+                l_timers.erase(*temp_begin);
+            }
+            temp_iter.clear();
         }
-        temp_iter.clear();
     }
     l_mutex.unlock();
-#endif
-
-#if 0
-    // test ok
-    static int count = 0;
-    MyDebugPrint("%d\n",count++);
-    if(g_timer)
-        g_timer->Work();
 #endif
     return 1000 * 60;
 }

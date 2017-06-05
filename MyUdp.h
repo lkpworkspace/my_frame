@@ -9,7 +9,7 @@ namespace my_master {
 /*  udp package size  : suggest < 567 byte
  */
 
-#define RECV_SIZE 4096
+#define RECV_SIZE 65535
 class MyUdp : public my_master::MySock
 {
 public:
@@ -21,7 +21,7 @@ public:
     virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::UDPCLASS;}
 
     MyAddrInfo RecvData(char** buf, int& len);
-    int Write(MyAddrInfo &info, char*buf, int len);
+    int Write(MyAddrInfo &info,const char* buf, int len);
 
     int SetBoardCast();
 protected:
@@ -47,7 +47,7 @@ typedef struct data_t
     char buf[MYPROTO_MAX_BUF_SIZE];
 }data_t;
 
-class MySelfProtocol //: public my_master::MyUdp
+class MySelfProtocol
 {
 public:
     MySelfProtocol(){}

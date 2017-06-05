@@ -17,7 +17,7 @@ MyAddrInfo MyUdp::RecvData(char** buf, int& len)
     return MyAddrInfo(addr);
 }
 
-int MyUdp::Write(MyAddrInfo& info,char*buf,int len)
+int MyUdp::Write(MyAddrInfo& info,const char* buf,int len)
 {
     m_mutex.lock();
     socklen_t addr_len = sizeof(sockaddr_in);

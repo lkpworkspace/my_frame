@@ -186,6 +186,12 @@ void* QuitFunc(void*)
     return nullptr;
 }
 
+void* TimerFunc(void*)
+{
+    printf("timeer\n");
+    return nullptr;
+}
+
 int main(int argc, char** argv)
 {
     MyApp app{1,1024};
@@ -196,6 +202,7 @@ int main(int argc, char** argv)
     std::thread thr([&](){
         sleep(1);
         MyTimer* timer = new MyTimer(500);
+        timer->SetCallFunc(&TimerFunc);
         timer->Start();
         sleep(5);
         timer->Stop();
