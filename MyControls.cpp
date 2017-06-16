@@ -49,9 +49,7 @@ MyCtrls* MyCtrls::GetInst()
 }
 
 MyCtrls::MyCtrls()
-{
-
-}
+{}
 
 MyCtrlObj* MyCtrls::Get(const std::string key)
 {

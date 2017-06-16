@@ -51,8 +51,10 @@ public:
     virtual void* CallBackFunc(MyEvent *);
 
     MyTcpSocket& operator=(MyTcpSocket& other);
+
     int Read(char*, int);
     int Write(const char*,int);
+
     std::string GetIp();
     unsigned short GetPort();
 private:

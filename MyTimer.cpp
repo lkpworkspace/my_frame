@@ -16,6 +16,8 @@ MyTimer::MyTimer(int period)
     // test
     g_timer = this;
     // test end
+
+    // reg call func
     SetFunc(&MyTimer::CallFunc);
 }
 

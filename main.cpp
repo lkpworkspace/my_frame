@@ -7,12 +7,13 @@
 #include "MyTFTP.h"
 #include "MyNormalEvent.h"
 #include "MyTimer.h"
+#include "MyFileEvent.h"
 #include <thread>
 using namespace my_master;
 //#define TEST
 
 #ifndef TEST
-#if 1
+
 // server
 class MyRecv : public MyTcpSocket
 { // maybe do not us the method
@@ -81,19 +82,6 @@ public:
         printf("button type = %d, x = %d, y = %d\n",
                GetMouseType(),GetRelX(),GetRelY());
         MyApp::theApp->AddEvent(ev);
-        return NULL;
-    }
-};
-
-class Normal : public MyNormalEvent
-{
-public:
-    void* CallBackFunc(MyEvent *ev)
-    {
-        // TODO...
-        printf("normal task worked...\n");
-
-        MyNormalEvent::CallBackFunc(ev);
         return NULL;
     }
 };
@@ -174,6 +162,11 @@ public:
             MyApp::theApp->AddEvent(ev);
         }
             break;
+        case MyEvent::CLASS_TYPE::FILECLASS:
+        {
+            MyFileEvent::GetInfo();
+        }
+            break;
         default:
             break;
         }
@@ -198,6 +191,12 @@ int main(int argc, char** argv)
     app.SetQuitFunc(QuitFunc);
 
 #if 1
+    // file monitor test
+    MyFileEvent* fileEvent = new MyFileEvent();
+    MyFileEvent::StartMonitor("filetest.txt");
+#endif
+
+#if 0
     // timer test
     std::thread thr([&](){
         sleep(1);
@@ -208,7 +207,7 @@ int main(int argc, char** argv)
         timer->Stop();
     });
     thr.detach();
-#endif
+#endif // end timer test
 
     // tcp test
 //    MyTcpServer *server = new MyTcpServer("",9999);
@@ -221,13 +220,14 @@ int main(int argc, char** argv)
 //    server1->Listen(10);
 //    app.AddEvent(server1);
 
+#if 0 // udp test
 #if 0
-#if 0
-    // udp test
+    // udp server
     MyUdp *server = new MyUdp("",4399,true);
     server->Bind();
     app.AddEvent(server);
 #else
+    // udp client
     MyUdp *client = new MyUdp("",5555,false);
     app.AddEvent(client);
     std::thread thr([&](){
@@ -245,15 +245,14 @@ int main(int argc, char** argv)
     });
     thr.detach();
 #endif
-#endif
+#endif // end udp test
 
     // mouse test
     //MyMouseEvent* mouse = new MyMouseEvent;
     //app.AddEvent(mouse);
 
-#if 0
+#if 0 // MyTFTP test
 #if 0 // MyTFTP client
-    // MyTFTP test
     MyTFTP* tftp = new MyTFTP("",5555,true);
     tftp->SetRootDir("./");
     app.AddEvent(tftp);
@@ -286,19 +285,10 @@ int main(int argc, char** argv)
     tftp->Bind();
     app.AddEvent(tftp);
 #endif
-#endif
+#endif // end MyTFTP test
 
 #if 0  // test MyNormalEvent
-    Normal *normal = new Normal();
-    std::thread thr([&](){
-        char ch;
-        while((ch = getchar()) != 'q')
-        {
-            printf("thread work...\n");
-            normal->Work();
-        }
-    });
-    thr.detach();
+    // see MyTimer used MyNormalEvent
 #endif
 
 #if 0  // test MyApp quit
@@ -312,7 +302,7 @@ int main(int argc, char** argv)
         }
     });
     thr.detach();
-#endif
+#endif // end MyApp quit test
 
     // ev procees
     AllEv* widget = new AllEv;
@@ -320,9 +310,9 @@ int main(int argc, char** argv)
 
     return app.Exec();
 }
-#else
-// client
-int main(int argc, char *argv[])
+
+// tcp client test
+int main1(int argc, char *argv[])
 {
     MyTcp client("127.0.0.1",19999,false);
     client.Connect();
@@ -338,8 +328,18 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-#endif
-#endif
+
+#endif // end not define TEST
+
+
+
+
+
+
+
+
+
+
 
 
 #ifdef TEST

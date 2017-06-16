@@ -24,7 +24,8 @@ public:
         UDPCLASS,
         UDPSOCKET,
         MOUSE,
-        KEY
+        KEY,
+        FILECLASS
     };
 
 public:

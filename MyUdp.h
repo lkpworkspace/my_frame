@@ -35,12 +35,7 @@ private:
 /*  | header(2byte) | datalen(2byte) | data(0-512byte) |
  *
  */
-
-#define MYPROTO_MAX_BUF_SIZE  1024
-#define MYPROTO_HEAD_SIZE 2
-// exclude 1000
-#define MYPROTO_BEGIN_NUM 1000
-#define MYPROTO_DATA_SIZE 512
+#define MYPROTO_MAX_BUF_SIZE  2048
 typedef struct data_t
 {
     uint16_t len;

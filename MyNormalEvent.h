@@ -13,7 +13,7 @@ public:
     int GetEventFd(){return m_msgFd[1];}
     EVENT_TYPE GetEventType(){return EVENT_TYPE::FILEFD;}
     uint32_t GetEpollEventType(){ return EPOLLIN; }
-    virtual void* CallBackFunc(MyEvent *);             // need override by child class
+    virtual void* CallBackFunc(MyEvent *);
     CLASS_TYPE GetClassType(){return CLASS_TYPE::BASECLASS;}
 
     int Work();                                        // invoke by child class

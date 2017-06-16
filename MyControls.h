@@ -3,8 +3,8 @@
 #include <map>
 #include <string>
 
-#define CALL_CTRL(name) MyCtrls::GetInst()->Get(name)
-
+#define REQUEST(name) MyCtrls::GetInst()->Get(name)
+#define UNREG(name) MyCtrls::GetInst()->UnRegCtrl(name)
 /*  maybe the UI control need inherit this class
  */
 class MyCtrlObj

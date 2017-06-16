@@ -5,6 +5,7 @@
 #include <QBuffer>
 #include "MySendCap.h"
 #include <QDebug>
+#include <QSize>
 
 MainWidget::MainWidget(std::__cxx11::string key, QWidget *parent) :
     QWidget(parent),
@@ -38,7 +39,10 @@ void MainWidget::BeginCap()
     QPixmap cap = m_screen->grabWindow(0);
     // save to array
     buf.open(QIODevice::WriteOnly);
-    cap.save(&buf,"png",20);
+    // scale
+    QSize picSize(600,400);
+    QPixmap scaledPixmap = cap.scaled(picSize);
+    scaledPixmap.save(&buf,"png",20);
 
     // send to play client
     MySendCap* sc = (MySendCap*)CALL_CTRL("sendcap");
@@ -54,6 +58,8 @@ void MainWidget::BeginCap()
     ui->label->setPixmap(temp);
     ui->label->setScaledContents(true);
 #endif
+
+    ba.clear();
 }
 
 void MainWidget::ButtonStartStop()

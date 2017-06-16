@@ -70,24 +70,12 @@ std::string MyHelp::ToStr(unsigned long num, int base)
 	return std::string(buf);
 }
 
-std::vector<std::string> MyHelp::SplitStr(std::string str, char split)
+char MyHelp::ToChar(uint8_t num)
 {
-	int pos;
-	std::vector<std::string> res;
-	str += split;
-	int size = str.size();
-
-	for (int i = 0; i < size; ++i)
-	{
-		pos = str.find(split, i);
-		if (pos < size)
-		{
-			std::string s = str.substr(i, pos - i);
-			res.push_back(s);
-			i = pos;
-		}
-	}
-	return res;
+    if(num < 0 || num > 10)
+        return '\0';
+    num += 48;
+    return (char)num;
 }
 
 std::string MyHelp::GetCurTime()
@@ -151,12 +139,43 @@ uint8_t MyHelp::CheckSum(uint8_t* buf, int len)
 // min : include; max : exclude
 uint8_t MyHelp::RandomNum(int min, int max) // Éú³ÉÒ»×Ö½ÚµÄËæ»úÊý
 {
+    static bool is_invoke = false;
+    if(!is_invoke)
+    {
+        srand((unsigned int)time(NULL));
+        is_invoke = true;
+    }
 	uint8_t temp = 0x00;
 
 	if (max < min) return 0x00;
 	temp = rand() % (max - min) + min;
 	return temp;
 }
+
+std::string MyHelp::RandomString(int len)
+{
+    char ch;
+    std::string res;
+    res.clear();
+    uint8_t en_tab[] = {
+        'A','B','C','D','E','F','G','H',
+        'I','J','K','L','M','N','O','P',
+        'Q','R','S','T','U','V','W','X',
+        'Y','Z','a','b','c','d','e','f',
+        'g','h','i','j','k','l','m','n',
+        'o','p','q','r','s','t','u','v',
+        'w','x','y','z','0','1','2','3',
+        '4','5','6','7','8','9'
+    };
+    for(int i = 0; i < len; ++i)
+    {
+        int index = RandomNum(0,sizeof(en_tab));
+        ch = en_tab[index];
+        res += ch;
+    }
+    return res;
+}
+
 std::string MyHelp::ToMutlStr(uint8_t* buf, int len)
 {
 	std::string temp;
@@ -186,3 +205,22 @@ std::string MyHelp::ToMutlStr(uint8_t* buf, int len)
 	return temp;
 }
 
+std::vector<std::string> MyHelp::SplitStr(std::string str, char split)
+{
+    int pos;
+    std::vector<std::string> res;
+    str += split;
+    int size = str.size();
+
+    for (int i = 0; i < size; ++i)
+    {
+        pos = str.find(split, i);
+        if (pos < size)
+        {
+            std::string s = str.substr(i, pos - i);
+            res.push_back(s);
+            i = pos;
+        }
+    }
+    return res;
+}

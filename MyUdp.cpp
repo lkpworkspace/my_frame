@@ -4,6 +4,7 @@ MyUdp::MyUdp(std::string ip,uint16_t port, bool isServer)
     :MySock(ip,port,SOCK_DGRAM,isServer)
 {
     memset(m_buf,0,RECV_SIZE);
+    SetNonblock(true);
 }
 MyAddrInfo MyUdp::RecvData(char** buf, int& len)
 {// TODO...
