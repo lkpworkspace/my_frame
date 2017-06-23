@@ -30,6 +30,9 @@ easy coding on linux
 | MyRawSock         |           |    // TODO...               |                          |             
 | MyFileEvent       |    no     |    // TODO...               |                          |
 | MyTimer           |    no     |    继承MyNormalEvent        | no|
+| MyTcpFrame        |           |   解析Tcp 数据流类         ||
+| MyEasyTcpSocket   |    no     |   TCP socket，继承MyTcpFrame，MyTcpSocket||
+| MyEasyTcpClient   |    no     |   TCP client，继承MyTcpFrame，MyTcpClient||
 
 ## 数据结构类
 	MyList                           双向循环链表

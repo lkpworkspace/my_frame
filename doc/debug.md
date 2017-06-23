@@ -79,3 +79,12 @@
 
 ## 06月06号
 1. 完成录屏软件的编写可以进行远程录屏, biubiubiu
+
+## 06月23号
+1. 完成Tcp数据流解析工作，添加MyTcpFrame， MyEasyTcpClient， MyEasySocket类
+2. 存在潜在问题，delete 的时机问题 // TODO...
+3. MyTcpFrame中 EasyWrite 需要考虑写数据的完整性问题 // TODO...
+
+
+
+

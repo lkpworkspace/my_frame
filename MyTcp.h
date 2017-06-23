@@ -2,6 +2,7 @@
 #define MYTCP_H
 #include "Common.h"
 #include "MySock.h"
+#include <queue>
 
 namespace my_master {
 class MyTcpSocket;
@@ -62,5 +63,73 @@ private:
     sockaddr_in m_addr;
 };
 
+// change tcp data stream to one frame
+class MyTcpFrame
+{
+public:
+    MyTcpFrame();
+    virtual ~MyTcpFrame();
+    ////////////////////////////////////////////////////////
+    /// \brief Frame
+    /// \param buf
+    /// \param len
+    ///     if 0, client quit
+    /// \return
+    ///     if true, add event to epoll
+    ///     if false, do nothing
+    virtual int Frame(const char* buf, int len) = 0;
+    int EasyWrite(const char* buf, uint16_t len);
+protected:
+    virtual int ReadBuf(char* buf, int len) = 0;
+    virtual int WriteBuf(const char* buf, int len) = 0;
+
+    int GetBuf1();
+private:
+    //ssize_t ReadN(char* buf, size_t len);
+    //ssize_t WriteN(const char* buf, size_t len);
+    uint16_t m_len;
+    bool m_iscomplete;
+    std::queue<char> m_datas;
+};
+
+class MyEasyTcpSocket : public MyTcpSocket, public MyTcpFrame
+{
+public:
+    MyEasyTcpSocket(int fd, sockaddr_in addr);
+    virtual ~MyEasyTcpSocket();
+
+    virtual int Frame(const char* buf, int len) = 0;
+private:
+    virtual int ReadBuf(char* buf, int len);
+    virtual int WriteBuf(const char* buf, int len);
+    virtual void* CallBackFunc(MyEvent *);
+};
+
+class MyEasyTcpClient : public MyTcpClient, public MyTcpFrame
+{
+public:
+    MyEasyTcpClient(std::string ip, uint16_t port);
+    virtual ~MyEasyTcpClient();
+
+    virtual int Frame(const char* buf, int len) = 0;
+private:
+    virtual int ReadBuf(char* buf, int len);
+    virtual int WriteBuf(const char* buf, int len);
+    virtual void* CallBackFunc(MyEvent *);
+};
+
 } // end namespace
 #endif // MYTCP_H
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -52,12 +52,12 @@ public:
     static void FreeBuf(char* buf);
     ////////////////////////////////////////////////
     /// handle
-    static uint16_t HandleHeader(char* buf);
-    static uint16_t HandleLen(int offset, char* buf, int len);
-    static uint8_t HandleChar(int offset, char* buf, int len);
+    static uint16_t HandleHeader(const char* buf);
+    static uint16_t HandleLen(int offset, const char* buf, int len);
+    static uint8_t HandleChar(int offset, const char* buf, int len);
 
-    static std::string HandleString(int offset, char* buf, int len);
-    static data_t HandleData(int offset, char* buf, int len);
+    static std::string HandleString(int offset, const char* buf, int len);
+    static data_t HandleData(int offset, const char* buf, int len);
     ////////////////////////////////////////////////
     /// build
     static int BuildHeader(uint16_t head, char* buf, int len);

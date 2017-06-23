@@ -57,14 +57,14 @@ void MySelfProtocol::FreeBuf(char* buf)
 
 ////////////////////////////////////////////////
 /// handle
-uint16_t MySelfProtocol::HandleHeader(char* buf)
+uint16_t MySelfProtocol::HandleHeader(const char *buf)
 {
     uint16_t head;
     memcpy(&head,&buf[0],sizeof(uint16_t));
     return head;
 }
 
-uint16_t MySelfProtocol::HandleLen(int offset, char* buf, int len)
+uint16_t MySelfProtocol::HandleLen(int offset, const char* buf, int len)
 {
     if(offset + sizeof(uint16_t) > len)
         return 0;
@@ -73,7 +73,7 @@ uint16_t MySelfProtocol::HandleLen(int offset, char* buf, int len)
     return data_len;
 }
 
-uint8_t MySelfProtocol::HandleChar(int offset, char* buf, int len)
+uint8_t MySelfProtocol::HandleChar(int offset, const char *buf, int len)
 {
     if(offset + sizeof(uint8_t) > len)
         return 0;
@@ -82,7 +82,7 @@ uint8_t MySelfProtocol::HandleChar(int offset, char* buf, int len)
     return data_len;
 }
 
-std::string MySelfProtocol::HandleString(int offset, char* buf, int len)
+std::string MySelfProtocol::HandleString(int offset, const char *buf, int len)
 {
     char temp_buf[MYPROTO_MAX_BUF_SIZE] = {0};
     int str_len = strlen(&buf[offset]);
@@ -90,7 +90,7 @@ std::string MySelfProtocol::HandleString(int offset, char* buf, int len)
     return std::string(temp_buf);
 }
 
-data_t MySelfProtocol::HandleData(int offset, char* buf, int len)
+data_t MySelfProtocol::HandleData(int offset, const char* buf, int len)
 {
     data_t my_data;
 

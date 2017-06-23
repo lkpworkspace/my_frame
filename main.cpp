@@ -311,24 +311,6 @@ int main(int argc, char** argv)
     return app.Exec();
 }
 
-// tcp client test
-int main1(int argc, char *argv[])
-{
-    MyTcp client("127.0.0.1",19999,false);
-    client.Connect();
-
-    char buf[20] = {0};
-    int res = 0;
-    while(true)
-    {
-        fscanf(stdin,"%s",buf);
-        res = client.Write(buf,20);
-        //printf("read %d byte : %s\n",res,buf);
-        memset(buf,0,20);
-    }
-    return 0;
-}
-
 #endif // end not define TEST
 
 
