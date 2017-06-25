@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QSize>
 
-MainWidget::MainWidget(std::__cxx11::string key, QWidget *parent) :
+MainWidget::MainWidget(std::string key, QWidget *parent) :
     QWidget(parent),
     MyCtrlObj(key),
     ui(new Ui::MainWidget)
@@ -17,7 +17,6 @@ MainWidget::MainWidget(std::__cxx11::string key, QWidget *parent) :
     // init
     m_login = new MyLogin();
     m_login->hide();
-
     m_screen = QGuiApplication::primaryScreen();
     m_screencap_timer = new QTimer(this);
 
@@ -27,10 +26,11 @@ MainWidget::MainWidget(std::__cxx11::string key, QWidget *parent) :
     connect(this,SIGNAL(GetAccount()),this,SLOT(UpdateAccount()));
     connect(this,SIGNAL(Cap()),this,SLOT(StartCap()));
     connect(this,SIGNAL(EndCap()),this,SLOT(StopCap()));
+    connect(m_login,SIGNAL(Login(QString,QString)),this,SLOT(GetAccAndPass(QString,QString)));
+    connect(this,SIGNAL(GetPic(QByteArray)),this,SLOT(DisplayPic(QByteArray)));
 
     // init method
     ui->pushButton_begin->setText("Connect...");
-    m_is_start = false;
 }
 
 MainWidget::~MainWidget()
@@ -50,14 +50,14 @@ void MainWidget::BeginCap()
     QSize picSize(600,350);
     QPixmap scaledPixmap = cap.scaled(picSize);
     scaledPixmap.save(&buf,"png",20);
-#if 0
-    // send to play client
-    MySendCap* sc = (MySendCap*)CALL_CTRL("sendcap");
-    qDebug("%d",ba.size());
-    if(sc != NULL)
-        sc->Send(ba.data(),ba.size());
-#endif
 #if 1
+    // send to play client
+    MyCapClient* sc = (MyCapClient*)REQUEST("client");
+    //qDebug("pic size %d",ba.size());
+    if(sc != NULL)
+        sc->EasySendPic(ba.data(),ba.size());
+#endif
+#if 0
     // load pic from bytearray
     QPixmap temp;
     temp.loadFromData(ba,"png");
@@ -65,6 +65,12 @@ void MainWidget::BeginCap()
     // display to window
     ui->label_pic->setPixmap(temp);
     ui->label_pic->setScaledContents(true);
+#endif
+#if 0
+    // test
+    for(int i = 0; i < 20; ++i)
+        printf("%02x\n",ba.at(i));
+    m_screencap_timer->stop();
 #endif
     ba.clear();
 }
@@ -77,18 +83,36 @@ void MainWidget::UpdateAccount()
     ui->label_pass->setText(client->GetPass().c_str());
 }
 
+void MainWidget::GetAccAndPass(QString acc,QString pass)
+{
+    qDebug() << acc << "  " << pass;
+    ((MyCapClient*)REQUEST("client"))->ConnectTo(acc.toStdString(),pass.toStdString());
+}
+
+void MainWidget::DisplayPic(QByteArray ba)
+{
+    // load pic from bytearray
+#if 1
+    QPixmap temp;
+    temp.loadFromData(ba,"png");
+
+    // display to window
+    ui->label_pic->setPixmap(temp);
+    ui->label_pic->setScaledContents(true);
+#else
+    qDebug("dis pic size %d\n",ba.size());
+    for(int i = 0; i < 20; ++i)
+        printf("%02x\n",ba.at(i));
+
+    static int temp = 0;
+    ui->label_pic->setText(std::to_string(temp++).c_str());
+#endif
+}
+
 
 void MainWidget::ButtonStartStop()
 {
     m_login->show();
-    ((MyCapClient*)REQUEST("client"))->ConnectTo("123456789","1234");
-#if 0
-    if(m_is_start)
-        StopCap();
-    else
-        StartCap();
-    m_is_start = !m_is_start;
-#endif
 }
 
 void MainWidget::StartCap()

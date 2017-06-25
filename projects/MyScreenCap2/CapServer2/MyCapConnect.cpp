@@ -28,7 +28,7 @@ int MyCapConnect::Frame(const char *buf, int len)
         printf("Frame: client quit\n");
         return false;
     }
-    printf("Get Frame :\n");
+    //printf("Get Frame :\n");
     Handle(buf,len);
     return true;
 }
@@ -41,14 +41,21 @@ void MyCapConnect::Handle(const char* buf, int len)
     case 0x0003:
         HandleConnectMsg(buf,len);
         break;
+#if 1
     case 0x0004:
         HandleData(buf,len);
         break;
     case 0xffff:
-        MyDebugPrint("error in this case");
+        MyDebugPrint("error in this case 0xffff\n");
         break;
     default:
+        MyDebugPrint("error in this case %d\n",head);
         break;
+#else
+    default:
+        HandleData(buf,len);
+        break;
+#endif
     }
 }
 
@@ -67,6 +74,7 @@ void MyCapConnect::HandleConnectMsg(const char* buf, int len)
     {
         temp->m_conn_account = m_account;
         temp->m_conn_pass = m_pass;
+        // send to client
         temp->EasyWrite(buf,len);
     }
 }

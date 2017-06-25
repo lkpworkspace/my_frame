@@ -14,7 +14,8 @@ MyCapClient::MyCapClient(std::string key,
       m_conn_account(""),
       m_conn_pass("")
 {
-
+    m_buf = new char[1024* 1024 * 10];
+    m_index = 0;
 }
 
 int MyCapClient::Frame(const char *buf, int len)
@@ -22,10 +23,66 @@ int MyCapClient::Frame(const char *buf, int len)
     if(len == 0)
         return false;
 
-    printf("client frame get buf\n");
+    //printf("client frame get buf\n");
 
     Handle(buf,len);
     return true;
+}
+
+void MyCapClient::EasySendPic(const char* data, int len)
+{
+#define USE_HEAD
+    // head(2byte) data_len(2byte) data(len)
+    int index = 0;
+    int out_len = 0;
+    int count = len / 1024;
+    int last = len % 1024;
+    char* buf = new char[len];
+
+    memset(buf,0,len);
+    memcpy(buf,data,len);
+
+    for(int i = 0; i < count; ++i)
+    {
+#ifdef USE_HEAD
+        char* temp = BuildData(&buf[index],1024,&out_len);
+        EasyWrite(temp,out_len);
+        MySelfProtocol::FreeBuf(temp);
+#else
+        EasyWrite(&buf[index],1024);
+#endif
+        index += 1024;
+        usleep(5);
+    }
+    if(last >= 0)
+    {
+#ifdef USE_HEAD
+        char* temp = BuildData(&buf[index],last,&out_len);
+        EasyWrite(temp,out_len);
+        MySelfProtocol::FreeBuf(temp);
+#else
+        EasyWrite(&buf[index],last);
+#endif
+    }
+    delete[] buf;
+}
+
+char* MyCapClient::BuildData(const char* buf, uint16_t len, int* outlen)
+{
+    int index = 0;
+    int out_len = 0;
+    uint16_t head = 0x0004;
+
+    char* bufx = MySelfProtocol::GetBuf(&out_len);
+    index += MySelfProtocol::BuildHeader(head,bufx,out_len);
+    index += MySelfProtocol::BuildLen(len,index,bufx,out_len);
+    if(len > 0)
+    {
+        memcpy(&bufx[index],buf,len);
+        index += len;
+    }
+    *outlen = index;
+    return bufx;
 }
 
 void MyCapClient::Run()
@@ -62,6 +119,7 @@ void MyCapClient::Handle(const char* buf, int len)
         HandleData(buf,len);
         break;
     default:
+        MyDebugPrint("should not in this case\n");
         break;
     }
 }
@@ -91,8 +149,19 @@ void MyCapClient::HandleData(const char* buf, int len)
     int index = 2;
     uint16_t data_len = 0;
     data_len = MySelfProtocol::HandleLen(index,buf,len);
-    index += data_len;
+    index += 2;
     // TODO...
+    if(data_len > 0)
+        memcpy(&m_buf[m_index],&buf[index],data_len);
+    m_index += data_len;
+
+    if(data_len != 1024)
+    {
+        //qDebug("%d\n",m_index);
+        QByteArray ba(m_buf,m_index);
+        ((MainWidget*)REQUEST("mainwidget"))->GetPic(ba);
+        m_index = 0;
+    }
 }
 
 char* MyCapClient::BuildConnectMsg(std::string dst_account, std::string dst_pass, int* outlen)

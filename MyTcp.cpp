@@ -142,10 +142,71 @@ int MyTcpFrame::EasyWrite(const char* buf, uint16_t len)
     index += MySelfProtocol::BuildHeader(len,temp,lenx);
     memcpy(&temp[sizeof(len)],buf,len);
     index += len;
+    // write
+    // TODO...
+    // end write
     res = WriteBuf(temp,index);
     MySelfProtocol::FreeBuf(temp);
     return (res - sizeof(len));
 }
+/*
+int WriteNonBlock(const char* send_buf, size_t send_len, int retrytimes)
+{
+    int sentlen = 0;//已经发送的长度
+
+    while(retrytimes && sentlen < send_len)
+    {
+        int ret = write(fd_, send_buf+sentlen, send_len-sentlen);
+        if(ret > 0)
+        {
+            sentlen += ret;
+            if(sentlen == send_len)
+            {
+                return sentlen;
+            }
+        }
+        else if(errno == EINTR)
+        {
+            continue;
+        }
+        else if(errno == EAGAIN)
+        {
+            retrytimes--;
+            continue;
+        }
+    }
+
+    return -1;
+}
+
+int ReadNonBlock(char* recv_buf, size_t recv_len, int retrytimes)
+{
+    int readlen = 0;//已经读到的长度
+    while(retrytimes && readlen < recv_len)
+    {
+        int ret = read(fd_, recv_buf+readlen, recv_len-readlen);
+        if(ret == 0)//已到达文件末尾
+        {
+            return readlen;
+        }
+        if(ret > 0)
+        {
+            readlen += ret;
+        }
+        else if(errno == EINTR)
+        {
+            continue;
+        }
+        else if(errno == EAGAIN)
+        {
+            retrytimes--;
+            continue;
+        }
+    }
+
+    return -1;
+}
+*/
 
 int MyTcpFrame::GetBuf1()
 {

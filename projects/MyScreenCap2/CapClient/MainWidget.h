@@ -20,6 +20,7 @@ public:
     ~MainWidget();
 
 signals:
+    void GetPic(QByteArray);
     void GetAccount();
     void Cap();
     void EndCap();
@@ -31,6 +32,8 @@ public slots:
     void ButtonStartStop();
 
     void UpdateAccount();
+    void GetAccAndPass(QString,QString);
+    void DisplayPic(QByteArray);
 private:
     Ui::MainWidget *ui;
     MyLogin* m_login;
