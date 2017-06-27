@@ -119,10 +119,12 @@ void MainWidget::StartCap()
 {
     m_screencap_timer->start(20);
     ui->textEdit->append("begin capture...");
+    ui->label_pic->setText("");
 }
 
 void MainWidget::StopCap()
 {
     m_screencap_timer->stop();
     ui->textEdit->append("stop capture...");
+    ui->label_pic->setText("connect client quit");
 }

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "MyEvent.h"
 #include "MyAllEvent.h"
+#include "MyLog.h"
 using namespace my_master;
 MySock::MySock(std::string ip, uint16_t port, int type, bool isServer)
     :m_sock(-1),
@@ -31,6 +32,12 @@ MySock::MySock(std::string ip, uint16_t port, int type, bool isServer)
     }
     m_sock = Socket(AF_INET,type,0);
 }
+
+MySock::~MySock(){
+    MyDebugPrint("sock close\n");
+    Close();
+}
+
 void* MySock::CallBackFunc(MyEvent * ev)
 {
     MyAllEvent::BoardEvent(ev);
@@ -38,6 +45,11 @@ void* MySock::CallBackFunc(MyEvent * ev)
 }
 
 /////////////////////////////////////////////////// share
+int MySock::SetReuseSock()
+{
+    return MyNet::SetReuseSock(m_sock);
+}
+
 int MySock::SetNonblock(bool b)
 {
     return Common::SetNonblock(m_sock,b);

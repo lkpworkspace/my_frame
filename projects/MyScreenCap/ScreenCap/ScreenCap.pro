@@ -1,14 +1,34 @@
+#-------------------------------------------------
+#
+# Project created by QtCreator 2017-06-03T14:31:23
+#
+#-------------------------------------------------
+
+QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = ScreenCap
 TEMPLATE = app
-CONFIG += console c++11
-CONFIG -= app_bundle
-CONFIG -= qt
+
+# The following define makes your compiler emit warnings if you use
+# any feature of Qt which as been marked as deprecated (the exact warnings
+# depend on your compiler). Please consult the documentation of the
+# deprecated API in order to know how to port your code away from it.
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# You can also make your code fail to compile if you use deprecated APIs.
+# In order to do so, uncomment the following line.
+# You can also select to disable deprecated APIs only up to a certain version of Qt.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # add by myself
-INCLUDEPATH += ../../../
+INCLUDEPATH += ../../../../
 LIBS += -lpthread -ldl -lrt
 QMAKE_CXXFLAGS += -fno-stack-protector
 
 SOURCES += main.cpp\
+        MainWidget.cpp \
     ../../../Common.cpp \
     ../../../MySock.cpp \
     ../../../MyNet.cpp \
@@ -32,8 +52,7 @@ SOURCES += main.cpp\
     ../../../MyTimer.cpp \
     ../../../MyControls.cpp \
     ../../../MyTest.cpp \
-    MyCapConnect.cpp \
-    MyServer.cpp
+    MySendCap.cpp
 
 HEADERS  += MainWidget.h \
     ../../../Common.h \
@@ -64,5 +83,6 @@ HEADERS  += MainWidget.h \
     ../../../MyTimer.h \
     ../../../MyControls.h \
     ../../../MyTest.h \
-    MyCapConnect.h \
-    MyServer.h
+    MySendCap.h
+
+FORMS    += mainwidget.ui

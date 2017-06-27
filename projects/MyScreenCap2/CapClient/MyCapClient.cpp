@@ -109,6 +109,9 @@ void MyCapClient::Handle(const char* buf, int len)
     uint16_t head = MySelfProtocol::HandleHeader(buf);
     switch(head)
     {
+    case 0x0001:
+        HandleMsg(buf,len);
+        break;
     case 0x0002:
         HandleAccountAndPass(buf,len);
         break;
@@ -161,6 +164,19 @@ void MyCapClient::HandleData(const char* buf, int len)
         QByteArray ba(m_buf,m_index);
         ((MainWidget*)REQUEST("mainwidget"))->GetPic(ba);
         m_index = 0;
+    }
+}
+
+void MyCapClient::HandleMsg(const char* buf, int len)
+{
+    int index = 2;
+    uint8_t msg_num = MySelfProtocol::HandleChar(index,buf,len);
+    switch (msg_num) {
+    case 0x03: // connect client quit
+        ((MainWidget*)REQUEST("mainwidget"))->EndCap();
+        break;
+    default:
+        break;
     }
 }
 

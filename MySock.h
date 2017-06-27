@@ -21,7 +21,7 @@ class MySock : public MyEvent
 public:
 public:
     MySock(std::string ip,uint16_t port,int type, bool isServer = true);
-    virtual ~MySock(){Close();}
+    virtual ~MySock();
     //////////////////////////////////// override MyEvent method
     int GetEventFd(){ return m_sock; }
     EVENT_TYPE GetEventType(){ return EVENT_TYPE::SOCKFD; }
@@ -31,6 +31,7 @@ public:
 public:
     int Bind();
     int Close();
+    int SetReuseSock();
     int SetNonblock(bool b = true);
     uint8_t GetSocketType(){return m_tcp_ip_type;}
 protected:

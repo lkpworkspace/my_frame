@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     ../../../MyKeyEvent.cpp \
     ../../../MyNormalEvent.cpp \
     ../../../MyTimer.cpp \
-    ../../../MyControls.cpp
+    ../../../MyControls.cpp \
+    ../../../MyTest.cpp
 
 HEADERS  += MainWidget.h \
     ../../../Common.h \
@@ -59,5 +60,6 @@ HEADERS  += MainWidget.h \
     ../../../3rd_src/Sqlite3/sqlite3ext.h \
     ../../../MyNormalEvent.h \
     ../../../MyTimer.h \
-    ../../../MyControls.h
+    ../../../MyControls.h \
+    ../../../MyTest.h
 

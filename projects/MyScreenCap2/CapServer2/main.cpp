@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     MyApp app(4,1024);
 
     MyTcpServer *server = new MyTcpServer("",4399);
+    server->SetReuseSock();
     server->Bind();
     server->Listen();
     app.AddEvent(server);

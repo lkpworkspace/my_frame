@@ -52,6 +52,7 @@ SOURCES += main.cpp\
     ../../../MyNormalEvent.cpp \
     ../../../MyTimer.cpp \
     ../../../MyControls.cpp \
+    ../../../MyTest.cpp \
     MainWidget.cpp \
     MyCapClient.cpp \
     MyLogin.cpp
@@ -84,6 +85,7 @@ HEADERS  += MainWidget.h \
     ../../../MyNormalEvent.h \
     ../../../MyTimer.h \
     ../../../MyControls.h \
+    ../../../MyTest.h \
     MainWidget.h \
     MyCapClient.h \
     MyLogin.h

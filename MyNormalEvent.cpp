@@ -18,6 +18,7 @@ MyNormalEvent::MyNormalEvent()
 
 MyNormalEvent::~MyNormalEvent()
 {
+    MyApp::theApp->DelEvent(this);
     Close();
 }
 
@@ -30,7 +31,6 @@ void* MyNormalEvent::CallBackFunc(MyEvent *ev)
     {
         if(m_event_func != nullptr)
             m_event_func(ev);
-        //MyDebugPrint("normal event\n");
     }
     MyApp::theApp->AddEvent(ev);
     return NULL;

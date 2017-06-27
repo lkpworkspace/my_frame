@@ -54,6 +54,7 @@ private:
 ///     head(2byte) msg num(1byte)
 ///     0x0001      0x01 connect ok
 ///                 0x02 connect fail
+///                 0x03 connect client quit
 /// account and password:
 ///     head(2byte) account(string) password(string)
 ///     0x0002

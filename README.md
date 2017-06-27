@@ -1,12 +1,12 @@
 # MyFrame
-easy coding on linux 
+easy coding on linux
 ## OS&IDE
 	Ubuntu
 	QtCreator
 ## 该项目使用qmake进行管理
     qmake
     make
-    make clean	
+    make clean
 ## 如何使用QtCreator打开此项目
     使用*.pro文件打开此项目
 ## git管理
@@ -40,42 +40,5 @@ easy coding on linux
 	MyHeap                           堆
 	MyHash                           散列表
 
-# 调试笔记：
+## 调试笔记：
 * doc/debug.md
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

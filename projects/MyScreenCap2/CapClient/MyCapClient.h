@@ -41,6 +41,7 @@ private:
     void HandleAccountAndPass(const char* buf, int len);
     void HandleConnectAcountAndPass(const char* buf, int len);
     void HandleData(const char* buf, int len);
+    void HandleMsg(const char* buf, int len);
 };
 
 #endif // MYCAPCLIENT_H

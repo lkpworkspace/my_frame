@@ -14,7 +14,7 @@ public:
     MyTimer(int period);
     virtual ~MyTimer();
 
-    void SetCallFunc(common_func_t func); // ok
+    void SetCallFunc(common_func_t func, void* arg); // ok
     void Start();
     void Stop();
     bool IsStop();
@@ -29,6 +29,7 @@ private:
     uint64_t m_time;          // future time
     int m_period;             // interval
     common_func_t m_func;     // callback func
+    void* m_arg;              // callback arg
     bool m_isStop;            // stop flag
     std::mutex m_mutex;       //
     static std::multimap<uint64_t,MyTimer*> l_timers;

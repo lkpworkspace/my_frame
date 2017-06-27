@@ -7,6 +7,8 @@
 #include "MyThread.h"
 #include <vector>
 #include "MyNormalEvent.h"
+#include "MyTimer.h"
+
 namespace my_master {
 class MyTask;
 class MyApp : public MyThread
@@ -18,11 +20,12 @@ public:
 
     int AddEvent(MyEvent* ev);
     int DelEvent(MyEvent* ev);
+    void DelLater(MyEvent* ev, int ms);
     void SetQuitFunc(common_func_t func){m_quit_func = func;}
     int Exec();                        // mainloop
     int Quit();                        // exit this app
 
-    MyNormalEvent* GetNormalEvent(){return m_quit_event;}
+    MyNormalEvent* GetNormalEvent(){return m_nor_event;}
 private:
     int InitApp();
     void Run();                        // override Mythread method (do nothing)
@@ -30,7 +33,9 @@ private:
     void OnExit();                     // override Mythread method (do nothing)
     int CreateTask();                  // create thread
     int TimerCheck();                  // get most nearly timer
-    void QuitCheck();                  // TODO...
+    void QuitCheck();                  // if m_isQuit, clear all resource
+    void DelUselessTimer();            // delete m_useless_timer vector
+    static void* DeleteTimer(void* arg);
 
     void CheckStopTask();
     void HandleEvent(struct epoll_event* epev, int count);
@@ -44,9 +49,11 @@ private:
     int m_evSize;                      // can be listened (const var)
     int m_threadSize;                  // thread size (const var)
 
-    MyNormalEvent* m_quit_event;       // quit event
+    MyNormalEvent* m_nor_event;        // quit event
     bool m_isQuit;                     // quit flag
-    common_func_t m_quit_func;        // quit func
+    common_func_t m_quit_func;         // quit func
+
+    std::vector<MyTimer*> m_useless_timer;   // useless timer
 
     int m_cur_thread_size;             // how many task was create
     int m_cur_ev_size;                 // how many ev was create

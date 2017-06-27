@@ -85,6 +85,7 @@ MyTcpSocket::MyTcpSocket(const MyTcpSocket& other)
 
 MyTcpSocket::~MyTcpSocket()
 {
+    MyDebugPrint("sock closed\n");
     close(m_sock);
 }
 

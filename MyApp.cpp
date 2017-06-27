@@ -2,7 +2,9 @@
 #include "MyTask.h"
 #include "MyLog.h"
 #include "MyTimer.h"
+#include "MyTest.h"
 
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
@@ -42,7 +44,10 @@ int MyApp::InitApp()
         CreateTask();
     }
     // init normal event
-    m_quit_event = new MyNormalEvent;
+    m_nor_event = new MyNormalEvent;
+
+    // ingore SIGPIPE signal
+    signal(SIGPIPE,SIG_IGN);
     return 0;
 }
 int MyApp::CreateTask()
@@ -63,20 +68,31 @@ int MyApp::AddEvent(MyEvent* ev)
     // TODO...
     struct epoll_event event;
     int res;
-
+#if 0
+    //Test
+    MyTest::Add(ev);
+    // end Test
+#endif
     pthread_mutex_lock(&m_app_mutex);
     event.data.ptr = ev;
     event.events = ev->GetEpollEventType();
     if(epoll_ctl(m_epollFd,EPOLL_CTL_MOD,ev->GetEventFd(),&event) < 0)
+    {
         res = epoll_ctl(m_epollFd,EPOLL_CTL_ADD,ev->GetEventFd(),&event);
 #ifdef USE_LOG
-    if(res)
-        MyDebug("add event fail %d",res);
+        if(res)
+        {
+            perror("add event");
+            MyDebug("add event fail %d",res);
+        }
 #endif
 #if DEBUG_INFO
-    if(res)
-        MyDebugPrint("add event fail %d\n",res);
+        if(res)
+            MyDebugPrint("add event fail %d\n",res);
 #endif
+    }else
+        MyDebugPrint("epoll_ctl_mod sucess\n");
+
     ++m_cur_ev_size;
     pthread_mutex_unlock(&m_app_mutex);
     return res;
@@ -91,7 +107,10 @@ int MyApp::DelEvent(MyEvent* ev)
 #endif
 #if DEBUG_INFO
     if(res)
+    {
+        perror("del event");
         MyDebugPrint("del event fail %d\n", res);
+    }
 #endif
     --m_cur_ev_size;
     pthread_mutex_unlock(&m_app_mutex);
@@ -110,6 +129,7 @@ int MyApp::Exec()
     {
         QuitCheck();
         CheckStopTask();
+        DelUselessTimer();
         wait = TimerCheck();
         res = epoll_wait(m_epollFd,ev,evc,wait);
         if(res > 0)
@@ -119,8 +139,8 @@ int MyApp::Exec()
     }
 
     // quit MyApp
-    if(m_quit_event)
-        delete m_quit_event;
+    if(m_nor_event)
+        delete m_nor_event;
     if(m_quit_func)
         m_quit_func(NULL);
     free(ev);
@@ -136,6 +156,7 @@ int MyApp::Exec()
 #endif
     return 0;
 }
+
 int MyApp::Quit()
 {
     // set quit flag
@@ -143,20 +164,18 @@ int MyApp::Quit()
     m_isQuit = true;
     pthread_mutex_unlock(&m_app_mutex);
     // weakup mainloop to check quit flag
-    m_quit_event->Work();
+    m_nor_event->Work();
     return 0;
 }
 
 /////////////////////////////////////////////////////
 int MyApp::TimerCheck()
 {
-    // TODO...
     // return  millisecond
     return MyTimer::TimerCheck();
 }
 void MyApp::QuitCheck()
 {
-    // TODO...
     pthread_mutex_lock(&m_app_mutex);
     if(m_isQuit)
     {
@@ -269,7 +288,7 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
 #if DEBUG_ERROR
             MyDebugPrint("trans self event to task self %d\n",task->GetThreadId());
 #endif
-            task->SendMsg(&ch,MSG_LEN);      
+            task->SendMsg(&ch,MSG_LEN);
         }else
         {
             m_idle_tasks.AddTail(task);
@@ -279,6 +298,50 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
         }
     }
 }
+
+void MyApp::DelUselessTimer()
+{
+    if(!m_useless_timer.empty())
+    {
+        //delete all useless timer
+        std::vector<MyTimer*>::iterator iter;
+        for(iter = m_useless_timer.begin(); iter != m_useless_timer.end();)
+        {
+            delete *iter;
+            iter = m_useless_timer.erase(iter);
+        }
+    }
+}
+
+void MyApp::DelLater(MyEvent* ev, int ms)
+{
+    MyTimer* timer = new MyTimer(ms);
+
+    void** arg = new void*[2];
+    arg[0] = timer;
+    arg[1] = ev;
+
+    timer->SetCallFunc(&MyApp::DeleteTimer,(void*)arg);
+    timer->Start();
+}
+
+void* MyApp::DeleteTimer(void* arg)
+{
+    void** a = (void**)arg;
+    MyTimer* timer = (MyTimer*)a[0];
+    MyEvent* ev = (MyEvent*)a[1];
+
+    if(ev)
+    {
+        delete (MyEvent*)ev;
+        ev = NULL;
+    }
+    timer->Stop();
+    MyApp::theApp->m_useless_timer.push_back(timer);
+    delete[] a;
+    return NULL;
+}
+
 ////////////////////////////////////////////////////
 /// thread virtual method (use msg config our server)
 #if USE_CONFIG

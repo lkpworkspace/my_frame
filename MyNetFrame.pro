@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     MyNormalEvent.cpp \
     MyTimer.cpp \
     MyControls.cpp \
-    MyFileEvent.cpp
+    MyFileEvent.cpp \
+    MyTest.cpp
 
 HEADERS += \
     Common.h \
@@ -59,6 +60,7 @@ HEADERS += \
     MyNormalEvent.h \
     MyTimer.h \
     MyControls.h \
-    MyFileEvent.h
+    MyFileEvent.h \
+    MyTest.h
 
 DISTFILES +=

@@ -46,6 +46,8 @@ public:
    */
     static MyAddrInfo GetSockInfo(const int fd);
     static MyAddrInfo GetRemoteSockInfo(const int fd);
+
+    static int SetReuseSock(int fd);
 #if 0
     // get host info
     // method1

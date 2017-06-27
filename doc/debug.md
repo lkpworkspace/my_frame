@@ -28,7 +28,7 @@
 
 ## 04月17号
 1. 编写完成MyTFTP类，
-	存在的问题： 
+	存在的问题：
 	发送读文件请求时后，服务无回应ack(没有什么影响)
 	需要修改GetFile,SendFile为阻塞调用 (已经修改为阻塞函数)
 
@@ -52,7 +52,7 @@
 4. 编写MyTalk项目， 实现了登录的功能
 
 ## 04月30号
-1. 编写Mytalk项目，实现传输好友的功能; 需要添加选项ip，在线状态 // mark 
+1. 编写Mytalk项目，实现传输好友的功能; 需要添加选项ip，在线状态 // mark
 2. 用户登录过程中，服务需要记录用户的ip，并标记在线 //TODO...
 
 ## 05月09号
@@ -85,6 +85,12 @@
 2. 存在潜在问题，delete 的时机问题 // TODO...
 3. MyTcpFrame中 EasyWrite 需要考虑写数据的完整性问题 // TODO...
 
-
-
-
+## 06月27号
+1. socket在服务器端关闭后，再在该socket写数据会导致系统发送SIGPIPE信号，设置忽略SIGPIPE信号
+2. 设置socket可复用
+3. 添加DelLater函数，在指定时间后删除继承了MyEvent的类
+4. 发现一个巨大的BUG，啊啊啊，解决了巨大的隐患，顺序很重要  
+	（正确示例）  
+	m_que.Del((MyNode*)begin,false);   
+	begin->CallBackFunc(begin);
+5. 设置组播等 // TODO...

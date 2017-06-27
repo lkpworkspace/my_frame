@@ -51,6 +51,18 @@ MyAddrInfo MyNet::GetRemoteSockInfo(const int fd)
     assert(res != -1);
     return MyAddrInfo(addr);
 }
+
+int MyNet::SetReuseSock(int fd)
+{
+    int flag = 1,len = sizeof(int);
+    if(setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &flag, len) == -1)
+    {
+        perror("setsockopt");
+        return -1;
+    }
+    return 0;
+}
+
 #if 0
 std::string MyNet::GetHostName(std::string ipStr)
 {

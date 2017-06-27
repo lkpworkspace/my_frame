@@ -77,7 +77,7 @@ int MyCtrls::UnRegCtrl(const std::string key)
 {
     if(!Find(key))
     {
-        std::cout << "UnRegCtrl : unreg \"" << key << "\"control fail, do not have this key" << std::endl;
+        std::cout << "UnRegCtrl : unreg \"" << key << "\" control fail, do not have this key" << std::endl;
         return -1;
     }
     m_ctrl.erase(key);

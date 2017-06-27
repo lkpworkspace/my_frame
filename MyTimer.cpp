@@ -1,4 +1,3 @@
-#include "MyTimer.h"
 #include "MyApp.h"
 using namespace my_master;
 
@@ -24,17 +23,18 @@ MyTimer::MyTimer(int period)
 MyTimer::~MyTimer()
 {}
 
-void MyTimer::SetCallFunc(common_func_t func)
+void MyTimer::SetCallFunc(common_func_t func, void *arg)
 {
     m_func = func;
+    m_arg = arg;
 }
 
 void MyTimer::CallFunc(my_master::MyEvent* ev)
 {
     MyTimer* mt = (MyTimer*)ev;
-    if(mt->m_func != nullptr)
-        mt->m_func(NULL);
     MyDebugPrint("Timer was called\n");
+    if(mt->m_func != nullptr)
+        mt->m_func(mt->m_arg);
 }
 
 void MyTimer::Start()

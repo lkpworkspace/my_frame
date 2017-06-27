@@ -18,17 +18,22 @@ MyCapConnect::MyCapConnect(std::string account,
 
 MyCapConnect::~MyCapConnect()
 {
-    UNREG(m_account);
+    MyDebugPrint("account %s delete\n",m_account.c_str());
 }
 
 int MyCapConnect::Frame(const char *buf, int len)
 {
     if(len == 0)
     {
-        printf("Frame: client quit\n");
+        printf("Frame: %s client quit\n",m_account.c_str());
+#if 1
+        UNREG(m_account);
+        MyApp::theApp->DelLater(this,1000);
+#else
+        delete this;
+#endif
         return false;
     }
-    //printf("Get Frame :\n");
     Handle(buf,len);
     return true;
 }
@@ -41,7 +46,6 @@ void MyCapConnect::Handle(const char* buf, int len)
     case 0x0003:
         HandleConnectMsg(buf,len);
         break;
-#if 1
     case 0x0004:
         HandleData(buf,len);
         break;
@@ -51,25 +55,25 @@ void MyCapConnect::Handle(const char* buf, int len)
     default:
         MyDebugPrint("error in this case %d\n",head);
         break;
-#else
-    default:
-        HandleData(buf,len);
-        break;
-#endif
     }
 }
 
 void MyCapConnect::HandleConnectMsg(const char* buf, int len)
 {
     MyCapConnect* temp;
+    std::string account;
+    std::string pass;
     int index = 2;
-    m_conn_account = MySelfProtocol::HandleString(index,buf,len);
-    index += (m_conn_account.size() + 1);
-    m_conn_pass = MySelfProtocol::HandleString(index,buf,len);
-    temp = ((MyCapConnect*)REQUEST(m_conn_account));
+
+    account = MySelfProtocol::HandleString(index,buf,len);
+    index += (account.size() + 1);
+    pass = MySelfProtocol::HandleString(index,buf,len);
+
+    temp = ((MyCapConnect*)REQUEST(account));
     printf("get connect msg,dst account %s,dst pass %s\n",
-           m_conn_account.c_str(),
-           m_conn_pass.c_str());
+           account.c_str(),
+           pass.c_str());
+
     if(temp != NULL)
     {
         temp->m_conn_account = m_account;
@@ -87,6 +91,16 @@ void MyCapConnect::HandleData(const char* buf, int len)
         temp = ((MyCapConnect*)REQUEST(m_conn_account));
         if(temp != NULL)
             temp->EasyWrite(buf,len);
+        else
+        {
+            // send error
+            int len;
+            char* buf = BuildMsg(0x03,&len);
+            EasyWrite(buf,len);
+            MySelfProtocol::FreeBuf(buf);
+            m_conn_account = "";
+            m_conn_pass = "";
+        }
     }
 }
 
