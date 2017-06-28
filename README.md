@@ -1,5 +1,6 @@
-# MyFrame
+# ![run](https://github.com/lkpworkspace/demo/blob/master/pics/icon3.png)MyFrame
 easy coding on linux
+
 ## OS&IDE
 	Ubuntu
 	QtCreator
