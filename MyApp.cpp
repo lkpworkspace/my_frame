@@ -30,6 +30,8 @@ int MyApp::InitApp()
     m_quit_func = nullptr;
     // epoll create
     m_epollFd = epoll_create(m_evSize);
+    if(m_epollFd == -1)
+        MyError("epoll create");
 #ifdef USE_LOG
     MyDebug("MyApp Begin");
     MyDebug("Get Epoll fd = %d", m_epollFd);
@@ -52,9 +54,7 @@ int MyApp::InitApp()
 }
 int MyApp::CreateTask()
 {
-    // TODO...
     MyTask* task = new MyTask;
-    //m_idle_tasks.AddTail(task);
     m_tasks.push_back(task);
     this->AddEvent(task);
 
@@ -65,7 +65,6 @@ int MyApp::CreateTask()
 }
 int MyApp::AddEvent(MyEvent* ev)
 {
-    // TODO...
     struct epoll_event event;
     int res;
 #if 0
@@ -79,19 +78,24 @@ int MyApp::AddEvent(MyEvent* ev)
     if(epoll_ctl(m_epollFd,EPOLL_CTL_MOD,ev->GetEventFd(),&event) < 0)
     {
         res = epoll_ctl(m_epollFd,EPOLL_CTL_ADD,ev->GetEventFd(),&event);
-#ifdef USE_LOG
         if(res)
         {
-            perror("add event");
-            MyDebug("add event fail %d",res);
-        }
-#endif
-#if DEBUG_INFO
-        if(res)
+            #if DEBUG_INFO
             MyDebugPrint("add event fail %d\n",res);
-#endif
+            #endif
+            #ifdef USE_LOG
+            MyError("add event fail %d",res);
+            #endif
+        }
     }else
+    {
+        #if DEBUG_INFO
         MyDebugPrint("epoll_ctl_mod sucess\n");
+        #endif
+        #ifdef USE_LOG
+        MyError("epoll_ctl_mod sucess\n");
+        #endif
+    }
 
     ++m_cur_ev_size;
     pthread_mutex_unlock(&m_app_mutex);
@@ -101,17 +105,16 @@ int MyApp::DelEvent(MyEvent* ev)
 {
     pthread_mutex_lock(&m_app_mutex);
     int res = epoll_ctl(m_epollFd,EPOLL_CTL_DEL,ev->GetEventFd(),NULL);
-#ifdef USE_LOG
-    if(res)
-        MyDebug("del event fail %d", res);
-#endif
-#if DEBUG_INFO
     if(res)
     {
-        perror("del event");
-        MyDebugPrint("del event fail %d\n", res);
+        #if DEBUG_INFO
+            MyDebugPrint("del event fail %d\n", res);
+        #endif
+        #ifdef USE_LOG
+            MyError("del event fail %d", res);
+        #endif
     }
-#endif
+
     --m_cur_ev_size;
     pthread_mutex_unlock(&m_app_mutex);
     return res;
@@ -135,6 +138,10 @@ int MyApp::Exec()
         if(res > 0)
         {
             HandleEvent(ev,res);
+        }else if(res == -1)
+        {
+            MyDebugPrint("epoll wait error\n");
+            MyError("epoll wait");
         }
     }
 

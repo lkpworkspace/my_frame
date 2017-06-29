@@ -1,4 +1,5 @@
 #include "MyUdp.h"
+#include "MyLog.h"
 using namespace my_master;
 MyUdp::MyUdp(std::string ip,uint16_t port, bool isServer)
     :MySock(ip,port,SOCK_DGRAM,isServer)
@@ -13,6 +14,12 @@ MyAddrInfo MyUdp::RecvData(char** buf, int& len)
 
     memset(m_buf,0,RECV_SIZE);
     int size = recvfrom(m_sock,m_buf,RECV_SIZE,0,(sockaddr*)&addr,&addr_len);
+    if(size == -1)
+    {
+        MyDebugPrint("recvfrom fail\n");
+        //MyError("recvfrom");
+        MyDebug("recvfrom");
+    }
     *buf = m_buf;
     len = size;
     return MyAddrInfo(addr);
@@ -24,7 +31,13 @@ int MyUdp::Write(MyAddrInfo& info,const char* buf,int len)
     socklen_t addr_len = sizeof(sockaddr_in);
     sockaddr_in addr = info.GetAddr();
     int res = sendto(m_sock,buf,len,0,(sockaddr*)&addr,addr_len);
-    assert(res == len);
+    if(res == -1)
+    {
+        MyDebugPrint("sendto fail\n");
+        //MyError("sendto");
+        MyDebug("sendto");
+    }
+    //assert(res == len);
     m_mutex.unlock();
     return res;
 }
@@ -35,7 +48,11 @@ int MyUdp::SetBoardCast()
     //设置该套接字为广播类型
     int nb = 0;
     nb = setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (char *)&opt, sizeof(opt));
-    assert(nb != -1);
+    if(nb == -1)
+    {
+        MyDebugPrint("setsockopt fail\n");
+        MyError("setsockopt");
+    }
     return nb;
 }
 

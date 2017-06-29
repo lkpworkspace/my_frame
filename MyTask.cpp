@@ -97,7 +97,13 @@ int MyTask::CreateSockPair()
 {
     int res = -1;
     res = socketpair(AF_UNIX,SOCK_DGRAM,0,m_msgFd);
-    assert(res == 0);
+    if(res == -1)
+    {
+#if DEBUG_INFO
+        MyDebugPrint("create socketpair fail\n");
+#endif
+        MyError("socketpair");
+    }
 
     Common::SetNonblock(m_msgFd[0],false);
     Common::SetNonblock(m_msgFd[1],false);

@@ -10,7 +10,7 @@
 #include "MyFileEvent.h"
 #include <thread>
 using namespace my_master;
-//#define TEST
+#define TEST
 
 #ifndef TEST
 
@@ -325,6 +325,11 @@ int main(int argc, char** argv)
 
 
 #ifdef TEST
+int main()
+{
+    MyError("ok");
+}
+
 class A : public MyNode
 {
 public:
@@ -349,7 +354,7 @@ public:
     int value;
 };
 
-int main()
+int main3()
 {
 #if 0
     MyHeap<B*> heap(1024,&B::Cmp,true);

@@ -1,5 +1,6 @@
 #include "MyThread.h"
 #include "Common.h"
+#include "MyLog.h"
 using namespace my_master;
 MyThread::MyThread()
 {
@@ -18,11 +19,22 @@ MyThread::~MyThread()
 void MyThread::Start()
 {
     Lock();
+    int res = 0;
     if(!m_isRuning)
     {
         m_isRuning = true;
-        pthread_create(&m_thread,NULL,&MyThread::ListenThread,this);
-        pthread_detach(m_thread);
+        res = pthread_create(&m_thread,NULL,&MyThread::ListenThread,this);
+        if(res != 0)
+        {
+            MyDebugPrint("pthread create fail\n");
+            MyError("pthread_create");
+        }
+        res = pthread_detach(m_thread);
+        if(res != 0)
+        {
+            MyDebugPrint("pthread detach fail\n");
+            MyError("pthread_detach");
+        }
     }
     Unlock();
 }

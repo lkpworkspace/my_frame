@@ -36,7 +36,7 @@
 - [x] 1. 事件删除操作还没有做，目前事件删除会造成内存泄漏。
 
 ## 04月17号
-- [x] 1. 编写完成MyTFTP类，**give up**
+- [x] 1. 编写完成MyTFTP类，**give up**  
 	存在的问题：
 	发送读文件请求时后，服务无回应ack(没有什么影响)
 	需要修改GetFile,SendFile为阻塞调用 (已经修改为阻塞函数)
@@ -100,3 +100,38 @@
 	m_que.Del((MyNode*)begin,false);   
 	begin->CallBackFunc(begin);
 - [ ] 5. 设置组播等
+
+## 06月30号
+- [x] 1. 每调用一个系统调用都检查返回值  
+	MyApp  
+	MyTask  
+	MyNormalEvent  
+	MySock  
+	MyTcp  
+	MyUdp  
+	MyThread  
+- [x] 2. 是否需要在CallBack加锁，避免两个线程同时CallBack  
+		答: no, addevent是在处理完数据后调用的
+- [ ] 3. 加入心跳机制
+- [x] 4. 线程的文件描述符是同一个吗  
+    答: 对与主线程打开的文件描述符，子线程与其使用的是同一个(指针指向同一个)，可以使用dup复制进行复制
+- [x] 5. 信号处理函数是由哪一个线程执行的  
+    答: 随机
+
+
+## TODO
+- [ ] 测试MyVec类
+- [ ] 整理MySock类
+- [ ] 完成MyFileEvent类
+- [ ] 完成MyHash的编写
+
+
+
+
+
+
+
+
+
+
+# end

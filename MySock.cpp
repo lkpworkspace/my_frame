@@ -57,7 +57,11 @@ int MySock::SetNonblock(bool b)
 int MySock::Socket(int domin, int type, int protocol)
 {
     int sock = socket(domin,type,protocol);
-    assert(sock > 0);
+    if(sock == -1)
+    {
+        MyDebugPrint("create socket fail\n");
+        MyError("create socket");
+    }
     return sock;
 }
 int MySock::Bind()
@@ -72,12 +76,20 @@ int MySock::Bind()
         m_addr.sin_addr.s_addr = INADDR_ANY;
 
     res = bind(m_sock, (struct sockaddr*)&m_addr, sizeof(m_addr));
-    assert(res == 0);
+    if(res == -1)
+    {
+        MyDebugPrint("bind socket fail\n");
+        MyError("bind");
+    }
     return res;
 }
 int MySock::Close()
 {
     int res = close(m_sock);
-    assert(res == 0);
+    if(res == -1)
+    {
+        MyDebugPrint("close socket fail\n");
+        MyError("close socket");
+    }
     return res;
 }

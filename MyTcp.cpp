@@ -54,16 +54,19 @@ int MyTcpClient::Connect()
 {
     if(IS_SERVER(m_tcp_ip_type))
         return -1;
-
     int ret;
-
+    /*
+        此处先连接后,再设置未不阻塞,否则connect会立即返回
+    */
     m_addr.sin_family = AF_INET;
     m_addr.sin_port = htons(m_port);
     inet_pton(AF_INET, m_ip.c_str(), &m_addr.sin_addr);
     ret = connect(m_sock, (struct sockaddr*)&m_addr, sizeof(m_addr));
-    if(ret != 0)
-        perror("connect fail");
-    assert(ret == 0);
+    if(ret == -1)
+    {
+        MyDebugPrint("connect fail\n");
+        MyError("connect");
+    }
     SetNonblock(true);
     return ret;
 }
@@ -86,7 +89,12 @@ MyTcpSocket::MyTcpSocket(const MyTcpSocket& other)
 MyTcpSocket::~MyTcpSocket()
 {
     MyDebugPrint("sock closed\n");
-    close(m_sock);
+    int res = close(m_sock);
+    if(res == -1)
+    {
+        MyDebugPrint("socket close fail\n");
+        MyError("socket close");
+    }
 }
 
 std::string MyTcpSocket::GetIp()

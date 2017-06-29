@@ -2,10 +2,11 @@
 #define __MyLog_H__
 #include <mutex>
 #include <string.h>
+#include <errno.h>
 #include "MyHelp.h"
 namespace my_master {
 
-#define LOG_NAME "mynet.log"
+#define LOG_NAME "myframe.log"
 #define MAX_PATH 255
 
 class MyLog
@@ -68,6 +69,25 @@ private:
         memset(buf,0,sizeof(buf)); \
         sprintf(buf,args); \
         __MyDebugPrint(buf); \
+    }while(0)
+
+/*
+编写此处时sprintf报错，查明原因并不是写的有错，而是调用的地方有错
+*/
+#define MyError(...) do \
+    { \
+        char* err_str = strerror(errno); \
+        int index = 0; \
+        char buf[2048] = {0}; \
+        memset(buf,0,sizeof(buf)); \
+        sprintf(buf,"[ERROR]: "); \
+        index += 9; \
+        sprintf(&buf[index],__VA_ARGS__); \
+        index = strlen(buf); \
+        sprintf(&buf[index],": %s",err_str); \
+        printf("%s",buf); \
+        __MyDebug(buf); \
+        exit(-1); \
     }while(0)
 
 } // end namespace
