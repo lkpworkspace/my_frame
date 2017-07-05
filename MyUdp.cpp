@@ -1,8 +1,8 @@
 #include "MyUdp.h"
 #include "MyLog.h"
 using namespace my_master;
-MyUdp::MyUdp(std::string ip,uint16_t port, bool isServer)
-    :MySock(ip,port,SOCK_DGRAM,isServer)
+MyUdp::MyUdp(std::string ip, uint16_t port)
+    :MySock(ip,port,SOCK_DGRAM)
 {
     memset(m_buf,0,RECV_SIZE);
     SetNonblock(true);

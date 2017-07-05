@@ -10,7 +10,7 @@
 #include "MyFileEvent.h"
 #include <thread>
 using namespace my_master;
-#define TEST
+//#define TEST
 
 #ifndef TEST
 
@@ -85,7 +85,7 @@ public:
         return NULL;
     }
 };
-
+#if 0
 class AllEv : public MyAllEvent
 {
 public:
@@ -173,6 +173,7 @@ public:
         return true;
     }
 };
+#endif
 void* QuitFunc(void*)
 {
     printf("ok this app was exit\n");
@@ -187,24 +188,28 @@ void* TimerFunc(void*)
 
 int main(int argc, char** argv)
 {
+    UNUSE_ARG(argc,argv);
     MyApp app{1,1024};
     app.SetQuitFunc(QuitFunc);
 
-#if 1
+#if 0
     // file monitor test
     MyFileEvent* fileEvent = new MyFileEvent();
     MyFileEvent::StartMonitor("filetest.txt");
 #endif
 
-#if 0
+#if 1
     // timer test
     std::thread thr([&](){
         sleep(1);
         MyTimer* timer = new MyTimer(500);
-        timer->SetCallFunc(&TimerFunc);
+        timer->SetCallFunc(&TimerFunc,NULL);
         timer->Start();
         sleep(5);
         timer->Stop();
+        sleep(1);
+        printf("second\n");
+        timer->Start();
     });
     thr.detach();
 #endif // end timer test
@@ -305,9 +310,10 @@ int main(int argc, char** argv)
 #endif // end MyApp quit test
 
     // ev procees
+#if 0
     AllEv* widget = new AllEv;
     widget = widget;
-
+#endif
     return app.Exec();
 }
 

@@ -64,7 +64,7 @@ public:
         uint16_t err_num;
     }send_t;
 
-    MyTFTP(std::string ip,uint16_t port, bool isServer = true);
+    MyTFTP(std::string ip, uint16_t port);
     virtual ~MyTFTP();
     ///////////////////////////////////////////////
     /// override MyUdp virtual method

@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     argc = argc;
     argv = argv;
     // init my database
-    g_db = new MySqlite3("../mytalk.db");
+    g_db = new MySqlite3("../../mytalk.db");
     g_db->Open();
 #if 0 // create table
     std::string sql;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     // init my frame
     MyApp app(2,1024);
 
-    g_udp = new MyUdp("",4399,true);
+    g_udp = new MyUdp("",4399);
     g_udp->Bind();
     app.AddEvent(g_udp);
 

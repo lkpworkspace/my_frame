@@ -14,9 +14,7 @@ MyServer::MyServer()
 
 bool MyServer::Event(MyEvent* ev)
 {
-    switch (ev->GetClassType())
-    {
-    case MyEvent::CLASS_TYPE::TCPSERVER:
+    if(ev->GetClassType() == "MyTcpServer")
     {
         MyTcpServer* serv = (MyTcpServer*)ev;
         sockaddr_in addr;
@@ -43,10 +41,6 @@ bool MyServer::Event(MyEvent* ev)
             MyApp::theApp->AddEvent(recv);
         }
         MyApp::theApp->AddEvent(ev);
-    }
-        break;
-    default:
-        break;
     }
     return true;
 }

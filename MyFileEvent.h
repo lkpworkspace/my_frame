@@ -17,7 +17,7 @@ public:
 public:
     virtual int GetEventFd(){ return l_fd; }
     virtual EVENT_TYPE GetEventType(){ return MyEvent::FILEFD; }     // maybe not most need
-    virtual CLASS_TYPE GetClassType(){ return MyEvent::FILECLASS; }
+    virtual std::string GetClassType(){ return "MyFileEvent"; }
     virtual uint32_t GetEpollEventType(){ return EPOLLIN; }
 protected:
     virtual void* CallBackFunc(MyEvent*);

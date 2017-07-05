@@ -15,28 +15,29 @@
 #else
 #include <unistd.h>
 #endif
-
-// macro define
+// log define
 #define USE_LOG
-
+// debug define
 #ifndef DEBUG_INFO
 #define DEBUG_INFO 1
 #endif
-
 #ifndef DEBUG_WARNING
 #define DEBUG_WARNING 0
 #endif
-
 #ifndef DEBUG_ERROR
 #define DEBUG_ERROR 0
 #endif
-
 // system V (msg key id)
 #define MSG_KEY 1024
-
 #define MSG_LEN 1
-
 #define USE_CONFIG 0
+// unuse arg
+#define UNUSE_ARG(argc,argv) \
+    do{ \
+        argc = argc; \
+        argv = argv; \
+    }while(0)
+#define UNUSE(arg) (arg) = (arg)
 
 typedef void*(*common_func_t)(void *);
 class Common

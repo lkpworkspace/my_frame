@@ -27,7 +27,7 @@ public:
     EVENT_TYPE GetEventType(){return EVENT_TYPE::TASKFD;}
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     void* CallBackFunc(MyEvent *){return NULL;}
-    CLASS_TYPE GetClassType(){return CLASS_TYPE::TASKCLASS;}
+    std::string GetClassType(){return "MyTask";}
 
     void Quit();                                // task quit
     int SendMsg(const char *buf, int len);      // invoke by MyApp

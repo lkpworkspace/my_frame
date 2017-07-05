@@ -63,7 +63,7 @@ void MyMainWidget::AddMyFriend(QString ip,
 void MyMainWidget::InitWindow()
 {
     m_bg->resize(this->size());
-    ui->label_photo->setPixmap(QPixmap("../my.png"));
+    ui->label_photo->setPixmap(QPixmap("../../my.png"));
     this->setWindowTitle("MyTalk");
     ui->label_info->setText(MyTalkClient::m_account.c_str());
 
@@ -82,6 +82,6 @@ void MyMainWidget::InitWindow()
 void MyMainWidget::AddBg()
 {
     m_bg = new QLabel(this);
-    m_bg->setPixmap(QPixmap("../bg.jpg"));
+    m_bg->setPixmap(QPixmap("../../bg.jpg"));
     m_bg->resize(this->size());
 }

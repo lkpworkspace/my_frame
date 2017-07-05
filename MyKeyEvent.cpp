@@ -17,9 +17,9 @@ MyEvent::EVENT_TYPE MyKeyEvent::GetEventType()
     return MyEvent::FILEFD;
 }
 
-MyEvent::CLASS_TYPE MyKeyEvent::GetClassType()
+std::string MyKeyEvent::GetClassType()
 {
-    return MyEvent::KEY;
+    return "MyKeyEvent";
 }
 
 uint32_t MyKeyEvent::GetEpollEventType()

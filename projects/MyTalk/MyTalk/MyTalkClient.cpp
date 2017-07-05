@@ -14,7 +14,7 @@ MyTalkClient::MyTalkClient()
 
 bool MyTalkClient::Event(MyEvent* ev)
 {
-    if(ev->GetClassType() == MyEvent::UDPCLASS)
+    if(ev->GetClassType() == "MyUdp")
     {
         MyUdp* udp = (MyUdp*)ev;
         char* buf;

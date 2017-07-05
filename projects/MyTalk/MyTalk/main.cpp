@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         MyApp app(1,1024);
 
         // my talk udp
-        g_udp = new MyUdp("",0,false);
+        g_udp = new MyUdp("",0);
         //g_udp->Bind();
         app.AddEvent(g_udp);
 

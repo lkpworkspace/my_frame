@@ -16,8 +16,8 @@ public:
     // maybe not useful in gcc
     std::string& GetTypeName();
 
-    virtual int Call(int num){}
-    virtual int Call(int num,void*){}
+    virtual int Call(int num){ num = num; return 0; }
+    virtual int Call(int num,void*){ num = num; return 0; }
 private:
     std::string m_obj_name;
     std::string m_type_name;

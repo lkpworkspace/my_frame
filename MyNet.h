@@ -125,6 +125,57 @@ private:
  *  n: numeric
  */
 
+/*
+ *  raw socket coding function
+ *  设置混杂模式：ifconfig eth0 promisc
+ *  取消混杂模式：ifconfig eth0 -promisc
+int socket ( int family, int type, int protocol );
+参数：
+    family：协议族 这里写 PF_PACKET
+    type：  套接字类，这里写 SOCK_RAW
+    protocol：协议类别，指定可以接收或发送的数据包类型，不能写 “0”，取值如下，注意，传参时需要用 htons() 进行字节序转换。
+        ETH_P_IP：IPV4数据包
+        ETH_P_ARP：ARP数据包
+        ETH_P_ALL：任何协议类型的数据包
+返回值：
+    成功( >0 )：套接字，这里为链路层的套接字
+    失败( <0 )：出错
+
+ssize_t recvfrom(  int sockfd,
+            void *buf,
+            size_t nbytes,
+            int flags,
+            struct sockaddr *from,
+            socklen_t *addrlen );
+参数：
+    sockfd:原始套接字
+    buf：接收数据缓冲区
+    nbytes:接收数据缓冲区的大小
+    flags：套接字标志(常为0)
+    from：这里没有用，写 NULL
+    addrlen：这里没有用，写 NULL
+返回值：
+    成功：接收到的字符数
+    失败：-1
+
+struct ifreq req;   //网络接口地址
+strncpy(req.ifr_name, "eth0", IFNAMSIZ);            //指定网卡名称
+if(-1 == ioctl(sock_raw_fd, SIOCGIFINDEX, &req))    //获取网络接口
+{
+    perror("ioctl");
+    close(sock_raw_fd);
+    exit(-1);
+}
+
+req.ifr_flags |= IFF_PROMISC;
+if(-1 == ioctl(sock_raw_fd, SIOCSIFINDEX, &req))    //网卡设置混杂模式
+{
+    perror("ioctl");
+    close(sock_raw_fd);
+    exit(-1);
+}
+*/
+
 /*domin:
  *  AF_INET
  *  AF_INET6

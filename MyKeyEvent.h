@@ -13,7 +13,7 @@ public:
     /// override MyEvent virtual method
     virtual int GetEventFd(){return m_fd;}
     virtual EVENT_TYPE GetEventType();     // maybe not most need
-    virtual CLASS_TYPE GetClassType();
+    virtual std::string GetClassType();
     virtual uint32_t GetEpollEventType();
 
     int GetKey();

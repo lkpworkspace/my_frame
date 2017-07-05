@@ -28,7 +28,7 @@ int MyCapConnect::Frame(const char *buf, int len)
         printf("Frame: %s client quit\n",m_account.c_str());
 #if 1
         UNREG(m_account);
-        MyApp::theApp->DelLater(this,1000);
+        MyApp::theApp->DelLater(this,1000 * 60);
 #else
         delete this;
 #endif

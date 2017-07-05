@@ -12,6 +12,7 @@ public:
     MyServer();
     bool Event(MyEvent* ev);
 
+
     std::string GetAccount();
     std::string Getpass();
 };

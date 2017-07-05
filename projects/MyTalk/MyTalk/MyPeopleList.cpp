@@ -62,7 +62,7 @@ void MyPersonList::mousePressEvent(QMouseEvent *event)
                     subItem->setHidden(false);                            //好友全部显示
                 }
             isHideMap.insert(currentItem,false);                          //设置该组为显示状态
-            currentItem->setIcon(QIcon("../arrowDown.png"));
+            currentItem->setIcon(QIcon("../../arrowDown.png"));
         }
         else                                                             //否则，先前是显示，则隐藏
         {
@@ -72,7 +72,7 @@ void MyPersonList::mousePressEvent(QMouseEvent *event)
                     subItem->setHidden(true);                            //好友全部隐藏
                 }
              isHideMap.insert(currentItem,true);                          //设置该组为隐藏状态
-             currentItem->setIcon(QIcon("../arrowRight.png"));
+             currentItem->setIcon(QIcon("../../arrowRight.png"));
         }
     }
 }
@@ -93,7 +93,7 @@ void MyPersonList::contextMenuEvent(QContextMenuEvent *event)
 //添加组
 void MyPersonList::slotAddGroup()
 {
-    QListWidgetItem *newItem=new QListWidgetItem(QIcon("../arrowRight.png"),"我的好友");    //创建一个Item
+    QListWidgetItem *newItem=new QListWidgetItem(QIcon("../../arrowRight.png"),"我的好友");    //创建一个Item
     newItem->setSizeHint(QSize(this->width(),25));//设置宽度、高度
     this->addItem(newItem);         //加到QListWidget中
     groupMap.insert(newItem,newItem);//加到容器groupMap里，key和value都为组

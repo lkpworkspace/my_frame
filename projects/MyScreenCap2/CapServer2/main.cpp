@@ -28,6 +28,7 @@ public:
 
 int main(int argc, char *argv[])
 {
+    UNUSE_ARG(argc,argv);
     MyApp app(4,1024);
 
     MyTcpServer *server = new MyTcpServer("",4399);

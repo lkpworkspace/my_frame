@@ -15,6 +15,7 @@ public:
         TASKFD,
         NONE
     };
+#if 0
     enum CLASS_TYPE{
         BASECLASS,
         TASKCLASS,
@@ -27,13 +28,14 @@ public:
         KEY,
         FILECLASS
     };
-
+#endif
 public:
     MyEvent();
     virtual ~MyEvent();
     virtual int GetEventFd() = 0;
     virtual EVENT_TYPE GetEventType() = 0;     // maybe not most need
-    virtual CLASS_TYPE GetClassType() = 0;
+    //virtual CLASS_TYPE GetClassType() = 0;
+    virtual std::string GetClassType() = 0;
     virtual uint32_t GetEpollEventType() = 0;
 protected:
     virtual void* CallBackFunc(MyEvent*) = 0;

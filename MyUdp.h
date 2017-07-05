@@ -14,11 +14,11 @@ class MyUdp : public my_master::MySock
 {
 public:
     // you need write you local ip and port
-    MyUdp(std::string ip,uint16_t port, bool isServer = true);
+    MyUdp(std::string ip,uint16_t port);
     virtual ~MyUdp(){}
     ////////////////////////////////////////////////
     /// override virtual method
-    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::UDPCLASS;}
+    virtual std::string GetClassType(){return "MyUdp";}
 
     MyAddrInfo RecvData(char** buf, int& len);
     int Write(MyAddrInfo &info,const char* buf, int len);

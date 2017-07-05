@@ -5,32 +5,13 @@
 #include "MyAllEvent.h"
 #include "MyLog.h"
 using namespace my_master;
-MySock::MySock(std::string ip, uint16_t port, int type, bool isServer)
+MySock::MySock(std::string ip, uint16_t port, int type, int protol)
     :m_sock(-1),
       m_port(port),
-      m_ip(ip),
-      m_tcp_ip_type(0x00)
+      m_ip(ip)
 {
     memset(&m_addr,0,sizeof(struct sockaddr_in));
-    if(isServer)
-    {
-        m_tcp_ip_type |= 0x01;
-    }else
-    {
-        m_tcp_ip_type |= 0x00;
-    }
-    switch(type)
-    {
-    case SOCK_STREAM:
-        m_tcp_ip_type |= 0x02;
-        break;
-    case SOCK_DGRAM:
-        m_tcp_ip_type |= 0x04;
-        break;
-    default:
-        break;
-    }
-    m_sock = Socket(AF_INET,type,0);
+    m_sock = Socket(AF_INET,type,protol);
 }
 
 MySock::~MySock(){

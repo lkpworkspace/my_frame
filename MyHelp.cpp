@@ -72,7 +72,7 @@ std::string MyHelp::ToStr(unsigned long num, int base)
 
 char MyHelp::ToChar(uint8_t num)
 {
-    if(num < 0 || num > 10)
+    if(((char)num) < 0 || num > 10)
         return '\0';
     num += 48;
     return (char)num;

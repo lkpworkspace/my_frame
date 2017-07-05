@@ -17,7 +17,7 @@ public:
 protected:
     /////////////////////////////////
     /// virtual method
-    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::TCPSERVER;}
+    virtual std::string GetClassType(){return "MyTcpServer";}
 };
 
 class MyTcpClient : public my_master::MySock
@@ -28,7 +28,7 @@ public:
 protected:
     /////////////////////////////////
     /// virtual method
-    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::TCPCLIENT;}
+    virtual std::string GetClassType(){return "MyTcpClient";}
 public:
     int Read(char* buf, int len);
     int Write(const char *buf, int len);
@@ -48,7 +48,7 @@ public:
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     ////////////////////////////////////
     /// virtual method
-    virtual CLASS_TYPE GetClassType(){return CLASS_TYPE::TCPSOCKET;}
+    virtual std::string GetClassType(){return "MyTcpSocket";}
     virtual void* CallBackFunc(MyEvent *);
 
     MyTcpSocket& operator=(MyTcpSocket& other);

@@ -12,7 +12,7 @@ MyPeopleItem::MyPeopleItem(MyAddrInfo info,
     initUi();
     m_talk = new MyTalkWidget(info, name, account,mark);
     m_talk->hide();
-    headPath="../photo.png";
+    headPath="../../photo.png";
 }
 
 void MyPeopleItem::SetAddr(MyAddrInfo info)

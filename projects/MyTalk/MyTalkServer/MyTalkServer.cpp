@@ -9,7 +9,7 @@ MyTalkServer::MyTalkServer()
 
 bool MyTalkServer::Event(MyEvent* ev)
 {
-    if(ev->GetClassType() == MyEvent::UDPCLASS)
+    if(ev->GetClassType() == "MyUdp")
     {
 #if 0
         MyDebugPrint("get udp msg\n");

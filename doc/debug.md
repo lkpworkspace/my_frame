@@ -7,7 +7,7 @@
 |---|----|
 |MyTFTP|give up|
 |MyTalk|complete|
-|ScreenCap udp|complete|
+|ScreenCap udp|delete|
 |ScreenCap2 tcp|complete|
 
 ## 03月27号
@@ -118,12 +118,21 @@
 - [x] 5. 信号处理函数是由哪一个线程执行的  
     答: 随机
 
+## 07月04号
+- [x] 考虑是否去掉CLASS_TYPE的枚举类型，使用字符串代替  
+- [x] 考虑是否去掉MySock的isServer类型  
+- [ ] 添加MyICMP类  
+
+## 07月05号
+- [x] 将CapServer2上传至服务器后出现问题，修改了EasyWrite函数，保证写入数据的完整性  
+- [x] 调整CapServer，客户端推出后删除对象的时间推迟至1分钟后删除，避免服务器崩溃  
 
 ## TODO
 - [ ] 测试MyVec类
 - [ ] 整理MySock类
 - [ ] 完成MyFileEvent类
 - [ ] 完成MyHash的编写
+
 
 
 

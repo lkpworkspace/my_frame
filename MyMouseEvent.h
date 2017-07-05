@@ -13,7 +13,7 @@ public:
     int GetEventFd(){return m_fd;}
     EVENT_TYPE GetEventType(){return EVENT_TYPE::FILEFD;}
     uint32_t GetEpollEventType(){return EPOLLIN;}
-    CLASS_TYPE GetClassType(){return CLASS_TYPE::MOUSE;}
+    std::string GetClassType(){return "MyMouseEvent";}
 
     /*
      *  0: left button up

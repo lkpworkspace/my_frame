@@ -6,9 +6,9 @@ CONFIG -= qt
 # add by myself
 INCLUDEPATH += ../../../
 LIBS += -lpthread -ldl -lrt
-QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
+QMAKE_CXXFLAGS += -fno-stack-protector
 
-SOURCES += main.cpp\
+SOURCES += \
     ../../../Common.cpp \
     ../../../MySock.cpp \
     ../../../MyNet.cpp \
@@ -26,15 +26,15 @@ SOURCES += main.cpp\
     ../../../MyAllEvent.cpp \
     ../../../3rd_src/Sqlite3/sqlite3.c \
     ../../../MySqlite3.cpp \
+    ../../../MyTFTP.cpp \
     ../../../MyKeyEvent.cpp \
     ../../../MyNormalEvent.cpp \
-    ../../../MyTimer.cpp \
-    ../../../MyControls.cpp \
     ../../../MyTest.cpp \
-    MyCapConnect.cpp \
-    MyServer.cpp
+    ../../../MyTimer.cpp \
+    main.cpp \
+    MyTalkServer.cpp
 
-HEADERS  += MainWidget.h \
+HEADERS += \
     ../../../Common.h \
     ../../../MySock.h \
     ../../../MyNet.h \
@@ -56,11 +56,10 @@ HEADERS  += MainWidget.h \
     ../../../MyFrame.h \
     ../../../3rd_src/Sqlite3/sqlite3.h \
     ../../../MySqlite3.h \
+    ../../../MyTFTP.h \
     ../../../MyKeyEvent.h \
     ../../../3rd_src/Sqlite3/sqlite3ext.h \
     ../../../MyNormalEvent.h \
-    ../../../MyTimer.h \
-    ../../../MyControls.h \
     ../../../MyTest.h \
-    MyCapConnect.h \
-    MyServer.h
+    ../../../MyTimer.h \
+    MyTalkServer.h

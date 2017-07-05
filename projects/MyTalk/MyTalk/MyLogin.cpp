@@ -9,7 +9,7 @@ extern MyMainWidget *g_main_widget;
 MyLogin::MyLogin(QWidget *parent) : QWidget(parent)
 {
     //add background picture
-    QLabel *background = new QLabel("<img src=../bg.jpg></img>");
+    QLabel *background = new QLabel("<img src=../../bg.jpg></img>");
     background->setGeometry(QRect(0,0,this->size().width(),120));
     background->setParent(this);
 

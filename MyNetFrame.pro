@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 LIBS += -lpthread -ldl -lrt
-QMAKE_CXXFLAGS += -fno-stack-protector
+QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
 
 SOURCES += main.cpp \
     Common.cpp \
@@ -30,7 +30,9 @@ SOURCES += main.cpp \
     MyTimer.cpp \
     MyControls.cpp \
     MyFileEvent.cpp \
-    MyTest.cpp
+    MyTest.cpp \
+    MyICMP.cpp \
+    MyRaw.cpp
 
 HEADERS += \
     Common.h \
@@ -61,6 +63,8 @@ HEADERS += \
     MyTimer.h \
     MyControls.h \
     MyFileEvent.h \
-    MyTest.h
+    MyTest.h \
+    MyICMP.h \
+    MyRaw.h
 
 DISTFILES +=

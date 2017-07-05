@@ -20,8 +20,8 @@ struct tftp_errmsg {
     { 10,       0 }
 };
 
-MyTFTP::MyTFTP(std::string ip,uint16_t port, bool isServer)
-    :MyUdp(ip,port,isServer),
+MyTFTP::MyTFTP(std::string ip,uint16_t port)
+    :MyUdp(ip,port),
       m_path("./")
 {
     InitRecvStruct();

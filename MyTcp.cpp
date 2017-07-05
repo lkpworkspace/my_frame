@@ -6,14 +6,12 @@ using namespace my_master;
 ////////////////////////////////////////////////////
 /// MyTcpServer
 MyTcpServer::MyTcpServer(std::string ip, uint16_t port)
-    :MySock(ip,port,SOCK_STREAM,true)
+    :MySock(ip,port,SOCK_STREAM)
 {}
 MyTcpServer::~MyTcpServer()
 {}
 int MyTcpServer::Listen(int backlog)
 {
-    if(!IS_SERVER(m_tcp_ip_type))
-        return 0;
     int res = -1;
     SetNonblock(true);
     res = listen(m_sock,backlog);
@@ -23,8 +21,6 @@ int MyTcpServer::Listen(int backlog)
 
 int MyTcpServer::Accpet(struct sockaddr_in *addr)
 {
-    if(!IS_SERVER(m_tcp_ip_type))
-        return 0;
     socklen_t addrlen = sizeof(struct sockaddr_in);
     int res = accept(m_sock,(sockaddr*)addr,&addrlen);
     return res; // file descriptor
@@ -32,28 +28,22 @@ int MyTcpServer::Accpet(struct sockaddr_in *addr)
 ////////////////////////////////////////////////////
 /// MyTcpClient
 MyTcpClient::MyTcpClient(std::string ip,uint16_t port)
-    :MySock(ip,port,SOCK_STREAM,false)
+    :MySock(ip,port,SOCK_STREAM)
 {}
 MyTcpClient::~MyTcpClient()
 {}
 
 int MyTcpClient::Read(char* buf,int len)
 {
-    if(IS_SERVER(m_tcp_ip_type))
-        return 0;
     return read(m_sock,buf,len);
 }
 
 int MyTcpClient::Write(const char* buf, int len)
 {
-    if(IS_SERVER(m_tcp_ip_type))
-        return 0;
     return write(m_sock,buf,len);
 }
 int MyTcpClient::Connect()
 {
-    if(IS_SERVER(m_tcp_ip_type))
-        return -1;
     int ret;
     /*
         此处先连接后,再设置未不阻塞,否则connect会立即返回
@@ -151,10 +141,26 @@ int MyTcpFrame::EasyWrite(const char* buf, uint16_t len)
     index += MySelfProtocol::BuildHeader(len,temp,lenx);
     memcpy(&temp[sizeof(len)],buf,len);
     index += len;
+
     // write
-    // TODO...
+    int count = 0;
     // end write
-    res = WriteBuf(temp,index);
+again:
+    res = WriteBuf(&temp[count],index - count);
+    if(res == -1)
+    {
+        //MyDebugPrint("write buf fail\n");
+        usleep(1000 * 100);
+        goto again;
+    }else
+    {
+        if((res + count) != index)
+        {
+            //MyDebugPrint("write buf add\n");
+            count += res;
+            goto again;
+        }
+    }
     MySelfProtocol::FreeBuf(temp);
     return (res - sizeof(len));
 }

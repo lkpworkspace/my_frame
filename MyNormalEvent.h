@@ -14,7 +14,7 @@ public:
     EVENT_TYPE GetEventType(){return EVENT_TYPE::FILEFD;}
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     virtual void* CallBackFunc(MyEvent *);
-    CLASS_TYPE GetClassType(){return CLASS_TYPE::BASECLASS;}
+    std::string GetClassType(){return "MyNormalEvent";}
 
     int Work();                                        // invoke by child class
     void SetFunc(void(*func)(my_master::MyEvent*)){m_event_func = func;}
