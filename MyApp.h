@@ -15,7 +15,7 @@ class MyApp : public MyThread
 {
 public:
     static MyApp* theApp;
-    MyApp(int thread_size = 1,int ev_size = 1024);
+    MyApp(int thread_size = 1);
     ~MyApp();
 
     int AddEvent(MyEvent* ev);
@@ -46,7 +46,6 @@ private:
     my_master::MyList m_ev_recv;       // recv task event, save MyEvent class
     pthread_mutex_t m_app_mutex;
     int m_epollFd;                     // listen Event file des
-    int m_evSize;                      // can be listened (const var)
     int m_threadSize;                  // thread size (const var)
 
     MyNormalEvent* m_nor_event;        // quit event

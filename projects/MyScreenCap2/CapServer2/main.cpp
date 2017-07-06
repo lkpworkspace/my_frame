@@ -29,7 +29,7 @@ public:
 int main(int argc, char *argv[])
 {
     UNUSE_ARG(argc,argv);
-    MyApp app(4,1024);
+    MyApp app(4);
 
     MyTcpServer *server = new MyTcpServer("",4399);
     server->SetReuseSock();

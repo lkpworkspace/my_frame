@@ -12,10 +12,9 @@
 using namespace my_master;
 MyApp* MyApp::theApp = nullptr;
 
-MyApp::MyApp(int thread_size, int ev_size)
+MyApp::MyApp(int thread_size)
 {
     theApp = this;
-    m_evSize = ev_size;
     m_threadSize = thread_size;
     m_cur_thread_size = 0;
     m_cur_ev_size = 0;
@@ -29,7 +28,7 @@ int MyApp::InitApp()
     m_isQuit = false;
     m_quit_func = nullptr;
     // epoll create
-    m_epollFd = epoll_create(m_evSize);
+    m_epollFd = epoll_create1(0);
     if(m_epollFd == -1)
         MyError("epoll create");
 #ifdef USE_LOG

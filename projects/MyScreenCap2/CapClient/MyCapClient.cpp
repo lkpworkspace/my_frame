@@ -87,7 +87,7 @@ char* MyCapClient::BuildData(const char* buf, uint16_t len, int* outlen)
 
 void MyCapClient::Run()
 {
-    MyApp app(4,1024);
+    MyApp app(4);
 
     app.AddEvent(this);
 

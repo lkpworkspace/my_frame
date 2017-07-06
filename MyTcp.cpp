@@ -150,7 +150,7 @@ again:
     if(res == -1)
     {
         //MyDebugPrint("write buf fail\n");
-        usleep(1000 * 100);
+        usleep(1000 * 10);
         goto again;
     }else
     {

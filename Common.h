@@ -49,6 +49,12 @@ public:
     static bool IsDirExist(const char* path);
     static char* GetHomeDir();
     static uint64_t GetTimerNow();
+
+    static void DaemonInit();
+
+    static void* DllOpen(const char * pathname, int mode);
+    static void* DllUse(void *handle, const char *symbol);
+    static int DllClose(void *handle);
 private:
     Common();
     ~Common();

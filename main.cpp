@@ -189,7 +189,7 @@ void* TimerFunc(void*)
 int main(int argc, char** argv)
 {
     UNUSE_ARG(argc,argv);
-    MyApp app{1,1024};
+    MyApp app{1};
     app.SetQuitFunc(QuitFunc);
 
 #if 0
