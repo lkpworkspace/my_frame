@@ -1,14 +1,16 @@
 #include "MyUdp.h"
 #include "MyLog.h"
+#include "MyApp.h"
+
 using namespace my_master;
 MyUdp::MyUdp(std::string ip, uint16_t port)
     :MySock(ip,port,SOCK_DGRAM)
 {
     memset(m_buf,0,RECV_SIZE);
-    SetNonblock(true);
 }
+
 MyAddrInfo MyUdp::RecvData(char** buf, int& len)
-{// TODO...
+{
     sockaddr_in addr;
     socklen_t addr_len = sizeof(sockaddr_in);
 
@@ -17,7 +19,6 @@ MyAddrInfo MyUdp::RecvData(char** buf, int& len)
     if(size == -1)
     {
         MyDebugPrint("recvfrom fail\n");
-        //MyError("recvfrom");
         MyDebug("recvfrom");
     }
     *buf = m_buf;
@@ -34,10 +35,8 @@ int MyUdp::Write(MyAddrInfo& info,const char* buf,int len)
     if(res == -1)
     {
         MyDebugPrint("sendto fail\n");
-        //MyError("sendto");
         MyDebug("sendto");
     }
-    //assert(res == len);
     m_mutex.unlock();
     return res;
 }
@@ -55,7 +54,6 @@ int MyUdp::SetBoardCast()
     }
     return nb;
 }
-
 
 ////////////////////////////////////////////////////////////
 /// MySelfProtocol

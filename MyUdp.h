@@ -18,6 +18,9 @@ public:
     virtual ~MyUdp(){}
     ////////////////////////////////////////////////
     /// override virtual method
+    virtual uint32_t GetEpollEventType(){ return EPOLLIN; }
+    ///////////////////////////////////////////////
+    /// override by child class
     virtual std::string GetClassType(){return "MyUdp";}
 
     MyAddrInfo RecvData(char** buf, int& len);

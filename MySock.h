@@ -10,13 +10,12 @@ class MySock : public MyEvent
 {
     friend class MyApp;
 public:
-public:
     MySock(std::string ip,uint16_t port,int type, int protol = 0);
     virtual ~MySock();
     //////////////////////////////////// override MyEvent method
     int GetEventFd(){ return m_sock; }
     EVENT_TYPE GetEventType(){ return EVENT_TYPE::SOCKFD; }
-    uint32_t GetEpollEventType(){ return EPOLLIN; }
+    virtual uint32_t GetEpollEventType(){ return EPOLLIN; }
     virtual void* CallBackFunc(MyEvent *);
     virtual std::string GetClassType(){return "MySock";}
 public:

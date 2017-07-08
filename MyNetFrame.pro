@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     MyFileEvent.cpp \
     MyTest.cpp \
     MyICMP.cpp \
-    MyRaw.cpp
+    MyRaw.cpp \
+    MyWriteable.cpp
 
 HEADERS += \
     Common.h \
@@ -65,6 +66,7 @@ HEADERS += \
     MyFileEvent.h \
     MyTest.h \
     MyICMP.h \
-    MyRaw.h
+    MyRaw.h \
+    MyWriteable.h
 
 DISTFILES +=

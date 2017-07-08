@@ -132,6 +132,9 @@
 - [x] 添加动态库加载函数  
 - [x] 修改epoll_create为epoll_create1  
 
+## 07月07号
+- [ ] 添加对写事件的监听  
+
 ## TODO
 - [ ] 测试MyVec类
 - [ ] 整理MySock类

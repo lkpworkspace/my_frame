@@ -10,7 +10,7 @@
 #include "MyFileEvent.h"
 #include <thread>
 using namespace my_master;
-//#define TEST
+#define TEST
 
 #ifndef TEST
 
@@ -331,9 +331,38 @@ int main(int argc, char** argv)
 
 
 #ifdef TEST
+class MyTcpClientTest : public MyTcpClient
+{
+public:
+    MyTcpClientTest()
+        :MyTcpClient("127.0.0.1",17173)
+    {}
+    std::string GetClassType(){return "MyTcpClient";}
+    virtual bool WriteEvent(MyEvent*)
+    {
+        printf("write event\n");
+        return true;
+    }
+
+    virtual bool ReadEvent(MyEvent*)
+    {
+        printf("read event\n");
+        char buf[100] = {0};
+        Read(buf,sizeof(buf));
+        return true;
+    }
+};
+
 int main()
 {
-    MyError("ok");
+    MyApp app(4);
+
+    MyTcpClientTest* tcpclient = new MyTcpClientTest();
+    tcpclient->Connect();
+    tcpclient->SetNonblock(true);
+    app.AddEvent(tcpclient);
+
+    return app.Exec();
 }
 
 class A : public MyNode
