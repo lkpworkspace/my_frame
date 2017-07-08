@@ -331,38 +331,32 @@ int main(int argc, char** argv)
 
 
 #ifdef TEST
-class MyTcpClientTest : public MyTcpClient
-{
-public:
-    MyTcpClientTest()
-        :MyTcpClient("127.0.0.1",17173)
-    {}
-    std::string GetClassType(){return "MyTcpClient";}
-    virtual bool WriteEvent(MyEvent*)
-    {
-        printf("write event\n");
-        return true;
-    }
-
-    virtual bool ReadEvent(MyEvent*)
-    {
-        printf("read event\n");
-        char buf[100] = {0};
-        Read(buf,sizeof(buf));
-        return true;
-    }
-};
+#include "MyWriteable.h"
 
 int main()
 {
-    MyApp app(4);
+    int a = 0;
+    void *p = &a;
 
-    MyTcpClientTest* tcpclient = new MyTcpClientTest();
-    tcpclient->Connect();
-    tcpclient->SetNonblock(true);
-    app.AddEvent(tcpclient);
+    MyWriteable w;
+    w.AddWriteEvent((my_master::MyEvent*)p);
 
-    return app.Exec();
+    std::thread thr([&](){
+        while(true)
+        {
+            sleep(2);
+            sem_t temp = w.SemFind((my_master::MyEvent*)p);
+            sem_post(&temp);
+        }
+    });
+    thr.detach();
+
+    while(true)
+    {
+        w.WaitWriteable((my_master::MyEvent*)p);
+        printf("aaaa\n");
+    }
+    return 0;
 }
 
 class A : public MyNode

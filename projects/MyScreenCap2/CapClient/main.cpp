@@ -4,7 +4,7 @@
 #include "MyLogin.h"
 #include <QFont>
 
-#if 1
+#if 0
 #define SERVER_IP "115.159.143.187"
 #else
 #define SERVER_IP "127.0.0.1"
