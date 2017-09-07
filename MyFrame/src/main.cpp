@@ -344,9 +344,9 @@ int main()
     std::thread thr([&](){
         while(true)
         {
-            sleep(2);
-            sem_t temp = w.SemFind((my_master::MyEvent*)p);
-            sem_post(&temp);
+            sleep(1);
+            sem_t* temp = w.SemFind((my_master::MyEvent*)p);
+            sem_post(temp);
         }
     });
     thr.detach();
