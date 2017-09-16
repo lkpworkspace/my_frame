@@ -1,8 +1,6 @@
 #include "../inc/MyApp.h"
 #include "../inc/MyTask.h"
 #include "../inc/MyLog.h"
-#include "../inc/MyTimer.h"
-#include "../inc/MyTest.h"
 
 #include <signal.h>
 #include <sys/types.h>
@@ -54,7 +52,6 @@ int MyApp::InitApp()
 int MyApp::CreateTask()
 {
     MyTask* task = new MyTask;
-    m_tasks.push_back(task);
     this->AddEvent(task);
 
     pthread_mutex_lock(&m_app_mutex);
@@ -66,11 +63,7 @@ int MyApp::AddEvent(MyEvent* ev)
 {
     struct epoll_event event;
     int res;
-#if 0
-    //Test
-    MyTest::Add(ev);
-    // end Test
-#endif
+
     pthread_mutex_lock(&m_app_mutex);
     event.data.ptr = ev;
     event.events = ev->GetEpollEventType();
@@ -137,11 +130,13 @@ int MyApp::Exec()
         if(res > 0)
         {
             HandleEvent(ev,res);
-        }else if(res == -1)
-        {
-            MyDebugPrint("epoll wait error\n");
-            MyError("epoll wait");
         }
+        // 也许是中断
+//        else if(res == -1)
+//        {
+//            MyDebugPrint("epoll wait error\n");
+//            MyError("epoll wait");
+//        }
     }
 
     // quit MyApp

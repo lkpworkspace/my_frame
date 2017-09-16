@@ -25,6 +25,19 @@ private:
     static int l_count;
 };
 
+class MyObj
+{
+public:
+    MyObj(std::string key = "");
+    ~MyObj();
+    std::string& GetObjName();
+    void SetObjName(std::string name);
+
+private:
+    std::string m_obj_name;
+    static int l_counter;
+};
+
 /*  author: kpli
  *  date:   2017.5.21
  *  feature:

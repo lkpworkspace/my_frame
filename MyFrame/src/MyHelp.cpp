@@ -1,5 +1,8 @@
 #include "../inc/MyHelp.h"
 #include <string.h>
+
+#define UNUSE(arg) (arg)=(arg)
+
 int MyHelp::ToInt(const char *str)
 {
 	return atoi(str);
@@ -41,6 +44,7 @@ unsigned long long MyHelp::ToULLong(const char* str, int base)
 }
 std::string MyHelp::ToStr(int num, int base)
 {
+    UNUSE(base);
 	char buf[20] = { 0 };
 #ifdef WIN32
     itoa(num, buf, base);
@@ -51,6 +55,7 @@ std::string MyHelp::ToStr(int num, int base)
 }
 std::string MyHelp::ToStr(long num, int base)
 {
+    UNUSE(base);
 	char buf[20] = { 0 };
 #ifdef WIN32
     ltoa(num, buf, base);
@@ -61,6 +66,7 @@ std::string MyHelp::ToStr(long num, int base)
 }
 std::string MyHelp::ToStr(unsigned long num, int base)
 {
+    UNUSE(base);
 	char buf[20] = { 0 };
 #ifdef WIN32
 	ultoa(num, buf, base);

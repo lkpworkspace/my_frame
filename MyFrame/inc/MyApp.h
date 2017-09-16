@@ -1,16 +1,16 @@
 #ifndef MYAPP_H
 #define MYAPP_H
-#include "Common.h"
 #include <sys/epoll.h>
 #include <pthread.h>
-#include "MyEvent.h"
-#include "MyThread.h"
 #include <vector>
-#include "MyNormalEvent.h"
+#include "Common.h"
+#include "MyThread.h"
 #include "MyTimer.h"
 
 namespace my_master {
 class MyTask;
+class MyEvent;
+class MyNormalEvent;
 class MyApp : public MyThread
 {
 public:
@@ -41,14 +41,13 @@ private:
     void HandleEvent(struct epoll_event* epev, int count);
     void HandleTaskEvent(MyEvent*);
 private:
-    std::vector<MyTask*> m_tasks;      // save MyTask class(not use)
     my_master::MyList m_idle_tasks;    // save MyTask class
     my_master::MyList m_ev_recv;       // recv task event, save MyEvent class
     pthread_mutex_t m_app_mutex;
     int m_epollFd;                     // listen Event file des
     int m_threadSize;                  // thread size (const var)
 
-    MyNormalEvent* m_nor_event;        // quit event
+    MyNormalEvent* m_nor_event;        // universal event
     bool m_isQuit;                     // quit flag
     common_func_t m_quit_func;         // quit func
 

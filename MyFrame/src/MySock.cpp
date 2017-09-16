@@ -15,7 +15,7 @@ MySock::MySock(std::string ip, uint16_t port, int type, int protol)
 }
 
 MySock::~MySock(){
-    MyDebugPrint("sock close\n");
+    MyDebugPrint("sock %d close\n",m_sock);
     Close();
 }
 

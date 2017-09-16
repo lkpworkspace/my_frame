@@ -1,7 +1,6 @@
 #include "../inc/MyTask.h"
 #include "../inc/MyApp.h"
 #include "../inc/MyLog.h"
-#include "../inc/MyTest.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 using namespace my_master;
@@ -43,12 +42,6 @@ int MyTask::TaskWork()
     MyEvent* end = (MyEvent*)m_que.End();
     while(begin != end)
     {
-#if 0
-        // Test
-        if(!MyTest::Has(begin))
-            assert(false);
-        // end Test
-#endif
         temp = (MyEvent*)(begin->next);
         m_que.Del((MyNode*)begin,false);
         begin->CallBackFunc(begin);

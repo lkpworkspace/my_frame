@@ -23,18 +23,24 @@ SOURCES += \
     ../src/MyNormalEvent.cpp \
     ../src/MyTimer.cpp \
     ../src/MyAllEvent.cpp \
-    ../src/MyBase64.cpp \
-    ../src/MyMouseEvent.cpp \
-    ../src/MyKeyEvent.cpp \
-    ../src/MyTFTP.cpp \
-    ../src/MyFileEvent.cpp \
-    ../src/MyTest.cpp \
-    ../src/MyICMP.cpp \
-    ../src/MyRaw.cpp \
     ../src/MyWriteable.cpp \
     ../src/MySqlite3.cpp \
     ../../3rd_src/Sqlite3/sqlite3.c \
+    ../../3rd_src/blowfish/blowfish.cpp \
+    ../../3rd_src/md5/md5.cpp \
     ../src/main.cpp
+
+#   ../src/MyBase64.cpp \
+#   ../src/MyMouseEvent.cpp \
+#   ../src/MyKeyEvent.cpp \
+#   ../src/MyTFTP.cpp \
+#   ../src/MyFileEvent.cpp \
+#   ../src/MyTest.cpp \
+#   ../src/MyICMP.cpp \
+#   ../src/MyRaw.cpp \
+
+
+
 
 HEADERS += \
     ../inc/Common.h \
@@ -53,20 +59,23 @@ HEADERS += \
     ../inc/MyControls.h \
     ../inc/MyUdp.h \
     ../inc/MyTcp.h \
-    ../inc/MyVec.h \
-    ../inc/MyBase64.h \
-    ../inc/MyHeap.h \
-    ../inc/MyHash.h \
-    ../inc/MyWriteable.h \
-    ../inc/MyMouseEvent.h \
-    ../inc/MyKeyEvent.h \
     ../inc/MyAllEvent.h \
-    ../inc/MyTFTP.h \
-    ../inc/MyFileEvent.h \
-    ../inc/MyTest.h \
-    ../inc/MyICMP.h \
-    ../inc/MyRaw.h \
     ../inc/MySqlite3.h \
     ../../3rd_src/Sqlite3/sqlite3.h \
     ../../3rd_src/Sqlite3/sqlite3ext.h \
+    ../../3rd_src/blowfish/blowfish.h \
+    ../../3rd_src/md5/md5.h
+
+#   ../inc/MyVec.h \
+#   ../inc/MyBase64.h \
+#   ../inc/MyHeap.h \
+#   ../inc/MyHash.h \
+#   ../inc/MyWriteable.h \
+#   ../inc/MyMouseEvent.h \
+#   ../inc/MyKeyEvent.h \
+#   ../inc/MyTFTP.h \
+#   ../inc/MyFileEvent.h \
+#   ../inc/MyTest.h \
+#   ../inc/MyICMP.h \
+#   ../inc/MyRaw.h \
 DISTFILES +=

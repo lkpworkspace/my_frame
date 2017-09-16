@@ -13,7 +13,7 @@ MyTcpServer::~MyTcpServer()
 int MyTcpServer::Listen(int backlog)
 {
     int res = -1;
-    SetNonblock(true);
+    //SetNonblock(true);
     res = listen(m_sock,backlog);
     assert(res == 0);
     return res;
@@ -252,7 +252,11 @@ int MyTcpFrame::GetBuf1()
                 memcpy(&m_len,buf_len,sizeof(m_len));
                 if(m_datas.size() >= m_len)
                 {
-                    char temp[m_len] = {0};
+                    if(m_len == 0)
+                    {
+                        MyDebugPrint("len is 0\n");
+                    }
+                    char temp[m_len];
                     for(int i = 0; i < m_len; ++i)
                     {
                         temp[i] = m_datas.front();

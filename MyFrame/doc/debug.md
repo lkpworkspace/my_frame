@@ -9,6 +9,7 @@
 |MyTalk|complete|
 |ScreenCap udp|delete|
 |ScreenCap2 tcp|complete|
+|MyBuildBuf|complete|
 
 ## 03月27号
 - [x] 1. 调试链表程序，发现老是段错误？
@@ -134,6 +135,10 @@
 
 ## 07月07号
 - [ ] 添加对写事件的监听  
+
+## 09月07号
+- [x] 添加Buildbuf项目
+- [x] MyWriteable类可以使用了，哈哈哈 
 
 ## TODO
 - [ ] 测试MyVec类

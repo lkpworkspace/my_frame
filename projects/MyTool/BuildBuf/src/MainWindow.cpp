@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(m_client,SIGNAL(readyRead()),this,SLOT(ReadMessage()));
     connect(m_client,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(DisplayError(QAbstractSocket::SocketError)));
-
 }
 
 MainWindow::~MainWindow()
@@ -184,29 +183,15 @@ void MainWindow::on_pushButton_Send_clicked()
 
     buf = GetBuildBuf(len);
     if(buf == NULL) return;
-
+    // add to ui
     MyListWidgetItem* item = new MyListWidgetItem(buf,len);
     ui->listWidget_Send->addItem(item);
+    ui->textEdit_Tips->append(_C("Send ") + QString::number(len) + _C(" bytes data"));
 
-    QByteArray block;
-    QDataStream send(&block,QIODevice::WriteOnly);
-    send.setVersion(QDataStream::Qt_5_4);
-#ifdef USE_HEAD
-    send << (quint16)len;
-#endif
-    send.writeRawData(buf,len);
-    ui->textEdit_Tips->append(_C("Send") + QString::number(len) + _C("bytes data"));
     if(ui->comboBox_Protocol->currentText() == "TCP")
     {
-        m_client->write(block.data(),len + sizeof(quint16));
-#ifdef USE_HEAD
-        ShowBuf(block.data(),len + sizeof(quint16));
-#else
-        ShowBuf(block.data(),len);
-#endif
-    }else
-    {
-
+        m_client->write(buf,len);
+        ShowBuf(buf,len);
     }
     delete[] buf;
 }
