@@ -1,4 +1,4 @@
-#include "../inc/Common.h"
+#include "MyCommon.h"
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>

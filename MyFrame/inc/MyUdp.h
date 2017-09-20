@@ -1,6 +1,6 @@
 #ifndef MYUDP_H
 #define MYUDP_H
-#include "Common.h"
+#include "MyCommon.h"
 #include "MySock.h"
 #include "MyNet.h"
 #include <mutex>

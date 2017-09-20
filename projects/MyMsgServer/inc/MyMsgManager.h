@@ -1,26 +1,31 @@
 #ifndef MYMSGMANAGER_H
 #define MYMSGMANAGER_H
-#include "Comm.h"
+#include "MyMsgCommon.h"
 #include "MyControls.h"
-#include "MyConnect.h"
+#include "MyMsgConnect.h"
 
 class MyMsgManager
 {
-public:
-    MyMsgManager* GetInstance();
-
-    void InsertGroup(std::string name);
-    void RemoveGroup(std::string name);
-
-    void InsertConnect(MyConnect*);
-    void RemoveConnect(MyConnect*);
-private:
-    MyMsgManager(){}
-    static MyMsgManager* instance;
-    typedef MyMap<std::string, MyConnect*> MyMsgGroup_t;
-    typedef MyMap<std::string, MyMsgGroup_t*> MyMsgGroups_t;
+    typedef MyMap<std::string, MyMsgConnect*> MyMsgGroup_t;
     typedef MyMap<std::string, MyMsgGroup_t*> MyMsgServer_t;
-    MyMsgServer_t m_servers;
+    typedef MyMap<std::string, MyMsgServer_t*> MyMsgServers_t;
+public:
+    static MyMsgManager* GetInstance();
+    static void Destory();
+
+    bool GetConnect(MyMsgConnect*){}
+    bool InsertConnect(MyMsgConnect*);
+    bool RemoveConnect(MyMsgConnect*);
+private:
+    MyMsgManager();
+    void RdLock();
+    void WrLock();
+    void UnLock();
+    MyMsgGroup_t* GetGroup(std::string servName, std::string name);
+    MyMsgServer_t* GetServer(std::string name);
+
+    static MyMsgManager* instance;
+    MyMsgServers_t m_servers;
 };
 
 #endif // MYMSGMANAGER_H

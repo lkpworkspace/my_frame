@@ -1,18 +1,18 @@
-#include "../inc/MyConnect.h"
+#include "MyMsgConnect.h"
 #include "MyApp.h"
 
 using namespace my_master;
 
-MyConnect::MyConnect(int fd, sockaddr_in addr)
+MyMsgConnect::MyMsgConnect(int fd, sockaddr_in addr)
     :MyEasyTcpSocket(fd,addr)
 {
 
 }
 
-MyConnect::~MyConnect()
+MyMsgConnect::~MyMsgConnect()
 {}
 
-int MyConnect::Frame(const char* buf, int len)
+int MyMsgConnect::Frame(const char* buf, int len)
 {
     if(len == 0)
     {
@@ -24,7 +24,7 @@ int MyConnect::Frame(const char* buf, int len)
     return true;
 }
 
-void MyConnect::Handle(const char* buf, int len)
+void MyMsgConnect::Handle(const char* buf, int len)
 {
     uint16_t head = MySelfProtocol::HandleHeader(buf);
     MyDebugPrint("Msg coming len %d\n",len);
@@ -39,12 +39,12 @@ void MyConnect::Handle(const char* buf, int len)
 
 ///////////////////////////////////////////////////////
 /// some useful func
-void MyConnect::WelcomeMsg()
+void MyMsgConnect::WelcomeMsg()
 {
     MyDebugPrint("welcome come to my msg server\n");
 }
 
-std::string MyConnect::GetAccount()
+std::string MyMsgConnect::GetAccount()
 {
     std::string temp;
     char buf[9] = {0};
@@ -61,7 +61,7 @@ again:
     return temp;
 }
 
-std::string MyConnect::Getpass()
+std::string MyMsgConnect::Getpass()
 {
     std::string pass;
     char buf[4] = {0};

@@ -1,6 +1,6 @@
 #ifndef MYTFTP_H
 #define MYTFTP_H
-#include "Common.h"
+#include "MyCommon.h"
 #include "MyUdp.h"
 #include "MyBase64.h"
 #include "MyThread.h"

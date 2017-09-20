@@ -1,6 +1,6 @@
 #ifndef MYTIMER_H
 #define MYTIMER_H
-#include "Common.h"
+#include "MyCommon.h"
 #include "MyLog.h"
 #include "MyNormalEvent.h"
 #include <map>

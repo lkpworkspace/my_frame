@@ -1,6 +1,6 @@
 #ifndef MYSQLITE3_H
 #define MYSQLITE3_H
-#include "Common.h"
+#include "MyCommon.h"
 #include "../../3rd_src/Sqlite3/sqlite3.h"
 #include <vector>
 namespace my_master {

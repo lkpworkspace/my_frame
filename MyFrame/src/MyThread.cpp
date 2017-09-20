@@ -1,6 +1,6 @@
-#include "../inc/MyThread.h"
-#include "../inc/Common.h"
-#include "../inc/MyLog.h"
+#include "MyThread.h"
+#include "MyCommon.h"
+#include "MyLog.h"
 using namespace my_master;
 MyThread::MyThread()
 {

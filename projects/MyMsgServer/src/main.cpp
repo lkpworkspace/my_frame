@@ -1,7 +1,7 @@
 #include <iostream>
 #include "MyFrame.h"
 #include "MyTcp.h"
-#include "../inc/MyMsgServer.h"
+#include "MyMsgServer.h"
 
 using namespace std;
 

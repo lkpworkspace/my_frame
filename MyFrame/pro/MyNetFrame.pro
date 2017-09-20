@@ -6,8 +6,10 @@ CONFIG -= qt
 LIBS += -lpthread -ldl -lrt
 QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
 
+INCLUDEPATH += ../inc
+
 SOURCES += \
-    ../src/Common.cpp \
+    ../src/MyCommon.cpp \
     ../src/MyThread.cpp \
     ../src/MyEvent.cpp \
     ../src/MyApp.cpp \
@@ -43,7 +45,7 @@ SOURCES += \
 
 
 HEADERS += \
-    ../inc/Common.h \
+    ../inc/MyCommon.h \
     ../inc/MyHelp.h \
     ../inc/MyLog.h \
     ../inc/MyFrame.h \

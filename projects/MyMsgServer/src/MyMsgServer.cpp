@@ -1,6 +1,7 @@
-#include "../inc/MyMsgServer.h"
+#include "MyMsgServer.h"
+#include "MyMsgConnect.h"
 #include "MyApp.h"
-#include "../inc/MyConnect.h"
+
 
 using namespace my_master;
 
@@ -22,7 +23,7 @@ void* MyMsgServer::CallBackFunc(MyEvent *ev)
         int fd = serv->Accpet(&addr);
         if(fd < 0)
             break;
-        MyConnect *recv = new MyConnect(fd,addr);
+        MyMsgConnect *recv = new MyMsgConnect(fd,addr);
         printf("get client connect fd : %d, port %u, ip %s\n",
                fd,
                MyNet::GetAddrPort(&addr),

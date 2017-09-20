@@ -1,7 +1,7 @@
 #ifndef MYMSGSERVER_H
 #define MYMSGSERVER_H
 #include "MyTcp.h"
-#include "Comm.h"
+#include "MyMsgCommon.h"
 #include "MyControls.h"
 
 class MyMsgServer : public my_master::MyTcpServer, public MyCtrlObj

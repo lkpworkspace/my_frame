@@ -1,6 +1,6 @@
 #ifndef MYTCP_H
 #define MYTCP_H
-#include "Common.h"
+#include "MyCommon.h"
 #include "MySock.h"
 #include <queue>
 

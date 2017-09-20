@@ -6,10 +6,10 @@ CONFIG -= qt
 LIBS += -lpthread -ldl -lrt
 QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
 
-INCLUDEPATH += ../../../MyFrame/inc/
+INCLUDEPATH += ../../../MyFrame/inc/ ../inc
 
 SOURCES += \
-    ../../../MyFrame/src/Common.cpp \
+    ../../../MyFrame/src/MyCommon.cpp \
     ../../../MyFrame/src/MyThread.cpp \
     ../../../MyFrame/src/MyEvent.cpp \
     ../../../MyFrame/src/MyApp.cpp \
@@ -33,7 +33,7 @@ SOURCES += \
     ../src/main.cpp \
     ../src/MyMsgServer.cpp \
     ../src/MyMsgManager.cpp \
-    ../src/MyConnect.cpp
+    ../src/MyMsgConnect.cpp
 
 #   ../src/MyBase64.cpp \
 #   ../src/MyMouseEvent.cpp \
@@ -48,7 +48,7 @@ SOURCES += \
 
 
 HEADERS += \
-    ../../../MyFrame/inc/Common.h \
+    ../../../MyFrame/inc/MyCommon.h \
     ../../../MyFrame/inc/MyHelp.h \
     ../../../MyFrame/inc/MyLog.h \
     ../../../MyFrame/inc/MyFrame.h \
@@ -70,10 +70,10 @@ HEADERS += \
     ../../../3rd_src/Sqlite3/sqlite3ext.h \
     ../../../3rd_src/blowfish/blowfish.h \
     ../../../3rd_src/md5/md5.h \
-    ../inc/Comm.h \
+    ../inc/MyMsgCommon.h \
     ../inc/MyMsgServer.h \
     ../inc/MyMsgManager.h \
-    ../inc/MyConnect.h
+    ../inc/MyMsgConnect.h
 
 #   ../inc/MyVec.h \
 #   ../inc/MyBase64.h \

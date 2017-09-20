@@ -1,6 +1,6 @@
 #ifndef MYSOCK_H
 #define MYSOCK_H
-#include "Common.h"
+#include "MyCommon.h"
 #include "MyEvent.h"
 #include "MyNet.h"
 namespace my_master {

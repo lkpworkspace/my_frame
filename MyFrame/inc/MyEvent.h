@@ -1,7 +1,7 @@
 #ifndef MYEVENT_H
 #define MYEVENT_H
 #include <sys/epoll.h>
-#include "Common.h"
+#include "MyCommon.h"
 #include "MyList.h"
 namespace my_master {
 

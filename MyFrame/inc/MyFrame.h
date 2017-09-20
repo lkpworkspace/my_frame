@@ -1,6 +1,6 @@
 #ifndef MYFRAME_H
 #define MYFRAME_H
-#include "Common.h"
+#include "MyCommon.h"
 // my class
 #include "MyLog.h"
 #include "MyHelp.h"
