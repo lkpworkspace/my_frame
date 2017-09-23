@@ -33,7 +33,8 @@ SOURCES += \
     ../src/main.cpp \
     ../src/MyMsgServer.cpp \
     ../src/MyMsgManager.cpp \
-    ../src/MyMsgConnect.cpp
+    ../src/MyMsgConnect.cpp \
+    ../src/MyMsgCommon.cpp
 
 #   ../src/MyBase64.cpp \
 #   ../src/MyMouseEvent.cpp \

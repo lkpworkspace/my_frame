@@ -56,6 +56,20 @@ void MySqlite3::Open()
     }
 }
 
+void MySqlite3::EventBegin()
+{
+    int err_code;
+    if((err_code = sqlite3_exec(m_db,"begin;",0,0,0)) != SQLITE_OK)
+        printf("[MySqlite3::EventBegin] : exec sql fail %d\n",err_code);
+}
+
+void MySqlite3::EventEnd()
+{
+    int err_code;
+    if((err_code = sqlite3_exec(m_db,"commit;",0,0,0)) != SQLITE_OK)
+        printf("[MySqlite3::EventEnd] : exec sql fail %d\n",err_code);
+}
+
 int MySqlite3::ExecSql(const std::string sql)
 {
     char* err_msg;

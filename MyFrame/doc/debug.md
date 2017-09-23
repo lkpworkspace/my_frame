@@ -138,7 +138,17 @@
 
 ## 09月07号
 - [x] 添加Buildbuf项目
-- [x] MyWriteable类可以使用了，哈哈哈 
+- [x] MyWriteable类可以使用了，哈哈哈
+
+## 09月21号
+- [x] 修改Common.*为MyCommon.*
+
+## 09月24号
+- [x] 添加 获得socket缓冲区存储的字节数 函数
+- [x] 编写MyMsgServer项目
+- [ ] 试图优化MyTcpFrame类(EasyWrite, Frame)
+- [ ] BuildBuf的string选项有问题，需要修改
+- [x] Sqlite3添加 事物机制的函数
 
 ## TODO
 - [ ] 测试MyVec类

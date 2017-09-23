@@ -1,19 +1,17 @@
 #include "MyMsgManager.h"
+#include "MyMsgConnect.h"
 
-MyMsgManager* MyMsgManager::instance = NULL;
-pthread_rwlock_t m_rw_mutex = PTHREAD_RWLOCK_INITIALIZER;
-
-MyMsgManager* MyMsgManager::GetInstance()
+MyMsgManager::MyMsgManager()
 {
-    if(instance == NULL)
-        instance = new MyMsgManager();
-    return instance;
+    pthread_rwlock_init(&m_rw_mutex,NULL);
 }
 
-void MyMsgManager::Destory()
+MyMsgManager::~MyMsgManager()
 {
     pthread_rwlock_destroy(&m_rw_mutex);
 }
+
+
 
 void MyMsgManager::RdLock()
 {
@@ -48,14 +46,45 @@ bool MyMsgManager::InsertConnect(MyMsgConnect* c)
 
 bool MyMsgManager::RemoveConnect(MyMsgConnect *c)
 {
-    // so diffcult
-    return false;
+    MyMsgConnect* conn;
+    MyMsgGroup_t* g;
+
+    WrLock();
+    g = m_servers.Get(c->m_server)->Get(c->m_group);
+    if(g->Find(c->m_id))
+    {
+        conn = g->Get(c->m_id);
+        if(conn != NULL)
+        {
+            g->Remove(c->m_id);
+            std::map<std::string, MyMsgConnect*>::iterator begin = g->GetMap().begin();
+            std::map<std::string, MyMsgConnect*>::iterator end = g->GetMap().end();
+            for(;begin != end;)
+            {
+                begin->second->MemberQuit(c->m_id);
+            }
+            delete conn;
+            conn = NULL;
+        }
+    }
+    UnLock();
+    return true;
 }
 
-MyMsgManager::MyMsgManager()
+MyMsgConnect* MyMsgManager::GetConnect(std::string serv, std::string group, std::string name)
 {
+    MyMsgConnect* conn;
+    MyMsgGroup_t* g;
+    RdLock();
+    g = m_servers.Get(serv)->Get(group);
+    if(g->Find(name))
+        conn = g->Get(name);
+    UnLock();
+    return conn;
 }
 
+
+////////////////////////////////////////////////////////////////////////////
 MyMsgManager::MyMsgGroup_t *MyMsgManager::GetGroup(std::string servName, std::string name)
 {
     MyMsgGroup_t* group;

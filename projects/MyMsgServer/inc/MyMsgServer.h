@@ -14,8 +14,13 @@ public:
     /// override parent method
     std::string GetClassType(){return "MyMsgServer";}
     void* CallBackFunc(MyEvent *);
+
+    //////////////////////////////////////////////
+    ///
+    MyMsgManager* GetManager(){ return m_manager; }
 protected:
 private:
+    MyMsgManager *m_manager;
 };
 
 #endif // MYMSGSERVER_H

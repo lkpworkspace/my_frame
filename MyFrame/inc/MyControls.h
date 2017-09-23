@@ -65,6 +65,7 @@ template<typename T1,typename T2>
 class MyMap
 {
 public:
+    std::map<T1,T2>& GetMap();
     T2 Get(T1);
     bool Insert(T1,T2);
     bool Remove(T1);
@@ -72,6 +73,12 @@ public:
 private:
     std::map<T1,T2> m_members;
 };
+
+template<typename T1,typename T2>
+std::map<T1,T2>& MyMap<T1,T2>::GetMap()
+{
+    return m_members;
+}
 
 template<typename T1,typename T2>
 T2 MyMap<T1,T2>::Get(T1 t1)

@@ -2,7 +2,6 @@
 #define __MYCONNECT_H__
 #include "MyMsgCommon.h"
 #include "MyTcp.h"
-#include "MyUdp.h"
 
 class MyMsgManager;
 class MyMsgConnect : public my_master::MyEasyTcpSocket
@@ -16,17 +15,32 @@ public:
     int Frame(const char* buf, int len);
     std::string GetClassType(){return m_id;}
 
-    void WelcomeMsg();
+    /////////////////////////////////////////////////
+    /// Ass func
+    void MemberQuit(std::string name);
     std::string GetAccount();
     std::string Getpass();
+    void InitAccountInfo(std::string id, std::string password);
+    //////////////////////////////////////////////////
+    /// Msg Process
     void Handle(const char* buf, int len);
-private:
+    void HandleLogin(const char* buf, int len);
+    void HandleErr(const char* buf, int len);
+    void WelcomeMsg();
+    //////////////////////////////////////////////////
+    /// Msg Build
+    char* BuildErr(unsigned short err_num, int* outlen);
+
     std::string m_id;               // id card
     std::string m_lv;               // is root or consumer
+    std::string m_pass;
     std::string m_group;            // belong group
     std::string m_server;           // belong server
-
     std::string m_name;             // user name
+private:
+    std::mutex m_mutex;
+    char* m_buf;
+    int m_buf_size;
 };
 
 

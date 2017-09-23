@@ -82,6 +82,7 @@ public:
 protected:
     virtual int ReadBuf(char* buf, int len) = 0;
     virtual int WriteBuf(const char* buf, int len) = 0;
+    virtual int GetFd() = 0;
 
     int GetBuf1();
 private:
@@ -102,6 +103,7 @@ public:
 private:
     virtual int ReadBuf(char* buf, int len);
     virtual int WriteBuf(const char* buf, int len);
+    virtual int GetFd(){ return GetEventFd(); }
     virtual void* CallBackFunc(MyEvent *);
 };
 

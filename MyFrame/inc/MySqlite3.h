@@ -12,11 +12,14 @@ public:
     ~MySqlite3();
 
     void Open();
+    void EventBegin();
+    void EventEnd();
     int ExecSql(const std::string sql);
     std::vector<std::string>* GetRow(); // hang
     const std::string GetValue(int row, int col);
     std::vector<std::string>* GetColumnName(){ return &m_col_name; }
     int GetColCount(){ return m_col_count; }
+
     void ClearBuf();
     void Close();
 private:

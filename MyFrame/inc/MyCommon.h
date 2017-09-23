@@ -49,6 +49,7 @@ public:
     static bool IsDirExist(const char* path);
     static char* GetHomeDir();
     static uint64_t GetTimerNow();
+    static int BytesAvailable(int fd);
 
     static void DaemonInit();
 
@@ -58,6 +59,46 @@ public:
 private:
     Common();
     ~Common();
+};
+
+/////////////////////////////////////////////////////
+/*  | header(2byte) | datalen(2byte) | data(0-512byte) |
+ *
+ */
+#define MYPROTO_MAX_BUF_SIZE  2048
+typedef struct data_t
+{
+    uint16_t len;
+    char buf[MYPROTO_MAX_BUF_SIZE];
+}data_t;
+
+class MySelfProtocol
+{
+public:
+    MySelfProtocol(){}
+    ~MySelfProtocol(){}
+
+    static char* GetBuf(int* len = NULL);
+    static void FreeBuf(char* buf);
+    ////////////////////////////////////////////////
+    /// handle
+    static uint16_t HandleHeader(const char* buf);
+    static uint16_t HandleLen(int offset, const char* buf, int len);
+    static uint8_t HandleChar(int offset, const char* buf, int len);
+
+    static std::string HandleString(int offset, const char* buf, int len);
+    static data_t HandleData(int offset, const char* buf, int len);
+    ////////////////////////////////////////////////
+    /// build
+    static int BuildHeader(uint16_t head, char* buf, int len);
+    static int BuildLen(uint16_t datalen,int offset, char* buf, int len);
+    static int BuildChar(uint8_t ch,int offset, char* buf, int len);
+
+    static int BuildString(const char* str, int offset, char* buf, int len);
+    // return value : data_len size + data's length
+    static int BuildData(const char* data, uint16_t data_len, int offset, char* buf, int len);
+protected:
+private:
 };
 /*
     open:(flags)

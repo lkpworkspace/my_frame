@@ -2,7 +2,6 @@
 #define MYMSGMANAGER_H
 #include "MyMsgCommon.h"
 #include "MyControls.h"
-#include "MyMsgConnect.h"
 
 class MyMsgManager
 {
@@ -10,22 +9,22 @@ class MyMsgManager
     typedef MyMap<std::string, MyMsgGroup_t*> MyMsgServer_t;
     typedef MyMap<std::string, MyMsgServer_t*> MyMsgServers_t;
 public:
-    static MyMsgManager* GetInstance();
-    static void Destory();
-
-    bool GetConnect(MyMsgConnect*){}
-    bool InsertConnect(MyMsgConnect*);
-    bool RemoveConnect(MyMsgConnect*);
-private:
     MyMsgManager();
+    ~MyMsgManager();
+
     void RdLock();
     void WrLock();
     void UnLock();
+
+    MyMsgConnect* GetConnect(std::string serv, std::string group, std::string name);
+    bool InsertConnect(MyMsgConnect*);
+    bool RemoveConnect(MyMsgConnect*);
+private:
     MyMsgGroup_t* GetGroup(std::string servName, std::string name);
     MyMsgServer_t* GetServer(std::string name);
 
-    static MyMsgManager* instance;
     MyMsgServers_t m_servers;
+    pthread_rwlock_t m_rw_mutex;
 };
 
 #endif // MYMSGMANAGER_H
