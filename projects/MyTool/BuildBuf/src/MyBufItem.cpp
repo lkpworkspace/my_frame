@@ -32,6 +32,7 @@ MyBufItem::MyBufItem(QWidget *parent)
     AddComboBoxItem("char");
     AddComboBoxItem("hex ch");
     AddComboBoxItem("short");
+    AddComboBoxItem("hex sh");
     AddComboBoxItem("int");
     AddComboBoxItem("hex in");
     AddComboBoxItem("flaot");

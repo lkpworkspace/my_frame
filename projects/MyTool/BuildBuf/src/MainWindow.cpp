@@ -48,6 +48,8 @@ void MainWindow::InitUI()
     ui->lineEdit_IP->setText("127.0.0.1");
     ui->lineEdit_Port->setText("4399");
     ui->pushButton_Send->setEnabled(false);
+
+    ui->mainToolBar->hide();
 }
 
 char* MainWindow::GetBuildBuf(int& len)
@@ -202,6 +204,7 @@ void MainWindow::on_pushButton_View_clicked()
     int len = 0;
 
     buf = GetBuildBuf(len);
+    ui->label_BufCount->setText(QString::number(len));
     if(buf == NULL) return;
 
     ShowBuf(buf,len);
@@ -236,9 +239,8 @@ void MainWindow::on_pushButton_Connect_clicked()
     {
         short p = port.toShort();
         NewConnect(IP,p);
-        ui->pushButton_Connect->setText(_C("close connect"));
+        ui->pushButton_Connect->setText(_C("Disconnect"));
         ui->pushButton_Send->setEnabled(true);
-        ui->textEdit_Tips->append(_C("Connect..."));
     }
     m_isOpen = !m_isOpen;
 }
