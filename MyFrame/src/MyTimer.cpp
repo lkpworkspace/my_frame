@@ -4,17 +4,11 @@ using namespace my_master;
 std::multimap<uint64_t,MyTimer*> MyTimer::l_timers;
 std::mutex MyTimer::l_mutex;
 
-//test
-static MyTimer* g_timer = nullptr;
-
 MyTimer::MyTimer(int period)
 {
     m_isStop = true;
     m_period = period;
     m_func = nullptr;
-    // test
-    g_timer = this;
-    // test end
 
     // reg call func
     SetFunc(&MyTimer::CallFunc);

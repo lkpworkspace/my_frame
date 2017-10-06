@@ -83,6 +83,7 @@ std::map<T1,T2>& MyMap<T1,T2>::GetMap()
 template<typename T1,typename T2>
 T2 MyMap<T1,T2>::Get(T1 t1)
 {
+#if 0
     if(m_members.find(t1) != m_members.end())
     {
         return m_members.find(t1)->second;
@@ -90,6 +91,8 @@ T2 MyMap<T1,T2>::Get(T1 t1)
     std::cout << "Get : do not have \"" << t1 << "\"" << std::endl;
     T2 temp;
     return temp;
+#endif
+    return m_members.find(t1)->second;
 }
 
 template<typename T1,typename T2>

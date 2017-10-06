@@ -80,9 +80,9 @@ char* MainWindow::GetBuildBuf(int& len)
 
 void MainWindow::ShowBuf(const char *buf, int len)
 {
-    if(!buf)
+    if(buf == NULL)
     {
-        qDebug() << "empty buf";
+        qDebug() << "[MainWindow::ShowBuf] : empty buf";
         return;
     }
     int ReadSize = len;

@@ -125,11 +125,16 @@ int MyTcpSocket::Write(const char* buf, int len)
 
 MyTcpFrame::MyTcpFrame()
     :m_iscomplete(true),
-      m_len(0)
+      m_len(0),
+      m_buffer(NULL),
+      m_buffer_len(0)
 {
 }
 
-MyTcpFrame::~MyTcpFrame(){}
+MyTcpFrame::~MyTcpFrame(){
+    if(m_buffer != NULL)
+        free(m_buffer);
+}
 
 int MyTcpFrame::EasyWrite(const char* buf, uint16_t len)
 {
@@ -165,6 +170,54 @@ again:
     return (res - sizeof(len));
 }
 
+/// TODO...
+int MyTcpFrame::GetBuf()
+{
+    int res = 0;
+    int read_bytes = 0;
+
+    read_bytes= Common::BytesAvailable(GetFd());
+    if(read_bytes == 0)
+    {
+        char ch;
+        if((res = ReadBuf(&ch,1) < 0))
+            return Frame(NULL,0);
+    }
+
+    if(m_buffer == NULL)
+    {
+        m_buffer = (char*)malloc(read_bytes);
+        m_buffer_len = read_bytes;
+    }else if(m_buffer_len < read_bytes)
+    {
+        m_buffer = (char*)realloc(m_buffer,read_bytes);
+        m_buffer_len = read_bytes;
+    }
+    res = ReadBuf(m_buffer,read_bytes);
+
+    int index = 0;
+    int process_len = read_bytes;
+    while(1)
+    {
+        if(m_iscomplete)
+        {
+            if(process_len >= 2)
+            {
+                memcpy(&m_len,&m_buffer[index],sizeof(m_len));
+                process_len -= sizeof(m_len);
+                if(m_len < process_len)
+                    return Frame(m_buffer,m_len);
+                else
+                    return true;
+            }
+        }else
+        {
+            if(process_len < m_len)
+                return true;
+        }
+    } // end while
+}
+
 int MyTcpFrame::GetBuf1()
 {
     char buf[1024] = {0};
@@ -174,8 +227,9 @@ int MyTcpFrame::GetBuf1()
     while(1)
     {
         int read_byte = Common::BytesAvailable(GetFd());
-        MyDebugPrint("get read bytes %d\n",read_byte);
+
         res = ReadBuf(buf,sizeof(buf));
+        MyDebugPrint("get read bytes %d, res : %d\n",read_byte,res);
         if(res == 0)
         {
             return Frame(NULL,0);
@@ -233,21 +287,6 @@ int MyTcpFrame::GetBuf1()
     } //end while
     return res1;
 }
-
-/* res:
- * =0 client quit
- * >0 data is coming
- * <0 end of file
-*/
-//ssize_t MyTcpFrame::ReadN(char* buf, size_t len)
-//{
-
-//}
-
-//ssize_t MyTcpFrame::WriteN(const char* buf, size_t len)
-//{
-
-//}
 
 //////////////////////////////////////////////////////////////////
 /// MyEasyTcpSocket

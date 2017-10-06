@@ -19,10 +19,10 @@ public:
     MyMsgConnect* GetConnect(std::string serv, std::string group, std::string name);
     bool InsertConnect(MyMsgConnect*);
     bool RemoveConnect(MyMsgConnect*);
+    std::vector<MyMsgConnect*> GetGroup(MyMsgConnect*);
 private:
-    MyMsgGroup_t* GetGroup(std::string servName, std::string name);
     MyMsgServer_t* GetServer(std::string name);
-
+    MyMsgGroup_t* GetGroup(std::string servName, std::string name);
     MyMsgServers_t m_servers;
     pthread_rwlock_t m_rw_mutex;
 };

@@ -21,7 +21,7 @@ MyListWidgetItem::MyListWidgetItem(const char* buf, int len)
     m_buf = NULL;
     m_len = 0;
 
-    //SetBuf(buf,len);
+    SetBuf(buf,len);
 }
 
 MyListWidgetItem::~MyListWidgetItem()

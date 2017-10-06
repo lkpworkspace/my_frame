@@ -85,11 +85,12 @@ protected:
     virtual int GetFd() = 0;
 
     int GetBuf1();
+    int GetBuf();
 private:
-    //ssize_t ReadN(char* buf, size_t len);
-    //ssize_t WriteN(const char* buf, size_t len);
     uint16_t m_len;
     bool m_iscomplete;
+    char* m_buffer;
+    int m_buffer_len;
     std::queue<char> m_datas;
 };
 

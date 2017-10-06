@@ -8,6 +8,7 @@ MyMsgConnect::MyMsgConnect(int fd, sockaddr_in addr)
     :MyEasyTcpSocket(fd,addr)
 {
     m_buf = MySelfProtocol::GetBuf(&m_buf_size);
+    m_isLogin = false;
 }
 
 MyMsgConnect::~MyMsgConnect()
@@ -44,10 +45,15 @@ void MyMsgConnect::Handle(const char* buf, int len)
     case 0x0005: // modify account info
         break;
     case 0x0009: // msg 1
+        if(m_isLogin)
+            HandleSingleMsg(buf,len);
         break;
     case 0x000b: // msg 2
         break;
     case 0x000d: // msg 3
+        break;
+    case 0x000f: // client request
+        HandleRequest(buf,len);
         break;
     case 0xffff: // msg err
         HandleErr(buf,len);
@@ -67,10 +73,27 @@ void MyMsgConnect::HandleLogin(const char* buf, int len)
     index += MSG_HEAD_SIZE + account.size() + 1; // +1 is end of str('\0')
     password = MySelfProtocol::HandleString(index,buf,len);
 
-    MyDebugPrint("get member %s,%s\n",account.c_str(),password.c_str());
+    MyDebugPrint("get client account %s,%s\n",account.c_str(),password.c_str());
 
     // check is right
     InitAccountInfo(account,password);
+}
+
+void MyMsgConnect::HandleSingleMsg(const char* buf, int len)
+{
+    int index = MSG_HEAD_SIZE;
+    int id_len = strlen(&buf[index]);
+    index += (id_len + 1);
+    std::string dst_id = MySelfProtocol::HandleString(index,buf,len);
+    // search dst_id
+    MyMsgConnect* dst = SearchMemberById(dst_id);
+    if(dst == NULL)
+    {
+        int outlen = 0;
+        char* send_buf = BuildErr(ERR_NOMEMBER,&outlen);
+        this->EasyWrite(send_buf,outlen);
+    }else
+        dst->EasyWrite(buf,len);
 }
 
 void MyMsgConnect::HandleErr(const char* buf, int len)
@@ -86,11 +109,54 @@ void MyMsgConnect::HandleErr(const char* buf, int len)
     }
 }
 
+void MyMsgConnect::HandleRequest(const char* buf, int len)
+{
+    uint16_t req_num = MySelfProtocol::HandleLen(MSG_HEAD_SIZE,buf,len);
+    char* temp_buf = NULL;
+    int temp_len = 0;
+
+    switch(req_num)
+    {
+    case REQ_ALLFRIEND:
+
+        break;
+    case REQ_ONLINEFRIEND:
+
+        break;
+    case REQ_SEARCHFRIENDID:
+
+        break;
+    }
+}
+
+char* MyMsgConnect::BuildAnswer(EnumMsgRequest_t e, char state, int *outlen)
+{
+    int index = 0;
+    memset(m_buf,0,m_buf_size);
+    index += MySelfProtocol::BuildHeader(0x0011,m_buf,m_buf_size);
+    index += MySelfProtocol::BuildLen((uint16_t)e,index,m_buf,m_buf_size);
+    index += MySelfProtocol::BuildChar(state,index,m_buf,m_buf_size);
+    *outlen = index;
+    return m_buf;
+}
+
+char* MyMsgConnect::BuildQuit(int* outlen)
+{
+    int index = 0;
+    char* quit_msg = NULL;
+    memset(m_buf,0,m_buf_size);
+
+    index = MySelfProtocol::BuildHeader(0x0007,m_buf,m_buf_size);
+    index += MySelfProtocol::BuildString(m_id.c_str(),index,m_buf,m_buf_size);
+    *outlen = index;
+    return m_buf;
+}
+
 char* MyMsgConnect::BuildErr(unsigned short err_num, int* outlen)
 {
     int index = 0;
 
-    index += MySelfProtocol::BuildHeader(MSG_HEAD_SIZE,m_buf,m_buf_size);
+    index += MySelfProtocol::BuildHeader(0xffff,m_buf,m_buf_size);
     index += MySelfProtocol::BuildLen(err_num,index,m_buf,m_buf_size);
     *outlen = index;
     return m_buf;
@@ -98,16 +164,50 @@ char* MyMsgConnect::BuildErr(unsigned short err_num, int* outlen)
 
 ///////////////////////////////////////////////////////
 /// some useful func
+std::vector<std::string>& MyMsgConnect::GetAllFriendsId()
+{
+    MySqlite3* db = GetMySqlite3();
+    std::vector<std::string>* row;
+    std::string sql = "select * from \
+                       MyMsgFriends \
+                       where account = '";
+    sql += m_id;
+    sql += "'";
+
+    db->ExecSql(sql);
+    m_all_friends_id.clear();
+    while((row = db->GetRow()) != NULL)
+    {
+        auto begin = row->begin();
+        m_all_friends_id.push_back(begin[1]);
+    }
+    return m_all_friends_id;
+}
+
+MyMsgConnect* MyMsgConnect::SearchMemberById(std::string id)
+{
+    MyMsgConnect* conn = NULL;
+
+    if(id == m_id) return this;
+    m_mutex.lock();
+    // search local member list
+    if(m_friends.Find(id))
+        conn = m_friends.Get(id);
+    m_mutex.unlock();
+    if(conn != NULL)
+        return conn;
+    // search global member list
+    conn = GetMsgServer()->GetManager()->GetConnect(m_server,m_group,id);
+    m_friends.Insert(conn->m_id,conn);
+    return conn;
+}
+
 void MyMsgConnect::MemberQuit(std::string name)
 {
     m_mutex.lock();
-
+    m_friends.Remove(name);
     m_mutex.unlock();
-}
-
-void MyMsgConnect::WelcomeMsg()
-{
-    MyDebugPrint("welcome come to my msg server\n");
+    MyDebugPrint("%s remove from %s map\n", name,m_id.c_str());
 }
 
 void MyMsgConnect::InitAccountInfo(std::string id, std::string password)
@@ -123,7 +223,7 @@ void MyMsgConnect::InitAccountInfo(std::string id, std::string password)
     db->ExecSql(sql);
     if((row = db->GetRow()) != NULL)
     {
-        MyDebugPrint("%s login\n",id.c_str());
+
         auto begin = row->begin();
         m_id = begin[0];
         m_pass = begin[1];
@@ -142,13 +242,15 @@ void MyMsgConnect::InitAccountInfo(std::string id, std::string password)
         m_server = begin[5];
         for(int i = 0; i < row->size(); ++i)
             MyDebugPrint("%s\n",begin[i].c_str());
+        MyDebugPrint("%s login success\n",id.c_str());
         GetMsgServer()->GetManager()->InsertConnect(this);
+        m_isLogin = true;
     }else
     {
         // ERR_ACCOUNT
         MyDebugPrint("%s login err, do not have this id!\n",id.c_str());
         len = 0;
-        buf = BuildErr(ERR_ACCOUNT,&len);
+        buf = BuildErr(ERR_NOACCOUNT,&len);
         EasyWrite(buf,len);
         return;
     }

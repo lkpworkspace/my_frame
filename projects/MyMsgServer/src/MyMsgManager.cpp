@@ -40,6 +40,7 @@ bool MyMsgManager::InsertConnect(MyMsgConnect* c)
         group = GetGroup(c->m_server,c->m_group);
         ret =  group->Insert(c->m_id,c);
         UnLock();
+        MyDebugPrint("%s insert to global map\n", c->m_id.c_str());
     }
     return ret;
 }
@@ -65,6 +66,7 @@ bool MyMsgManager::RemoveConnect(MyMsgConnect *c)
             }
             delete conn;
             conn = NULL;
+            MyDebugPrint("%s remove from global map\n", c->m_id.c_str());
         }
     }
     UnLock();
@@ -73,14 +75,31 @@ bool MyMsgManager::RemoveConnect(MyMsgConnect *c)
 
 MyMsgConnect* MyMsgManager::GetConnect(std::string serv, std::string group, std::string name)
 {
-    MyMsgConnect* conn;
-    MyMsgGroup_t* g;
+    MyMsgConnect* conn = NULL;
+    MyMsgGroup_t* g = NULL;
     RdLock();
     g = m_servers.Get(serv)->Get(group);
     if(g->Find(name))
         conn = g->Get(name);
     UnLock();
     return conn;
+}
+
+std::vector<MyMsgConnect*> MyMsgManager::GetGroup(MyMsgConnect* c)
+{
+    std::vector<MyMsgConnect*> tempgroup;
+    MyMsgGroup_t* g;
+
+    RdLock();
+    g = m_servers.Get(c->m_server)->Get(c->m_group);
+    std::map<std::string, MyMsgConnect*>::iterator begin = g->GetMap().begin();
+    std::map<std::string, MyMsgConnect*>::iterator end = g->GetMap().end();
+    for(;begin != end;)
+    {
+        tempgroup.push_back(begin->second);
+    }
+    UnLock();
+    return tempgroup;
 }
 
 
