@@ -25,7 +25,7 @@ public:
 
     /////////////////////////////////////////////////
     /// Ass func
-    std::vector<MyMsgConnect*>& GetAllFriendsId();
+    std::vector<std::string>& GetAllFriendsId();
     MyMsgConnect* SearchMemberById(std::string id);
     void MemberQuit(std::string name);
     std::string GetAccount();

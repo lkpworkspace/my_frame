@@ -204,7 +204,7 @@ uint16_t MySelfProtocol::HandleHeader(const char *buf)
     return head;
 }
 
-uint16_t MySelfProtocol::HandleLen(int offset, const char* buf, int len)
+uint16_t MySelfProtocol::HandleShort(int offset, const char* buf, int len)
 {
     if(offset + sizeof(uint16_t) > len)
         return 0;
@@ -234,7 +234,7 @@ data_t MySelfProtocol::HandleData(int offset, const char* buf, int len)
 {
     data_t my_data;
 
-    my_data.len = HandleLen(offset,buf,len);
+    my_data.len = HandleShort(offset,buf,len);
     memcpy(my_data.buf,&buf[offset + sizeof(uint16_t)],my_data.len);
     return my_data;
 }
@@ -248,7 +248,7 @@ int MySelfProtocol::BuildHeader(uint16_t head, char* buf, int len)
     return sizeof(head);
 }
 
-int MySelfProtocol::BuildLen(uint16_t datalen, int offset, char* buf, int len)
+int MySelfProtocol::BuildShort(uint16_t datalen, int offset, char* buf, int len)
 {
     if(offset + sizeof(datalen) > len)
         return 0;
@@ -275,7 +275,7 @@ int MySelfProtocol::BuildString(const char* str, int offset, char* buf, int len)
 
 int MySelfProtocol::BuildData(const char* data, uint16_t data_len, int offset, char* buf, int len)
 {
-    int len_offset = BuildLen(data_len,offset,buf,len);
+    int len_offset = BuildShort(data_len,offset,buf,len);
     if(data_len + offset + len_offset > len)
         return 0;
     memcpy(&buf[offset + len_offset],data,data_len);

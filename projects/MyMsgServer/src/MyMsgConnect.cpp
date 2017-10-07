@@ -98,7 +98,7 @@ void MyMsgConnect::HandleSingleMsg(const char* buf, int len)
 
 void MyMsgConnect::HandleErr(const char* buf, int len)
 {
-    uint16_t err_num = MySelfProtocol::HandleLen(MSG_HEAD_SIZE,buf,len);
+    uint16_t err_num = MySelfProtocol::HandleShort(MSG_HEAD_SIZE,buf,len);
     switch(err_num)
     {
     case ERR_OK:
@@ -111,7 +111,7 @@ void MyMsgConnect::HandleErr(const char* buf, int len)
 
 void MyMsgConnect::HandleRequest(const char* buf, int len)
 {
-    uint16_t req_num = MySelfProtocol::HandleLen(MSG_HEAD_SIZE,buf,len);
+    uint16_t req_num = MySelfProtocol::HandleShort(MSG_HEAD_SIZE,buf,len);
     char* temp_buf = NULL;
     int temp_len = 0;
 
@@ -134,7 +134,7 @@ char* MyMsgConnect::BuildAnswer(EnumMsgRequest_t e, char state, int *outlen)
     int index = 0;
     memset(m_buf,0,m_buf_size);
     index += MySelfProtocol::BuildHeader(0x0011,m_buf,m_buf_size);
-    index += MySelfProtocol::BuildLen((uint16_t)e,index,m_buf,m_buf_size);
+    index += MySelfProtocol::BuildShort((uint16_t)e,index,m_buf,m_buf_size);
     index += MySelfProtocol::BuildChar(state,index,m_buf,m_buf_size);
     *outlen = index;
     return m_buf;
@@ -157,7 +157,7 @@ char* MyMsgConnect::BuildErr(unsigned short err_num, int* outlen)
     int index = 0;
 
     index += MySelfProtocol::BuildHeader(0xffff,m_buf,m_buf_size);
-    index += MySelfProtocol::BuildLen(err_num,index,m_buf,m_buf_size);
+    index += MySelfProtocol::BuildShort(err_num,index,m_buf,m_buf_size);
     *outlen = index;
     return m_buf;
 }

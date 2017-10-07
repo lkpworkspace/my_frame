@@ -1,10 +1,12 @@
 #include "../inc/MyBufItem.h"
+#include <QDebug>
 
 #define _C(X) QString::fromLocal8Bit(X)
 
 
 MyBufItem::MyBufItem(QWidget *parent)
-    :QWidget(parent)
+    :QWidget(parent),
+      m_buf(NULL)
 {
     QHBoxLayout* hbox = new QHBoxLayout(this);
 
@@ -37,8 +39,16 @@ MyBufItem::MyBufItem(QWidget *parent)
     AddComboBoxItem("hex in");
     AddComboBoxItem("flaot");
     AddComboBoxItem("string");
+    AddComboBoxItem("hex dat");
 
     connect(m_butDel,SIGNAL(clicked()),this,SLOT(OnButClicked()));
+}
+
+MyBufItem::~MyBufItem()
+{
+    if(m_buf != NULL)
+        delete[] m_buf;
+    m_buf = NULL;
 }
 
 
@@ -63,6 +73,8 @@ int MyBufItem::GetLen()
     case 7:
         len=m_edit->text().toLatin1().count();
         break;
+    case 8:
+        len = m_edit->text().split(' ').size();
     }
     return len;
 }
@@ -125,8 +137,38 @@ char* MyBufItem::GetBuf(int &len)
         memcpy(buf,m_edit->text().toLatin1().data(),len  - 1);
         len -= 1;
         break;
+    case 8:
+    {
+        QStringList list = m_edit->text().split(' ');
+        len = list.size();
+        buf = new char[len];
+        memset(buf,0,len);
+        for(int i = 0; i < list.size(); ++i)
+        {
+            buf[i] = (char)list.at(i).toShort(NULL,16);
+        }
     }
+        break;
+    }
+    m_buf = buf;
     return buf;
+}
+
+char* MyBufItem::ToData(QByteArray a, int& outlen)
+{
+    QByteArray temp_array = a.toHex();
+    qDebug() << temp_array;
+    outlen = temp_array.count();
+    char* temp_buf = new char[outlen];
+    memset(temp_buf,0,outlen);
+    memcpy(temp_buf,temp_array.data(),outlen);
+    printf("\n");
+    for(int i = 0; i < outlen; ++i)
+    {
+        printf("%02X\t",temp_buf[i]);
+    }
+    printf("\n");
+    return temp_buf;
 }
 
 void MyBufItem::OnButClicked()

@@ -83,7 +83,7 @@ public:
     ////////////////////////////////////////////////
     /// handle
     static uint16_t HandleHeader(const char* buf);
-    static uint16_t HandleLen(int offset, const char* buf, int len);
+    static uint16_t HandleShort(int offset, const char* buf, int len);
     static uint8_t HandleChar(int offset, const char* buf, int len);
 
     static std::string HandleString(int offset, const char* buf, int len);
@@ -91,7 +91,7 @@ public:
     ////////////////////////////////////////////////
     /// build
     static int BuildHeader(uint16_t head, char* buf, int len);
-    static int BuildLen(uint16_t datalen,int offset, char* buf, int len);
+    static int BuildShort(uint16_t datalen,int offset, char* buf, int len);
     static int BuildChar(uint8_t ch,int offset, char* buf, int len);
 
     static int BuildString(const char* str, int offset, char* buf, int len);
