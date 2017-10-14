@@ -129,6 +129,7 @@ MyTcpFrame::MyTcpFrame()
       m_buffer(NULL),
       m_buffer_len(0)
 {
+    //MyDebugPrint("m_datas size %d\n",)
 }
 
 MyTcpFrame::~MyTcpFrame(){
@@ -171,7 +172,7 @@ again:
 }
 
 /// TODO...
-int MyTcpFrame::GetBuf()
+int MyTcpFrame::GetBufx()
 {
     int res = 0;
     int read_bytes = 0;

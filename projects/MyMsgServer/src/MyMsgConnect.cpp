@@ -25,20 +25,21 @@ int MyMsgConnect::Frame(const char* buf, int len)
         MyApp::theApp->DelLater(this,1000 * 5);
         return false;
     }
-    Handle(buf,len);
-    return true;
+    return Handle(buf,len);
 }
 
-void MyMsgConnect::Handle(const char* buf, int len)
+int MyMsgConnect::Handle(const char* buf, int len)
 {
+    int ret = true;
     uint16_t head = MySelfProtocol::HandleHeader(buf);
+
     MyDebugPrint("Msg coming len %d\n",len);
     switch(head)
     {
     case 0x0000:
         break;
     case 0x0001: // login
-        HandleLogin(buf,len);
+        ret = HandleLogin(buf,len);
         break;
     case 0x0003: // reg account
         break;
@@ -46,24 +47,25 @@ void MyMsgConnect::Handle(const char* buf, int len)
         break;
     case 0x0009: // msg 1
         if(m_isLogin)
-            HandleSingleMsg(buf,len);
+            ret = HandleSingleMsg(buf,len);
         break;
     case 0x000b: // msg 2
         break;
     case 0x000d: // msg 3
         break;
     case 0x000f: // client request
-        HandleRequest(buf,len);
+        ret = HandleRequest(buf,len);
         break;
     case 0xffff: // msg err
-        HandleErr(buf,len);
+        ret = HandleErr(buf,len);
         break;
     default:
         break;
     }
+    return ret;
 }
 
-void MyMsgConnect::HandleLogin(const char* buf, int len)
+int MyMsgConnect::HandleLogin(const char* buf, int len)
 {
     std::string account;
     std::string password;
@@ -76,10 +78,10 @@ void MyMsgConnect::HandleLogin(const char* buf, int len)
     MyDebugPrint("get client account %s,%s\n",account.c_str(),password.c_str());
 
     // check is right
-    InitAccountInfo(account,password);
+    return InitAccountInfo(account,password);
 }
 
-void MyMsgConnect::HandleSingleMsg(const char* buf, int len)
+int MyMsgConnect::HandleSingleMsg(const char* buf, int len)
 {
     int index = MSG_HEAD_SIZE;
     int id_len = strlen(&buf[index]);
@@ -94,9 +96,10 @@ void MyMsgConnect::HandleSingleMsg(const char* buf, int len)
         this->EasyWrite(send_buf,outlen);
     }else
         dst->EasyWrite(buf,len);
+    return true;
 }
 
-void MyMsgConnect::HandleErr(const char* buf, int len)
+int MyMsgConnect::HandleErr(const char* buf, int len)
 {
     uint16_t err_num = MySelfProtocol::HandleShort(MSG_HEAD_SIZE,buf,len);
     switch(err_num)
@@ -107,9 +110,10 @@ void MyMsgConnect::HandleErr(const char* buf, int len)
     default:
         break;
     }
+    return true;
 }
 
-void MyMsgConnect::HandleRequest(const char* buf, int len)
+int MyMsgConnect::HandleRequest(const char* buf, int len)
 {
     uint16_t req_num = MySelfProtocol::HandleShort(MSG_HEAD_SIZE,buf,len);
     char* temp_buf = NULL;
@@ -127,6 +131,7 @@ void MyMsgConnect::HandleRequest(const char* buf, int len)
 
         break;
     }
+    return true;
 }
 
 char* MyMsgConnect::BuildAnswer(EnumMsgRequest_t e, char state, int *outlen)
@@ -210,7 +215,7 @@ void MyMsgConnect::MemberQuit(std::string name)
     MyDebugPrint("%s remove from %s map\n", name,m_id.c_str());
 }
 
-void MyMsgConnect::InitAccountInfo(std::string id, std::string password)
+int MyMsgConnect::InitAccountInfo(std::string id, std::string password)
 {
     MySqlite3* db = GetMySqlite3();
     std::vector<std::string>* row;
@@ -218,12 +223,20 @@ void MyMsgConnect::InitAccountInfo(std::string id, std::string password)
     int len = 0;
     char* buf = NULL;
 
+    if(m_isLogin)
+    {
+        MyDebugPrint("Account %s has already login\n",m_id.c_str());
+        len = 0;
+        buf = BuildErr(ERR_ALREADYLOGIN,&len);
+        EasyWrite(buf,len);
+        return true;
+    }
+
     sql = "select * from MyMsgAccount where account=";
     sql += id;
     db->ExecSql(sql);
     if((row = db->GetRow()) != NULL)
     {
-
         auto begin = row->begin();
         m_id = begin[0];
         m_pass = begin[1];
@@ -234,14 +247,27 @@ void MyMsgConnect::InitAccountInfo(std::string id, std::string password)
             len = 0;
             buf = BuildErr(ERR_PASSWORD,&len);
             EasyWrite(buf,len);
-            return;
+            return true;
         }
         m_name = begin[2];
         m_group = begin[3];
         m_lv = begin[4];
         m_server = begin[5];
         for(int i = 0; i < row->size(); ++i)
-            MyDebugPrint("%s\n",begin[i].c_str());
+            printf("%s\t",begin[i].c_str());
+        printf("\n");
+
+        MyMsgConnect* conn = NULL;
+        if((conn = GetMsgServer()->GetManager()->GetConnect(m_server,m_group,m_id)) != NULL)
+        {
+            MyDebugPrint("Account %s has already login\n",m_id.c_str());
+            len = 0;
+            buf = BuildErr(ERR_ALREADYLOGIN,&len);
+            EasyWrite(buf,len);
+            MyApp::theApp->DelLater(this,1000 * 5);
+            return true;
+        }
+
         MyDebugPrint("%s login success\n",id.c_str());
         GetMsgServer()->GetManager()->InsertConnect(this);
         m_isLogin = true;
@@ -252,12 +278,13 @@ void MyMsgConnect::InitAccountInfo(std::string id, std::string password)
         len = 0;
         buf = BuildErr(ERR_NOACCOUNT,&len);
         EasyWrite(buf,len);
-        return;
+        return true;
     }
     // ERR_OK
     len = 0;
     buf = BuildErr(ERR_OK,&len);
     EasyWrite(buf,len);
+    return true;
 }
 
 std::string MyMsgConnect::GetAccount()

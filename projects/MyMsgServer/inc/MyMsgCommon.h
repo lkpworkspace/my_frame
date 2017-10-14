@@ -13,6 +13,7 @@ typedef enum EnumMsgCode{
     ERR_OK,
     ERR_PASSWORD,
     ERR_NOACCOUNT,
+    ERR_ALREADYLOGIN,
     ERR_NOMEMBER
 }EnumMsgCode_t;
 

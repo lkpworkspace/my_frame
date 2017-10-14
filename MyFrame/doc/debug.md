@@ -147,8 +147,11 @@
 - [x] 添加 获得socket缓冲区存储的字节数 函数
 - [x] 编写MyMsgServer项目
 - [ ] 试图优化MyTcpFrame类(EasyWrite, Frame)
-- [ ] BuildBuf的string选项有问题，需要修改
+- [x] BuildBuf的string选项有问题，需要修改
 - [x] Sqlite3添加 事物机制的函数
+
+## 10月14号
+- [ ] 考虑添加获得消息帧的智能过滤功能
 
 ## TODO
 - [ ] 测试MyVec类

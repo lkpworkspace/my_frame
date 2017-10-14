@@ -21,6 +21,7 @@ static int g_buf_len = 0;
 int MyMsgInit()
 {
     g_buf = GetBuf(&g_buf_len);
+    return 0;
 }
 
 int MyMsgExit()
@@ -28,9 +29,47 @@ int MyMsgExit()
     FreeBuf(g_buf);
     g_buf = NULL;
     g_buf_len = 0;
+    return 0;
 }
 
+char* MyMsgLogin(std::string account,
+                 std::string pass,
+                 int* outlen)
+{
+    int index = 0;
+#ifdef USE_HEAD
+    index += 2;
+#endif
+    index += BuildShort(0x0001,index,g_buf,g_buf_len);
+    index += BuildString(account.c_str(),index,g_buf,g_buf_len);
+    index += BuildString(pass.c_str(),index,g_buf,g_buf_len);
+#ifdef USE_HEAD
+    BuildHeader((uint16_t)(index - 2),g_buf,g_buf_len);
+#endif
+    *outlen = index;
+    return g_buf;
+}
 
+char* MyMsgSingleMsg(std::string src,
+                     std::string dest,
+                     const char* buf,
+                     unsigned short len,
+                     int *outlen)
+{
+    int index = 0;
+#ifdef USE_HEAD
+    index += 2;
+#endif
+    index += BuildShort(0x0009,index,g_buf,g_buf_len);
+    index += BuildString(src.c_str(),index,g_buf,g_buf_len);
+    index += BuildString(dest.c_str(),index,g_buf,g_buf_len);
+    index += BuildData(buf,len,index,g_buf,g_buf_len);
+#ifdef USE_HEAD
+    BuildHeader((uint16_t)(index - 2),g_buf,g_buf_len);
+#endif
+    *outlen = index;
+    return g_buf;
+}
 
 
 
@@ -119,7 +158,6 @@ data_t HandleData(int offset, const char* buf, int len)
 /// build
 int BuildHeader(uint16_t head, char* buf, int len)
 {
-    memset(buf,0,len);
     memcpy(buf,&head,sizeof(head));
     return sizeof(head);
 }

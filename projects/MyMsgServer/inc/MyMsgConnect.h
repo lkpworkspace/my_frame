@@ -30,14 +30,14 @@ public:
     void MemberQuit(std::string name);
     std::string GetAccount();
     std::string Getpass();
-    void InitAccountInfo(std::string id, std::string password);
+    int InitAccountInfo(std::string id, std::string password);
     //////////////////////////////////////////////////
     /// 消息处理
-    void Handle(const char* buf, int len);
-    void HandleLogin(const char* buf, int len);
-    void HandleSingleMsg(const char* buf, int len);
-    void HandleErr(const char* buf, int len);
-    void HandleRequest(const char* buf, int len);
+    int Handle(const char* buf, int len);
+    int HandleLogin(const char* buf, int len);
+    int HandleSingleMsg(const char* buf, int len);
+    int HandleErr(const char* buf, int len);
+    int HandleRequest(const char* buf, int len);
 
     //////////////////////////////////////////////////
     /// 构造消息

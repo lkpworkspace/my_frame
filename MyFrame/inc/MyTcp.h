@@ -85,7 +85,7 @@ protected:
     virtual int GetFd() = 0;
 
     int GetBuf1();
-    int GetBuf();
+    int GetBufx();
 private:
     uint16_t m_len;
     bool m_iscomplete;
