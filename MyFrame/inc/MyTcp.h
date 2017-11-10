@@ -116,6 +116,7 @@ public:
 
     virtual int Frame(const char* buf, int len) = 0;
 private:
+    virtual int GetFd(){ return GetEventFd(); }
     virtual int ReadBuf(char* buf, int len);
     virtual int WriteBuf(const char* buf, int len);
     virtual void* CallBackFunc(MyEvent *);

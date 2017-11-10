@@ -22,6 +22,7 @@ int MyMsgConnect::Frame(const char* buf, int len)
     if(len == 0)
     {
         printf("Frame: %s client quit\n",m_id.c_str());
+        GetMsgServer()->GetManager()->RemoveConnect(this);
         MyApp::theApp->DelLater(this,1000 * 5);
         return false;
     }
@@ -32,6 +33,8 @@ int MyMsgConnect::Handle(const char* buf, int len)
 {
     int ret = true;
     uint16_t head = MySelfProtocol::HandleHeader(buf);
+    char* temp_buf = NULL;
+    int temp_len = 0;
 
     MyDebugPrint("Msg coming len %d\n",len);
     switch(head)
@@ -42,24 +45,36 @@ int MyMsgConnect::Handle(const char* buf, int len)
         ret = HandleLogin(buf,len);
         break;
     case 0x0003: // reg account
+        temp_buf = BuildErr(ERR_NOFUNC,&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
         break;
     case 0x0005: // modify account info
+        temp_buf = BuildErr(ERR_NOFUNC,&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
         break;
     case 0x0009: // msg 1
         if(m_isLogin)
             ret = HandleSingleMsg(buf,len);
         break;
     case 0x000b: // msg 2
+        temp_buf = BuildErr(ERR_NOFUNC,&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
         break;
     case 0x000d: // msg 3
+        temp_buf = BuildErr(ERR_NOFUNC,&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
         break;
     case 0x000f: // client request
-        ret = HandleRequest(buf,len);
+        if(m_isLogin)
+            ret = HandleRequest(buf,len);
         break;
     case 0xffff: // msg err
-        ret = HandleErr(buf,len);
+        temp_buf = BuildErr(ERR_NOFUNC,&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
         break;
     default:
+        temp_buf = BuildErr(ERR_FORMAT,&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
         break;
     }
     return ret;
@@ -99,22 +114,9 @@ int MyMsgConnect::HandleSingleMsg(const char* buf, int len)
     return true;
 }
 
-int MyMsgConnect::HandleErr(const char* buf, int len)
-{
-    uint16_t err_num = MySelfProtocol::HandleShort(MSG_HEAD_SIZE,buf,len);
-    switch(err_num)
-    {
-    case ERR_OK:
-        MyDebugPrint("get client msg %d\n",err_num);
-        break;
-    default:
-        break;
-    }
-    return true;
-}
-
 int MyMsgConnect::HandleRequest(const char* buf, int len)
 {
+    return true;
     uint16_t req_num = MySelfProtocol::HandleShort(MSG_HEAD_SIZE,buf,len);
     char* temp_buf = NULL;
     int temp_len = 0;
@@ -122,47 +124,50 @@ int MyMsgConnect::HandleRequest(const char* buf, int len)
     switch(req_num)
     {
     case REQ_ALLFRIEND:
-
+    {
+        temp_buf = BuildAllFriends(&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
+    }
         break;
     case REQ_ONLINEFRIEND:
-
+    {
+        temp_buf = BuildOLFriends(&temp_len);
+        this->EasyWrite(temp_buf,temp_len);
+    }
         break;
     case REQ_SEARCHFRIENDID:
-
         break;
     }
     return true;
 }
 
-char* MyMsgConnect::BuildAnswer(EnumMsgRequest_t e, char state, int *outlen)
+char* MyMsgConnect::BuildOLFriends(int* outlen)
 {
-    int index = 0;
-    memset(m_buf,0,m_buf_size);
-    index += MySelfProtocol::BuildHeader(0x0011,m_buf,m_buf_size);
-    index += MySelfProtocol::BuildShort((uint16_t)e,index,m_buf,m_buf_size);
-    index += MySelfProtocol::BuildChar(state,index,m_buf,m_buf_size);
-    *outlen = index;
-    return m_buf;
+    return NULL;
 }
 
-char* MyMsgConnect::BuildQuit(int* outlen)
+char* MyMsgConnect::BuildAllFriends(int* outlen)
 {
-    int index = 0;
-    char* quit_msg = NULL;
-    memset(m_buf,0,m_buf_size);
+    std::vector<AccountInfo_t*>* group = NULL;
+    std::vector<AccountInfo_t*>::iterator begin;
+    std::vector<AccountInfo_t*>::iterator end;
 
-    index = MySelfProtocol::BuildHeader(0x0007,m_buf,m_buf_size);
-    index += MySelfProtocol::BuildString(m_id.c_str(),index,m_buf,m_buf_size);
-    *outlen = index;
-    return m_buf;
+    group = GetMsgServer()->GetManager()->GetGroupMembers(m_server,m_group);
+    for(;begin != end;)
+    {
+    }
+    return NULL;
 }
 
-char* MyMsgConnect::BuildErr(unsigned short err_num, int* outlen)
+
+
+char* MyMsgConnect::BuildErr(EnumMsgCode_t err_num, int* outlen)
 {
     int index = 0;
+    unsigned short err = err_num;
 
     index += MySelfProtocol::BuildHeader(0xffff,m_buf,m_buf_size);
-    index += MySelfProtocol::BuildShort(err_num,index,m_buf,m_buf_size);
+    index += MySelfProtocol::BuildShort(err,index,m_buf,m_buf_size);
     *outlen = index;
     return m_buf;
 }
@@ -203,6 +208,7 @@ MyMsgConnect* MyMsgConnect::SearchMemberById(std::string id)
         return conn;
     // search global member list
     conn = GetMsgServer()->GetManager()->GetConnect(m_server,m_group,id);
+    if(conn == NULL) return NULL;
     m_friends.Insert(conn->m_id,conn);
     return conn;
 }
@@ -212,7 +218,7 @@ void MyMsgConnect::MemberQuit(std::string name)
     m_mutex.lock();
     m_friends.Remove(name);
     m_mutex.unlock();
-    MyDebugPrint("%s remove from %s map\n", name,m_id.c_str());
+    MyDebugPrint("%s remove from %s's map\n", name.c_str(),m_id.c_str());
 }
 
 int MyMsgConnect::InitAccountInfo(std::string id, std::string password)
@@ -287,32 +293,4 @@ int MyMsgConnect::InitAccountInfo(std::string id, std::string password)
     return true;
 }
 
-std::string MyMsgConnect::GetAccount()
-{
-    std::string temp;
-    char buf[9] = {0};
-again:
-    temp.clear();
-    memset(buf,0,sizeof(buf));
-    for(int i = 0; i < 9; ++i)
-    {
-        buf[i] = MyHelp::RandomNum(0,10);
-        temp += MyHelp::ToChar(buf[i]);
-    }
-    //    if(REQUEST(temp) != NULL)
-    //        goto again;
-    return temp;
-}
 
-std::string MyMsgConnect::Getpass()
-{
-    std::string pass;
-    char buf[4] = {0};
-
-    for(int i = 0; i < 4; ++i)
-    {
-        buf[i] = MyHelp::RandomNum(0,10);
-        pass += MyHelp::ToChar(buf[i]);
-    }
-    return pass;
-}

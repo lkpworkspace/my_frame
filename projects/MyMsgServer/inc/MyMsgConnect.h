@@ -26,26 +26,21 @@ public:
     /////////////////////////////////////////////////
     /// Ass func
     std::vector<std::string>& GetAllFriendsId();
-    MyMsgConnect* SearchMemberById(std::string id);
-    void MemberQuit(std::string name);
-    std::string GetAccount();
-    std::string Getpass();
-    int InitAccountInfo(std::string id, std::string password);
+    MyMsgConnect* SearchMemberById(std::string id); // 搜索该帐号的对象
+    void MemberQuit(std::string name); // 退出时被MyMsgManager类调用
+    int InitAccountInfo(std::string id, std::string password); // 处理登录
     //////////////////////////////////////////////////
     /// 消息处理
     int Handle(const char* buf, int len);
     int HandleLogin(const char* buf, int len);
     int HandleSingleMsg(const char* buf, int len);
-    int HandleErr(const char* buf, int len);
     int HandleRequest(const char* buf, int len);
 
     //////////////////////////////////////////////////
     /// 构造消息
-    char* BuildQuit(int* outlen);
-    char* BuildAnswer(EnumMsgRequest_t e, char state, int *outlen);
-    /// err_num : \see EnumMsgCode_t
-    char* BuildErr(unsigned short err_num, int* outlen);
-
+    char* BuildErr(EnumMsgCode_t err_num, int* outlen);
+    char* BuildAllFriends(int* outlen);
+    char* BuildOLFriends(int* outlen);
     //////////////////////////////////////////////////
     /// 帐号信息
     std::string m_id;               ///< id card

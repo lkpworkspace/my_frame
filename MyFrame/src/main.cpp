@@ -331,9 +331,24 @@ int main(int argc, char** argv)
 
 
 #ifdef TEST
-#include "../inc/MyWriteable.h"
-
 int main()
+{
+    MyApp app(4);
+
+    std::thread thr([&](){
+        while(Common::getch() != 'q')
+        {
+            app.DelLater(NULL,100);
+        }
+    });
+    thr.detach();
+
+    return app.Exec();
+}
+
+
+#include "../inc/MyWriteable.h"
+int main4()
 {
     int a = 0;
     void *p = &a;

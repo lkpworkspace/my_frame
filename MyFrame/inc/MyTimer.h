@@ -6,12 +6,12 @@
 #include <map>
 #include <mutex>
 
-class MyTimer : public my_master::MyNormalEvent
+class MyTimer
 {
     friend class MyApp;
     typedef std::multimap<uint64_t, MyTimer*>::iterator timer_iter;
 public:
-    MyTimer(int period);
+    MyTimer(uint64_t period);
     virtual ~MyTimer();
 
     void SetCallFunc(common_func_t func, void* arg); // ok
@@ -27,7 +27,7 @@ public:
     bool operator !=(MyTimer&);
 private:
     uint64_t m_time;          // future time
-    int m_period;             // interval
+    uint64_t m_period;        // interval
     common_func_t m_func;     // callback func
     void* m_arg;              // callback arg
     bool m_isStop;            // stop flag

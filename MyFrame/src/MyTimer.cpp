@@ -4,14 +4,12 @@ using namespace my_master;
 std::multimap<uint64_t,MyTimer*> MyTimer::l_timers;
 std::mutex MyTimer::l_mutex;
 
-MyTimer::MyTimer(int period)
+MyTimer::MyTimer(uint64_t period)
 {
     m_isStop = true;
     m_period = period;
     m_func = nullptr;
-
-    // reg call func
-    SetFunc(&MyTimer::CallFunc);
+    m_time = 0x0;
 }
 
 MyTimer::~MyTimer()
@@ -72,19 +70,23 @@ uint64_t MyTimer::TimerCheck()
 
         // 响应最近的定时器
         range = l_timers.equal_range(l_timers.begin()->first);
-        for (timer_iter iter = range.first; iter != range.second; ++iter)
+        for (timer_iter iter = range.first;
+             iter != range.second;
+             ++iter)
         {
             timer = iter->second;
             temp = timer->m_time;
-            if (timer != NULL && timer->m_time <= Common::GetTimerNow())
+
+            if ((timer != NULL) && (timer->m_time <= Common::GetTimerNow()))
             {
                 if(!timer->IsStop())
                 {
-                    timer->Work();
+                    timer->CallFunc((MyEvent*)timer);
+                    /// uint64_t test = timer->m_time;
                     timer->m_time += timer->m_period;
-                    temp_iter.push_back(iter);
+                    temp_iter.push_back(iter); // 删除旧的时间的定时器
                     l_timers.insert(std::pair<uint64_t, MyTimer*>(
-                        timer->m_time, timer));
+                        timer->m_time, timer)); // 插入新的时间的定时器
                 }else
                 {
                     temp_iter.push_back(iter);

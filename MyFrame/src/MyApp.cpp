@@ -131,12 +131,6 @@ int MyApp::Exec()
         {
             HandleEvent(ev,res);
         }
-        // 也许是中断
-//        else if(res == -1)
-//        {
-//            MyDebugPrint("epoll wait error\n");
-//            MyError("epoll wait");
-//        }
     }
 
     // quit MyApp
@@ -318,7 +312,7 @@ void MyApp::DelLater(MyEvent* ev, int ms)
 {
     MyTimer* timer = new MyTimer(ms);
 
-    void** arg = new void*[2];
+    void** arg = (void**)malloc(sizeof(void*)*2);
     arg[0] = timer;
     arg[1] = ev;
 
@@ -339,7 +333,7 @@ void* MyApp::DeleteTimer(void* arg)
     }
     timer->Stop();
     MyApp::theApp->m_useless_timer.push_back(timer);
-    delete[] a;
+    free(a);
     return NULL;
 }
 

@@ -30,45 +30,45 @@ private:
 
 #define __MyDebug(str) do \
     { \
-        std::string temp; \
-        temp += __FILE__; \
-        temp += ","; \
-        temp += __FUNCTION__; \
-        temp += ",line "; \
-        temp += MyHelp::ToStr(__LINE__,10); \
-        temp += ": "; \
-        temp += str; \
-        my_master::MyLog::GetInstance()->AddLog(temp); \
+        std::string __temp; \
+        __temp += __FILE__; \
+        __temp += ","; \
+        __temp += __FUNCTION__; \
+        __temp += ",line "; \
+        __temp += MyHelp::ToStr(__LINE__,10); \
+        __temp += ": "; \
+        __temp += str; \
+        my_master::MyLog::GetInstance()->AddLog(__temp); \
     }while(0)
 
 #define __MyDebugPrint(str) do \
     { \
-        std::string temp; \
-        temp += __FILE__; \
-        temp += ","; \
-        temp += __FUNCTION__; \
-        temp += ",line "; \
-        temp += MyHelp::ToStr(__LINE__,10); \
-        temp += ": "; \
-        temp += str; \
-        my_master::MyLog::GetInstance()->PrintLog(temp); \
+        std::string __temp; \
+        __temp += __FILE__; \
+        __temp += ","; \
+        __temp += __FUNCTION__; \
+        __temp += ",line "; \
+        __temp += MyHelp::ToStr(__LINE__,10); \
+        __temp += ": "; \
+        __temp += str; \
+        my_master::MyLog::GetInstance()->PrintLog(__temp); \
     }while(0)
 
 
 #define MyDebug(...) do \
     { \
-        char buf[2048] = {0}; \
-        memset(buf,0,sizeof(buf)); \
-        sprintf(buf,__VA_ARGS__); \
-        __MyDebug(buf); \
+        char __buf[2048] = {0}; \
+        memset(__buf,0,sizeof(__buf)); \
+        sprintf(__buf,__VA_ARGS__); \
+        __MyDebug(__buf); \
     }while(0)
 
 #define MyDebugPrint(args...) do \
     { \
-        char buf[2048] = {0}; \
-        memset(buf,0,sizeof(buf)); \
-        sprintf(buf,args); \
-        __MyDebugPrint(buf); \
+        char __buf[2048] = {0}; \
+        memset(__buf,0,sizeof(__buf)); \
+        sprintf(__buf,args); \
+        __MyDebugPrint(__buf); \
     }while(0)
 
 /*
@@ -76,17 +76,17 @@ private:
 */
 #define MyError(...) do \
     { \
-        char* err_str = strerror(errno); \
-        int index = 0; \
-        char buf[2048] = {0}; \
-        memset(buf,0,sizeof(buf)); \
-        sprintf(buf,"[ERROR]: "); \
-        index += 9; \
-        sprintf(&buf[index],__VA_ARGS__); \
-        index = strlen(buf); \
-        sprintf(&buf[index],": %s",err_str); \
-        printf("%s",buf); \
-        __MyDebug(buf); \
+        char* __err_str = strerror(errno); \
+        int __index = 0; \
+        char __buf[2048] = {0}; \
+        memset(__buf,0,sizeof(__buf)); \
+        sprintf(__buf,"[ERROR]: "); \
+        __index += 9; \
+        sprintf(&__buf[__index],__VA_ARGS__); \
+        __index = strlen(__buf); \
+        sprintf(&__buf[__index],": %s",__err_str); \
+        printf("%s",__buf); \
+        __MyDebug(__buf); \
         exit(-1); \
     }while(0)
 

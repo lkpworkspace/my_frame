@@ -43,6 +43,7 @@ typedef void*(*common_func_t)(void *);
 class Common
 {
 public:
+    static const char getch();
     static bool SetNonblock(int fd, bool b);
     static int GetFileLen(const char* path);
     static bool IsFileExist(const char* path);

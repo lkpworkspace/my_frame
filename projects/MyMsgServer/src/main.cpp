@@ -24,6 +24,11 @@ int main(int argc, char *argv[])
     MyMsgConnect* c = MyMsgManager::GetInstance()->GetConnect("kpli","kpli","110");
     std::cout << c->m_id;
 #endif
+    // init database
+    MySqlite3 db("../dat/MyMsgDB.dat");
+    db.Open();
+    SetMySqlite3(&db);
+
     // init tcp server
     MyMsgServer *server = new MyMsgServer();
     server->SetReuseSock();
@@ -32,12 +37,7 @@ int main(int argc, char *argv[])
     server->SetNonblock(true);
     app.AddEvent(server);
 
-    // init database
-    MySqlite3 db("../dat/MyMsgDB.dat");
-    db.Open();
-
     SetMsgServer(server);
-    SetMySqlite3(&db);
 
     return app.Exec();
 }

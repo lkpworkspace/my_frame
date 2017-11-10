@@ -2,6 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <string>
+typedef struct data_t
+{
+    uint16_t len;
+    char buf[MYPROTO_MAX_BUF_SIZE];
+}data_t;
+
 char *GetBuf(int *len);
 void FreeBuf(char* buf);
 uint16_t HandleHeader(const char *buf);
@@ -32,46 +38,79 @@ int MyMsgExit()
     return 0;
 }
 
+unsigned short MyMsgHandle(const char* buf)
+{
+    unsigned short msg_code = 0;
+    msg_code = HandleHeader(buf);
+#ifndef USE_EASY_CLIENT
+    msg_code = HandleShort(2,buf,1024);
+#endif
+    return msg_code;
+}
+
 char* MyMsgLogin(std::string account,
                  std::string pass,
                  int* outlen)
 {
     int index = 0;
-#ifdef USE_HEAD
+    memset(g_buf,0,g_buf_len);
+#ifndef USE_EASY_CLIENT
     index += 2;
 #endif
     index += BuildShort(0x0001,index,g_buf,g_buf_len);
     index += BuildString(account.c_str(),index,g_buf,g_buf_len);
     index += BuildString(pass.c_str(),index,g_buf,g_buf_len);
-#ifdef USE_HEAD
+#ifndef USE_EASY_CLIENT
     BuildHeader((uint16_t)(index - 2),g_buf,g_buf_len);
 #endif
     *outlen = index;
     return g_buf;
 }
 
-char* MyMsgSingleMsg(std::string src,
+char* MyMsgBuildSingleMsg(std::string src,
                      std::string dest,
                      const char* buf,
                      unsigned short len,
                      int *outlen)
 {
     int index = 0;
-#ifdef USE_HEAD
+    memset(g_buf,0,g_buf_len);
+#ifndef USE_EASY_CLIENT
     index += 2;
 #endif
     index += BuildShort(0x0009,index,g_buf,g_buf_len);
     index += BuildString(src.c_str(),index,g_buf,g_buf_len);
     index += BuildString(dest.c_str(),index,g_buf,g_buf_len);
     index += BuildData(buf,len,index,g_buf,g_buf_len);
-#ifdef USE_HEAD
+#ifndef USE_EASY_CLIENT
     BuildHeader((uint16_t)(index - 2),g_buf,g_buf_len);
 #endif
     *outlen = index;
     return g_buf;
 }
 
+int MyMsgHandleSingleMsg(const char* buf,int len,SingleMsg_t* sm)
+{ // dest src (yourself format)
+    int index = 4;
+#ifdef USE_EASY_CLIENT
+    index = 2;
+#endif
+    sm->dest = HandleString(index,buf,len);
+    int dest_len = strlen(&buf[index]);
+    index += (dest_len + 1);
+    int src_len = strlen(&buf[index]);
+    sm->src = HandleString(index,buf,len);
+    index += (src_len + 1);
+    sm->len = HandleShort(index,buf,len);
+    index += 2;
+    sm->buf = &(buf[index]);
+    return sm->len;
+}
 
+const char* MyMsgGetErrStr(const char* buf, int len)
+{
+    return NULL;
+}
 
 
 
