@@ -336,7 +336,7 @@ int main()
     MyApp app(4);
 
     std::thread thr([&](){
-        while(Common::getch() != 'q')
+        while(MyHelp::getch() != 'q')
         {
             app.DelLater(NULL,100);
         }

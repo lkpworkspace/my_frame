@@ -98,8 +98,8 @@ int MyTask::CreateSockPair()
         MyError("socketpair");
     }
 
-    Common::SetNonblock(m_msgFd[0],false);
-    Common::SetNonblock(m_msgFd[1],false);
+    MyHelp::SetNonblock(m_msgFd[0],false);
+    MyHelp::SetNonblock(m_msgFd[1],false);
     return res;
 }
 ////////////////////////////////////////////////////

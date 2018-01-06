@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     UNUSE_ARG(argc,argv);
     // as a daemon
-    Common::DaemonInit();
+    MyHelp::DaemonInit();
 
     MyApp app(4);
 

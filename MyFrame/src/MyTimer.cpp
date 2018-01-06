@@ -33,7 +33,7 @@ void MyTimer::Start()
 {
     m_mutex.lock();
     m_isStop = false;
-    m_time = Common::GetTimerNow() + m_period;
+    m_time = MyHelp::GetTimerNow() + m_period;
     m_mutex.unlock();
     // insert into l_timers
     l_mutex.lock();
@@ -77,7 +77,7 @@ uint64_t MyTimer::TimerCheck()
             timer = iter->second;
             temp = timer->m_time;
 
-            if ((timer != NULL) && (timer->m_time <= Common::GetTimerNow()))
+            if ((timer != NULL) && (timer->m_time <= MyHelp::GetTimerNow()))
             {
                 if(!timer->IsStop())
                 {
@@ -105,7 +105,7 @@ uint64_t MyTimer::TimerCheck()
                     temp_iter.clear();
                 }
                 l_mutex.unlock();
-                return (temp - Common::GetTimerNow());
+                return (temp - MyHelp::GetTimerNow());
             }
         }
         // 删除过期的定时器

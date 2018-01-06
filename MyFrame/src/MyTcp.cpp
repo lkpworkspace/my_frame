@@ -67,13 +67,13 @@ MyTcpSocket::MyTcpSocket(int fd, sockaddr_in addr)
 {
     this->m_sock = fd;
     memcpy(&m_addr,&addr,sizeof(addr));
-    Common::SetNonblock(fd,true);
+    MyHelp::SetNonblock(fd,true);
 }
 MyTcpSocket::MyTcpSocket(const MyTcpSocket& other)
 {
     memcpy(&m_addr,&other.m_addr,sizeof(m_addr));
     m_sock = other.m_sock;
-    Common::SetNonblock(m_sock,true);
+    MyHelp::SetNonblock(m_sock,true);
 }
 
 MyTcpSocket::~MyTcpSocket()
@@ -177,7 +177,7 @@ int MyTcpFrame::GetBufx()
     int res = 0;
     int read_bytes = 0;
 
-    read_bytes= Common::BytesAvailable(GetFd());
+    read_bytes= MyHelp::BytesAvailable(GetFd());
     if(read_bytes == 0)
     {
         char ch;

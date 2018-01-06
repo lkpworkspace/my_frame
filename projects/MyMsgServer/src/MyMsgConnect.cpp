@@ -9,8 +9,8 @@ MyMsgConnect::MyMsgConnect(int fd, sockaddr_in addr)
 {
     m_buf = MySelfProtocol::GetBuf(&m_buf_size);
     m_isLogin = false;
-    memset(m_ol,0,sizeof(m_ol));
-    memset(m_all,0,sizeof(m_all));
+    memset(&m_ol,0,sizeof(m_ol));
+    memset(&m_all,0,sizeof(m_all));
 }
 
 MyMsgConnect::~MyMsgConnect()

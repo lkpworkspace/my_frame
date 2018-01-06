@@ -33,7 +33,7 @@ int MySock::SetReuseSock()
 
 int MySock::SetNonblock(bool b)
 {
-    return Common::SetNonblock(m_sock,b);
+    return MyHelp::SetNonblock(m_sock,b);
 }
 int MySock::Socket(int domin, int type, int protocol)
 {

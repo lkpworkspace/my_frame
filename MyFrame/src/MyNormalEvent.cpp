@@ -63,7 +63,7 @@ int MyNormalEvent::CreateSockPair()
 #endif
         MyError("socketpair");
     }
-    Common::SetNonblock(m_msgFd[0],true);
-    Common::SetNonblock(m_msgFd[1],true);
+    MyHelp::SetNonblock(m_msgFd[0],true);
+    MyHelp::SetNonblock(m_msgFd[1],true);
     return res;
 }
