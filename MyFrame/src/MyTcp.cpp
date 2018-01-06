@@ -227,10 +227,9 @@ int MyTcpFrame::GetBuf1()
 
     while(1)
     {
-        int read_byte = Common::BytesAvailable(GetFd());
-
+        //int read_byte = Common::BytesAvailable(GetFd());
         res = ReadBuf(buf,sizeof(buf));
-        MyDebugPrint("get read bytes %d, res : %d\n",read_byte,res);
+        //MyDebugPrint("get read bytes %d, res : %d\n",read_byte,res);
         if(res == 0)
         {
             return Frame(NULL,0);
@@ -251,10 +250,10 @@ int MyTcpFrame::GetBuf1()
                 memcpy(&m_len,buf_len,sizeof(m_len));
                 if(m_datas.size() >= m_len)
                 {
-                    if(m_len == 0)
-                    {
-                        MyDebugPrint("len is 0\n");
-                    }
+//                    if(m_len == 0)
+//                    {
+//                        MyDebugPrint("len is 0\n");
+//                    }
                     char temp[m_len];
                     for(int i = 0; i < m_len; ++i)
                     {

@@ -2,12 +2,41 @@
 #include <string.h>
 #include <stdlib.h>
 #include <string>
+
+/**
+ * struct, union, string array...
+*/
 typedef struct data_t
 {
     uint16_t len;
     char buf[MYPROTO_MAX_BUF_SIZE];
 }data_t;
 
+const char* g_errStr[] = {
+    "ERR_OK",
+    "ERR_PASSWORD",
+    "ERR_NOACCOUNT",
+    "ERR_ALREADYLOGIN",
+    "ERR_NOMEMBER",
+    "ERR_NOFUNC",
+    "ERR_FORMAT",
+    "null",
+};
+
+const char* g_reqStr[] = {
+    "REQ_NONE",
+    "REQ_LOGIN",
+    "REQ_SINMSG",
+    "REQ_ALLFRIEND",
+    "REQ_ONLINEFRIEND",
+    "REQ_SEARCHFRIENDID",
+    "null",
+};
+
+
+/**
+ * function declaration
+*/
 char *GetBuf(int *len);
 void FreeBuf(char* buf);
 uint16_t HandleHeader(const char *buf);
@@ -21,6 +50,11 @@ int BuildChar(uint8_t ch,int offset, char* buf, int len);
 int BuildString(const char* str, int offset, char* buf, int len);
 int BuildData(const char* data, uint16_t data_len, int offset, char* buf, int len);
 
+
+
+/**
+ * global var
+ */
 static char* g_buf = NULL;
 static int g_buf_len = 0;
 
@@ -36,6 +70,16 @@ int MyMsgExit()
     g_buf = NULL;
     g_buf_len = 0;
     return 0;
+}
+
+const char* MyMsgGetRequest(EnumMsgRequest_t emr)
+{
+    return g_reqStr[(int)emr];
+}
+
+const char* MyMsgGetErr(EnumMsgCode_t emc)
+{
+    return g_errStr[(int)emc];
 }
 
 unsigned short MyMsgHandle(const char* buf)
@@ -107,9 +151,35 @@ int MyMsgHandleSingleMsg(const char* buf,int len,SingleMsg_t* sm)
     return sm->len;
 }
 
-const char* MyMsgGetErrStr(const char* buf, int len)
+const char* MyMsgBuildRequest(EnumMsgRequest_t re, int *out_len)
 {
-    return NULL;
+    int index = 0;
+    unsigned short request = re;
+    memset(g_buf,0,g_buf_len);
+#ifndef USE_EASY_CLIENT
+    index += 2;
+#endif
+    index += BuildShort(0x000f,index,g_buf,g_buf_len);
+    index += BuildShort(request,index,g_buf,g_buf_len);
+#ifndef USE_EASY_CLIENT
+    BuildHeader((uint16_t)(index - 2),g_buf,g_buf_len);
+#endif
+    *out_len = index;
+    return g_buf;
+}
+
+int MyMsgHandleAnswer(MsgAnswer_t *answer, const char* buf, int len)
+{
+    unsigned short request = 0,err_code = 0;
+    int index = 4;
+#ifdef USE_EASY_CLIENT
+    index = 2;
+#endif
+    answer->request = (EnumMsgRequest_t)HandleShort(index,buf,len);
+    index += 2;
+    answer->err_code = (EnumMsgCode_t)HandleShort(index,buf,len);
+    index += 2;
+    return index;
 }
 
 

@@ -3,8 +3,11 @@
 #include "MyFrame.h"
 #include "MySqlite3.h"
 #include "MyControls.h"
-
+#if 0
 #define IP "127.0.0.1"
+#else
+#define IP "172.16.212.139"
+#endif
 #define PORT 4399
 
 #define MSG_HEAD_SIZE 2
@@ -17,9 +20,13 @@ typedef enum EnumMsgCode{
     ERR_NOMEMBER,                   ///< 没有该帐号(要发送的帐号)
     ERR_NOFUNC,                     ///< 没有此功能
     ERR_FORMAT,                     ///< 错误的消息格式
+    ERR_REPEATREQ,                  ///<
 }EnumMsgCode_t;
 
 typedef enum EnumMsgRequest{
+    REQ_NONE,
+    REQ_LOGIN,
+    REQ_SINMSG,
     REQ_ALLFRIEND,
     REQ_ONLINEFRIEND,
     REQ_SEARCHFRIENDID
@@ -34,6 +41,16 @@ typedef struct _AccountInfo
     std::string m_server;           ///< belong server
     std::string m_name;             ///< user name
 }AccountInfo_t;
+
+typedef struct _OLFriend{
+    int index;
+    int total;
+}OLFriend_t;
+
+typedef struct _ALLFriend{
+    int index;
+    int total;
+}ALLFriend_t;
 
 class MyMsgServer;
 class MyMsgManager;

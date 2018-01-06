@@ -10,8 +10,11 @@
 #include "MyFrame.h"
 #include "MyMsg.h"
 #include "MyTcp.h"
-
+#if 1
+#define IP "101.37.149.18"
+#else
 #define IP "127.0.0.1"
+#endif
 #define PORT 4399
 #define PASS "123456"
 #if 0
@@ -54,11 +57,16 @@ public:
             return false;
         }
         SingleMsg_t smsg;
+        MsgAnswer_t ma;
         switch(MyMsgHandle(buf))
         {
-        case 0x0009:
+        case HD_SIGMSG:
             MyMsgHandleSingleMsg(buf,len,&smsg);
-            printf("%s\n",smsg.buf);
+            MyDebugPrint("%s\n",smsg.buf);
+            break;
+        case HD_ANSWER:
+            MyMsgHandleAnswer(&ma,buf,len);
+            MyDebugPrint("request: %s, answer: %s\n",MyMsgGetRequest(ma.request),MyMsgGetErr(ma.err_code));
             break;
         default:
             break;
@@ -106,6 +114,8 @@ int main(int argc, char*argv[])
         printf("command usage : \n");
         printf("\tl for login\n");
         printf("\ts for send message\n");
+        printf("\tm for send message loop\n");
+        printf("\tq for quit\n");
 
         while((ch = getch()) != 'q')
         {
@@ -127,13 +137,26 @@ int main(int argc, char*argv[])
 //                printf("\n");
                 client->EasyWrite(buf,outlen);
                 break;
+            case 'm':
+                while(1)
+                {
+                    buf = MyMsgBuildSingleMsg(SRC,DEST,"hello",5,&outlen);
+                    MyDebugPrint("%d byte write\n",outlen);
+    //                for(int i = 0; i < outlen; ++i)
+    //                    printf("%02d\t",(unsigned char)buf[i]);
+    //                printf("\n");
+                    client->EasyWrite(buf,outlen);
+                    usleep(1000*16);
+                }
+                break;
             default:
                 break;
             }
             printf("command usage : \n");
             printf("\tl for login\n");
             printf("\ts for send message\n");
-            //printf("\tlogin\n");
+            printf("\tm for send message loop\n");
+            printf("\tq for quit\n");
         }
         MyDebugPrint("cmd thread quit\n");
     });

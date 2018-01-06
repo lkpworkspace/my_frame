@@ -3,14 +3,6 @@
 #include "MyMsgCommon.h"
 #include "MyTcp.h"
 
-/*!
- * \brief msg protocal
- *      build msg:
- *          BuildErr
- *      handle msg:
- *          HandleLogin
- */
-
 class MyMsgManager;
 class MyMsgConnect : public my_master::MyEasyTcpSocket
 {
@@ -33,14 +25,17 @@ public:
     /// 消息处理
     int Handle(const char* buf, int len);
     int HandleLogin(const char* buf, int len);
-    int HandleSingleMsg(const char* buf, int len);
-    int HandleRequest(const char* buf, int len);
+    ///////////////////////// 子类需要继承的虚函数
+    virtual int HandleSingleMsg(const char* buf, int len);
+    virtual int HandleRequest(unsigned short *re , const char* buf, int len);
 
     //////////////////////////////////////////////////
     /// 构造消息
-    char* BuildErr(EnumMsgCode_t err_num, int* outlen);
-    char* BuildAllFriends(int* outlen);
-    char* BuildOLFriends(int* outlen);
+    // 构造消息头
+    char* BuildAnswer(EnumMsgRequest_t re ,EnumMsgCode_t err_num, int* outlen);
+    // 构造消息的具体内容
+    char* BuildAllFriends(char* buf, int offset, int* outlen);
+    char* BuildOLFriends(char* buf, int offset, int* outlen);
     //////////////////////////////////////////////////
     /// 帐号信息
     std::string m_id;               ///< id card
@@ -49,11 +44,14 @@ public:
     std::string m_group;            ///< belong group
     std::string m_server;           ///< belong server
     std::string m_name;             ///< user name
-private:
-    std::mutex m_mutex;
+protected:
     char* m_buf;                    ///< 构造消息使用的数组
     int m_buf_size;                 ///< 消息数组的大小
     bool m_isLogin;                 ///< 是否登录
+    OLFriend_t m_ol;
+    ALLFriend_t m_all;
+private:
+    std::mutex m_mutex;
     MyMap<std::string,MyMsgConnect*> m_friends;
     std::vector<std::string> m_all_friends_id;
     std::vector<AccountInfo_t> m_m_all_friends_info;
