@@ -238,11 +238,11 @@ void MyApp::HandleEvent(struct epoll_event* epev, int count)
         event = (MyEvent*)epev[i].data.ptr;
         switch(event->GetEventType())
         {
-        case MyEvent::TASKFD:
+        case MyEvent::EV_TASKFD:
             HandleTaskEvent(event);
             break;
-        case MyEvent::SOCKFD:
-        case MyEvent::FILEFD:
+        case MyEvent::EV_SOCKFD:
+        case MyEvent::EV_FILEFD:
         default:
 #if DEBUG_ERROR
             MyDebugPrint("get sock,file... event\n");

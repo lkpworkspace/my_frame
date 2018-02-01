@@ -11,10 +11,9 @@ public:
     virtual ~MyNormalEvent();
     ////////////////////////////////////////////// override MyEvent method
     int GetEventFd(){return m_msgFd[1];}
-    EVENT_TYPE GetEventType(){return EVENT_TYPE::FILEFD;}
+    EVENT_TYPE GetEventType(){return EVENT_TYPE::EV_FILEFD;}
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     virtual void* CallBackFunc(MyEvent *);
-    std::string GetClassType(){return "MyNormalEvent";}
 
     int Work();                                        // invoke by child class
     void SetFunc(void(*func)(my_master::MyEvent*)){m_event_func = func;}

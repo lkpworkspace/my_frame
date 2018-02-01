@@ -10,6 +10,9 @@ MyTask::MyTask()
     m_msgFd[1] = -1;
     memset(m_msgBuf,0,MSG_LEN);
     m_isQuit = true;
+    m_needLoop = false;
+    m_specifledEv = false;
+
     CreateSockPair();
     this->Start();
 }
@@ -31,6 +34,7 @@ void MyTask::Run()
 
     WaitEvent();
     TaskWork();
+    Update(&m_ev_que);
 }
 int MyTask::TaskWork()
 {
@@ -44,11 +48,29 @@ int MyTask::TaskWork()
     {
         temp = (MyEvent*)(begin->next);
         m_que.Del((MyNode*)begin,false);
+
+        // 普通事件就执行完函数，将产生的事件加入队列就行了
         begin->CallBackFunc(begin);
+        if(!begin->GetEvSendQue()->IsEmpty())
+            m_send.Append(begin->GetEvSendQue());
+        if(begin->GetSendTag() == this->GetTag())
+        {
+            // 指定该线程ID的事件执行完回调函数，
+            // 将事件加入队列，然会在交由Update函数处理
+            // TODO...
+            m_ev_que.AddTail(begin);
+        }
+
         begin = (MyEvent*)(temp);
     }
     return 0;
 }
+
+void MyTask::Update(my_master::MyList* evs)
+{// override by child class
+    return;
+}
+
 ////////////////////////////////////////////////////TODO...
 int MyTask::WaitEvent()
 {

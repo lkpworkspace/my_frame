@@ -11,11 +11,10 @@ public:
     ///////////////////////////////////////
     /// override myevent method
     int GetEventFd(){return m_fd;}
-    EVENT_TYPE GetEventType(){return EVENT_TYPE::FILEFD;}
+    EVENT_TYPE GetEventType(){return EVENT_TYPE::EV_FILEFD;}
     uint32_t GetEpollEventType(){return EPOLLIN;}
-    std::string GetClassType(){return "MyMouseEvent";}
 
-    /*
+    /**
      *  0: left button up
      *  1: left button down
      *  2: right button down

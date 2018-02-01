@@ -13,7 +13,6 @@ public:
     /////////////////////////////////////////////////
     /// override parent method
     int Frame(const char* buf, int len);
-    std::string GetClassType(){return m_id;}
 
     /////////////////////////////////////////////////
     /// Ass func

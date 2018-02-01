@@ -4,8 +4,31 @@
 #include <string>
 #include <vector>
 
+/**
+ * macro define
+ */
+#define MYPROTO_MAX_BUF_SIZE  2048
+
+
+/**
+ * typedef
+ */
 typedef void*(*common_func_t)(void *);
 
+
+/**
+ *  struct define
+ */
+typedef struct data_t
+{
+    uint16_t len;
+    char buf[MYPROTO_MAX_BUF_SIZE];
+}data_t;
+
+
+/**
+ * class define
+ */
 class MyHelp
 {
 public:
@@ -58,13 +81,8 @@ public:
     static void DaemonInit();
 };
 
-/////////////////////////////////////////////////////
-#define MYPROTO_MAX_BUF_SIZE  2048
-typedef struct data_t
-{
-    uint16_t len;
-    char buf[MYPROTO_MAX_BUF_SIZE];
-}data_t;
+
+
 
 class MySelfProtocol
 {
@@ -95,27 +113,10 @@ protected:
 private:
 };
 
-class MyOutStream
-{
-public:
-    MyOutStream():
-        m_buf(nullptr),m_head(0),m_capacity(0)
-    {ReallocBuf(32);}
-    ~MyOutStream()
-    {free(m_buf);}
 
-    const char* GetPtr(){return m_buf;}
-    uint32_t GetLen(){return m_head;}
 
-    void Write(const void* data, size_t bytes);
 
-private:
-    void ReallocBuf(uint32_t new_len);
 
-    char* m_buf;
-    uint32_t m_head;
-    uint32_t m_capacity;
-};
 
 /*
     open:(flags)

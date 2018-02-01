@@ -19,9 +19,6 @@ public:
     ////////////////////////////////////////////////
     /// override virtual method
     virtual uint32_t GetEpollEventType(){ return EPOLLIN; }
-    ///////////////////////////////////////////////
-    /// override by child class
-    virtual std::string GetClassType(){return "MyUdp";}
 
     MyAddrInfo RecvData(char** buf, int& len);
     int Write(MyAddrInfo &info,const char* buf, int len);

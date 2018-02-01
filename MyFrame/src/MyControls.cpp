@@ -36,33 +36,6 @@ std::string& MyCtrlObj::GetTypeName()
 {
     return m_type_name;
 }
-/////////////////////////////////////////////////////////////////////////
-/// MyObj
-int MyObj::l_counter = 0;
-MyObj::MyObj(std::string key)
-{
-    if(key.empty())
-    {
-        char buf[20];
-        memset(buf,0,sizeof(buf));
-        sprintf(buf,"key%d",l_counter);
-        key = buf;
-        l_counter++;
-    }
-    m_obj_name = key;
-}
-
-MyObj::~MyObj()
-{}
-
-std::string& MyObj::GetObjName()
-{
-    return m_obj_name;
-}
-void MyObj::SetObjName(std::string name)
-{
-    m_obj_name = name;
-}
 
 /////////////////////////////////////////////////////////////////////////
 /// MyCtrls

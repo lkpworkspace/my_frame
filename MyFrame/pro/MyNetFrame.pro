@@ -3,10 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -lpthread -ldl -lrt
-QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
-
-INCLUDEPATH += ../inc
+INCLUDEPATH += ../inc ../example
 
 SOURCES += \
     ../src/MyCommon.cpp \
@@ -27,10 +24,12 @@ SOURCES += \
     ../src/MyAllEvent.cpp \
     ../src/MyWriteable.cpp \
     ../src/MySqlite3.cpp \
+    ../src/MySerialize.cpp \
     ../../3rd_src/Sqlite3/sqlite3.c \
     ../../3rd_src/blowfish/blowfish.cpp \
     ../../3rd_src/md5/md5.cpp \
-    ../src/main.cpp
+    ../src/main.cpp \
+    ../src/MyObj.cpp
 
 #   ../src/MyBase64.cpp \
 #   ../src/MyMouseEvent.cpp \
@@ -40,9 +39,6 @@ SOURCES += \
 #   ../src/MyTest.cpp \
 #   ../src/MyICMP.cpp \
 #   ../src/MyRaw.cpp \
-
-
-
 
 HEADERS += \
     ../inc/MyCommon.h \
@@ -63,10 +59,27 @@ HEADERS += \
     ../inc/MyTcp.h \
     ../inc/MyAllEvent.h \
     ../inc/MySqlite3.h \
+    ../inc/MySerialize.h \
     ../../3rd_src/Sqlite3/sqlite3.h \
     ../../3rd_src/Sqlite3/sqlite3ext.h \
     ../../3rd_src/blowfish/blowfish.h \
-    ../../3rd_src/md5/md5.h
+    ../../3rd_src/md5/md5.h \
+    ../inc/MyObj.h \
+    ../example/MyObj_test.h \
+    ../inc/MyWriteable.h \
+    ../example/MyApp_test.h \
+    ../example/MyEvent_test.h \
+    ../example/MyHeap_test.h \
+    ../example/MyList_test.h \
+    ../example/MyNormalEvent_test.h \
+    ../example/MySqlite3_test.h \
+    ../example/MyTcp_test.h \
+    ../example/MyTFTP_test.h \
+    ../example/MyTimer_test.h \
+    ../example/MyUdp_test.h \
+    ../example/MyWriteable_test.h \
+    ../example/MyTest.h \
+    ../example/MyAllEvent_test.h
 
 #   ../inc/MyVec.h \
 #   ../inc/MyBase64.h \
@@ -80,4 +93,11 @@ HEADERS += \
 #   ../inc/MyTest.h \
 #   ../inc/MyICMP.h \
 #   ../inc/MyRaw.h \
-DISTFILES +=
+
+unix {
+    DISTFILES +=
+    LIBS += -lpthread -ldl -lrt
+    QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
+    #DESTDIR =
+}
+

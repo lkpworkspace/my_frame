@@ -14,10 +14,6 @@ public:
 
     int Listen(int backlog = 10);
     int Accpet(struct sockaddr_in *addr);
-protected:
-    /////////////////////////////////
-    /// virtual method
-    virtual std::string GetClassType(){return "MyTcpServer";}
 };
 
 class MyTcpClient : public my_master::MySock
@@ -25,10 +21,6 @@ class MyTcpClient : public my_master::MySock
 public:
     MyTcpClient(std::string ip,uint16_t port);
     virtual ~MyTcpClient();
-protected:
-    /////////////////////////////////
-    /// virtual method
-    virtual std::string GetClassType(){return "MyTcpClient";}
 public:
     int Read(char* buf, int len);
     int Write(const char *buf, int len);
@@ -44,11 +36,10 @@ public:
     ////////////////////////////////////
     /// override MyEvent method
     int GetEventFd(){ return m_sock; }
-    EVENT_TYPE GetEventType(){ return EVENT_TYPE::SOCKFD; }
+    EVENT_TYPE GetEventType(){ return EVENT_TYPE::EV_SOCKFD; }
     uint32_t GetEpollEventType(){ return EPOLLIN; }
     ////////////////////////////////////
     /// virtual method
-    virtual std::string GetClassType(){return "MyTcpSocket";}
     virtual void* CallBackFunc(MyEvent *);
 
     MyTcpSocket& operator=(MyTcpSocket& other);

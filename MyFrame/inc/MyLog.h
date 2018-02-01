@@ -57,7 +57,7 @@ private:
 
 #define MyDebug(...) do \
     { \
-        char __buf[2048] = {0}; \
+        char __buf[512] = {0}; \
         memset(__buf,0,sizeof(__buf)); \
         sprintf(__buf,__VA_ARGS__); \
         __MyDebug(__buf); \
@@ -65,7 +65,7 @@ private:
 
 #define MyDebugPrint(args...) do \
     { \
-        char __buf[2048] = {0}; \
+        char __buf[512] = {0}; \
         memset(__buf,0,sizeof(__buf)); \
         sprintf(__buf,args); \
         __MyDebugPrint(__buf); \
@@ -78,7 +78,7 @@ private:
     { \
         char* __err_str = strerror(errno); \
         int __index = 0; \
-        char __buf[2048] = {0}; \
+        char __buf[512] = {0}; \
         memset(__buf,0,sizeof(__buf)); \
         sprintf(__buf,"[ERROR]: "); \
         __index += 9; \

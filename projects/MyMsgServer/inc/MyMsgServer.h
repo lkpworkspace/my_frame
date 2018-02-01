@@ -12,7 +12,6 @@ public:
 
     //////////////////////////////////////////////
     /// override parent method
-    std::string GetClassType(){return "MyMsgServer";}
     void* CallBackFunc(MyEvent *);
 
     //////////////////////////////////////////////

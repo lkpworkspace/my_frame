@@ -10,6 +10,7 @@ INCLUDEPATH += ../../../MyFrame/inc/ ../inc
 
 SOURCES += \
     ../../../MyFrame/src/MyCommon.cpp \
+    ../../../MyFrame/src/MyObj.cpp \
     ../../../MyFrame/src/MyThread.cpp \
     ../../../MyFrame/src/MyEvent.cpp \
     ../../../MyFrame/src/MyApp.cpp \
@@ -50,6 +51,7 @@ SOURCES += \
 
 HEADERS += \
     ../../../MyFrame/inc/MyCommon.h \
+    ../../../MyFrame/inc/MyObj.h \
     ../../../MyFrame/inc/MyHelp.h \
     ../../../MyFrame/inc/MyLog.h \
     ../../../MyFrame/inc/MyFrame.h \

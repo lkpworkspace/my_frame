@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include "MyObj.h"
 
 #define REQUEST(name) MyCtrls::GetInst()->Get(name)
 #define UNREG(name) MyCtrls::GetInst()->UnRegCtrl(name)
@@ -23,19 +24,6 @@ private:
     std::string m_obj_name;
     std::string m_type_name;
     static int l_count;
-};
-
-class MyObj
-{
-public:
-    MyObj(std::string key = "");
-    ~MyObj();
-    std::string& GetObjName();
-    void SetObjName(std::string name);
-
-private:
-    std::string m_obj_name;
-    static int l_counter;
 };
 
 /*  author: kpli

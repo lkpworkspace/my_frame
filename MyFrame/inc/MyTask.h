@@ -11,10 +11,10 @@ class MyTask : public my_master::MyThread, public my_master::MyEvent
     friend class MyApp;
 public:
     enum TASK_STATUS{
-        RUNING,
-        IDLE,
-        STOP,
-        ERROR
+        TASK_RUNING,
+        TASK_IDLE,
+        TASK_STOP,
+        TASK_ERROR
     };
 public:
     MyTask();
@@ -22,30 +22,54 @@ public:
     void Run();    // override
     void OnInit(); // override
     void OnExit(); // override
+    /**
+     * Update() - 需要循环的函数
+     * @evs: 需要处理的事件队列
+     */
+    virtual void Update(my_master::MyList* evs); // virtual method
     ////////////////////////////////////////////// override MyEvent method
     int GetEventFd(){return m_msgFd[1];}
-    EVENT_TYPE GetEventType(){return EVENT_TYPE::TASKFD;}
+    EVENT_TYPE GetEventType(){return EVENT_TYPE::EV_TASKFD;}
     uint32_t GetEpollEventType(){ return EPOLLIN; }
-    void* CallBackFunc(MyEvent *){return NULL;}
-    std::string GetClassType(){return "MyTask";}
+    void* CallBackFunc(MyEvent *){ return NULL; }
+
 
     void Quit();                                // task quit
     int SendMsg(const char *buf, int len);      // invoke by MyApp
     int RecvMsg(char *buf, int len);            // invoke by MyApp
     int WaitEvent();                            // invoke by myself
     int ProcessMsg();                           // process MyApp event(do not use)
+
+    /**
+     * 该线程是否是需要循环的线程
+     * 在子类中初始化调用此函数，如果需要使用此功能
+     */
+    void SetLoop(bool b){ m_needLoop = b; }
+    bool IsLoop(){ return m_needLoop; }
+
+    /**
+     * 该线程是否只处理指定自己ID的事件
+     * 在子类中初始化调用此函数，如果需要使用此功能
+     * /// 也许不需要此函数也能实现
+     */
+    void SetSpecifledEv(bool b){ m_specifledEv = b; }
+    bool IsProcessSpecifledEv(){ return m_specifledEv; }
 private:
     int TaskWork();
-    int CreateSockPair();   // communication between thread
+    int CreateSockPair();   // communication between self and mainthread
     void ClearResource();
 private:
-    my_master::MyList m_recv;            // recv queue
-    my_master::MyList m_que;             // work queue, save MyEvent class
+    my_master::MyList m_send;              // send queue
+    my_master::MyList m_recv;              // recv queue
+    my_master::MyList m_que;               // work queue, save MyEvent class
+    my_master::MyList m_ev_que;            // 由工作队列中的事件产生的事件队列
 
     //TASK_STATUS m_status;                // current thread runing status
-    int m_msgFd[2];                      // 0 used by myself, 1 used by MyApp
+    int m_msgFd[2];                        // 0 used by myself, 1 used by MyApp
     uint8_t m_msgBuf[MSG_LEN];
     bool m_isQuit;
+    bool m_needLoop;                       // 该线程是否是需要循环的线程
+    bool m_specifledEv;                    // 是否只处理指定自己ID的事件
 };
 
 } // end namespace
