@@ -79,7 +79,8 @@ HEADERS += \
     ../example/MyUdp_test.h \
     ../example/MyWriteable_test.h \
     ../example/MyTest.h \
-    ../example/MyAllEvent_test.h
+    ../example/MyAllEvent_test.h \
+    ../example/MyTask_test.h
 
 #   ../inc/MyVec.h \
 #   ../inc/MyBase64.h \

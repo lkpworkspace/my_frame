@@ -10,6 +10,7 @@
 #include "MyList.h"
 #include "MyEvent.h"
 #include "MyThread.h"
+#include "MyTask.h"
 #include "MyNet.h"
 #include "MyAllEvent.h"
 

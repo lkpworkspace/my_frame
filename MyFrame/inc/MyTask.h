@@ -54,6 +54,12 @@ public:
      */
     void SetSpecifledEv(bool b){ m_specifledEv = b; }
     bool IsProcessSpecifledEv(){ return m_specifledEv; }
+
+    /**
+     * 设置线程数组, 便于索引, 索引使用Identify
+     */
+    static MyTask* l_tasks[100];
+    static int l_cur__max_identify;
 private:
     int TaskWork();
     int CreateSockPair();   // communication between self and mainthread
@@ -62,7 +68,7 @@ private:
     my_master::MyList m_send;              // send queue
     my_master::MyList m_recv;              // recv queue
     my_master::MyList m_que;               // work queue, save MyEvent class
-    my_master::MyList m_ev_que;            // 由工作队列中的事件产生的事件队列
+    my_master::MyList m_ev_que;            // 由工作队列中的事件产生的事件队列, 交由Update函数处理的队列
 
     //TASK_STATUS m_status;                // current thread runing status
     int m_msgFd[2];                        // 0 used by myself, 1 used by MyApp

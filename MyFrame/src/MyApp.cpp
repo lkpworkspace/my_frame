@@ -215,6 +215,14 @@ void MyApp::CheckStopTask()
             begin = (MyTask*)(temp);
             continue;
         }
+
+        // TODO(lkp): something not testing...
+        if(begin->IsProcessSpecifledEv())
+        {
+            begin = (MyTask*)(temp);
+            continue;
+        }
+
         // move MyApp recv queue to MyTask work queue
         // weak up this task
         if(!m_ev_recv.IsEmpty())
@@ -267,7 +275,28 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
         delete task;
         m_cur_thread_size--;
     }else
-    {
+    {   // process task send queue
+        // TODO(lkp): something not testing...
+        MyEvent* begin = (MyEvent*)task->m_send.Begin();
+        MyEvent* end = (MyEvent*)task->m_send.End();
+        MyEvent* temp = NULL;
+        for(;begin != end;)
+        {
+            temp = (MyEvent*)(begin->next);
+            if(begin->GetSendIdentify() == -1)
+            {
+                task->m_send.Del(begin);
+                m_ev_recv.AddTail(begin);
+            }else
+            {
+                if(MyTask::l_tasks[begin->GetSendIdentify()] != NULL)
+                {
+                    task->m_send.Del(begin);
+                    MyTask::l_tasks[begin->GetSendIdentify()]->m_recv.AddTail(begin);
+                }
+            }
+            begin = (MyEvent*)(temp);
+        }
         // task need event
         if(!task->m_recv.IsEmpty())
         {
@@ -276,6 +305,15 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
             MyDebugPrint("trans main event to task %d\n",task->GetThreadId());
 #endif
             task->SendMsg(&ch,MSG_LEN);
+        }else if(task->IsProcessSpecifledEv())
+        {// TODO(lkp): something not testing...
+            if(task->IsLoop())
+            {
+                task->SendMsg(&ch,MSG_LEN);
+            }else
+            {
+                m_idle_tasks.AddTail(task);
+            }
         }else if(!m_ev_recv.IsEmpty())
         {
             // change m_idle_tasks to m_ev_recv

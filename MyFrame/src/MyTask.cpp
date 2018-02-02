@@ -4,8 +4,16 @@
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 using namespace my_master;
+
+MyTask* MyTask::l_tasks[100] = {NULL};
+int MyTask::l_cur__max_identify = 0;
+
 MyTask::MyTask()
 {
+    SetIdentify(IDENTIFY_TASK + l_cur__max_identify);
+    l_cur__max_identify++;
+    l_tasks[GetIdentify()] = this;
+
     m_msgFd[0] = -1;
     m_msgFd[1] = -1;
     memset(m_msgBuf,0,MSG_LEN);
@@ -51,9 +59,9 @@ int MyTask::TaskWork()
 
         // 普通事件就执行完函数，将产生的事件加入队列就行了
         begin->CallBackFunc(begin);
-        if(!begin->GetEvSendQue()->IsEmpty())
-            m_send.Append(begin->GetEvSendQue());
-        if(begin->GetSendTag() == this->GetTag())
+        if(!begin->GetSendEvQue()->IsEmpty())
+            m_send.Append(begin->GetSendEvQue());
+        if(begin->GetSendIdentify() == this->GetIdentify())
         {
             // 指定该线程ID的事件执行完回调函数，
             // 将事件加入队列，然会在交由Update函数处理

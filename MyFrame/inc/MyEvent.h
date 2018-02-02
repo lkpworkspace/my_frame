@@ -47,19 +47,20 @@ public:
     /**
      * 指定处理事件的线程标识
      */
-    virtual void SetSendTag(int tag){ m_send_tag = tag; }
-    virtual int GetSendTag(){ return -1; }
+    virtual void SetSendIdentify(int identify){ m_send_identify = identify; }
+    virtual int GetSendIdentify(){ return m_send_identify; }
 
     /**
      * 发送事件队列,一般将读到的数据创建成一个MyEvent子类事件发送给相应的线程处理
      * 该发送事件只需要指定线程标识(SetSendTag)就可以，不需要重写其他MyEvent虚函数
      */
-    MyList* GetEvSendQue(){return &m_ev_send_que;}
+    MyList* GetSendEvQue(){return &m_ev_send_que;}
+    void AddSendEv(MyEvent* ev) { m_ev_send_que.AddTail(ev);}
 protected:
     virtual void* CallBackFunc(MyEvent*) = 0;
 private:
     MyList m_ev_send_que;                 // send event queue
-    int m_send_tag;
+    int m_send_identify;
 };
 
 } // end namespace

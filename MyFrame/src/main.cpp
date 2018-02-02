@@ -12,11 +12,12 @@
 #include "MyEvent_test.h"
 #include "MyNormalEvent_test.h"
 #include "MyTFTP_test.h"
+#include "MyTask_test.h"
 
 
 int main()
 {
-    MyObj_test myobj;
-    myobj.test();
+    MyTaskTest::Test();
+    return 0;
 }
 
