@@ -24,10 +24,11 @@ MyTask::MyTask()
     CreateSockPair();
     this->Start();
 }
+
 MyTask::~MyTask()
 {
     ClearResource();
-#if DEBUG_ERROR
+#if DEBUG_INFO
     MyDebugPrint("MyTask %d destructor\n", GetThreadId());
 #endif
 }
@@ -44,6 +45,8 @@ void MyTask::Run()
     TaskWork();
     Update(&m_ev_que);
 }
+
+
 int MyTask::TaskWork()
 {
 #if DEBUG_ERROR
@@ -74,10 +77,12 @@ int MyTask::TaskWork()
     return 0;
 }
 
+
 void MyTask::Update(my_master::MyList* evs)
 {// override by child class
     return;
 }
+
 
 ////////////////////////////////////////////////////TODO...
 int MyTask::WaitEvent()
@@ -96,26 +101,30 @@ void MyTask::OnInit()
     MyThread::OnInit();
     m_isQuit = false;
 #ifdef USE_LOG
-    MyDebug("thread %u begin", GetThreadId());
+    MyDebug("thread %u begin, identify %d", GetThreadId(), GetIdentify());
 #endif
 #if DEBUG_INFO
-    MyDebugPrint("thread %u begin\n", GetThreadId());
+    MyDebugPrint("thread %u begin, identify %d\n", GetThreadId(), GetIdentify());
 #endif
 }
+
+
 void MyTask::OnExit()
 {
     MyThread::OnExit();
     m_isQuit = true;
 #ifdef USE_LOG
-    MyDebug("thread %u quit", GetThreadId());
+    MyDebug("thread %u quit, identify %d", GetThreadId(), GetIdentify());
 #endif
 #if DEBUG_INFO
-    MyDebugPrint("thread %u quit\n", GetThreadId());
+    MyDebugPrint("thread %u quit, identify %d\n", GetThreadId(), GetIdentify());
 #endif
     // send stop msg to main thread
     char ch = -1;
     write(m_msgFd[0],&ch,MSG_LEN);
 }
+
+
 int MyTask::CreateSockPair()
 {
     int res = -1;
@@ -132,16 +141,22 @@ int MyTask::CreateSockPair()
     MyHelp::SetNonblock(m_msgFd[1],false);
     return res;
 }
+
+
 ////////////////////////////////////////////////////
 /// MyApp communication with this class
 int MyTask::SendMsg(const char* buf, int len)
 {
     return write(m_msgFd[1],buf,len);
 }
+
+
 int MyTask::RecvMsg(char* buf, int len)
 {
     return read(m_msgFd[1],buf,len);
 }
+
+
 void MyTask::Quit()
 {
     Lock();
@@ -151,8 +166,8 @@ void MyTask::Quit()
     char ch = -1;
     SendMsg(&ch,1);
 }
-////////////////////////////////////////////////////
-/// assist function
+
+
 void MyTask::ClearResource()
 {
     this->Stop();

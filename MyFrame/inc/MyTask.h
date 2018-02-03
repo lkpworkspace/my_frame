@@ -20,8 +20,9 @@ public:
     MyTask();
     virtual ~MyTask();
     void Run();    // override
-    void OnInit(); // override
-    void OnExit(); // override
+    virtual void OnInit(); // override
+    virtual void OnExit(); // override
+
     /**
      * Update() - 需要循环的函数
      * @evs: 需要处理的事件队列
@@ -50,7 +51,6 @@ public:
     /**
      * 该线程是否只处理指定自己ID的事件
      * 在子类中初始化调用此函数，如果需要使用此功能
-     * /// 也许不需要此函数也能实现
      */
     void SetSpecifledEv(bool b){ m_specifledEv = b; }
     bool IsProcessSpecifledEv(){ return m_specifledEv; }
@@ -68,6 +68,7 @@ private:
     my_master::MyList m_send;              // send queue
     my_master::MyList m_recv;              // recv queue
     my_master::MyList m_que;               // work queue, save MyEvent class
+
     my_master::MyList m_ev_que;            // 由工作队列中的事件产生的事件队列, 交由Update函数处理的队列
 
     //TASK_STATUS m_status;                // current thread runing status

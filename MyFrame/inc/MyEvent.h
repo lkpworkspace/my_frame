@@ -56,10 +56,19 @@ public:
      */
     MyList* GetSendEvQue(){return &m_ev_send_que;}
     void AddSendEv(MyEvent* ev) { m_ev_send_que.AddTail(ev);}
+
 protected:
+    /**
+     * 事件的回调函数
+     */
     virtual void* CallBackFunc(MyEvent*) = 0;
+
 private:
+
+    /* 回调函数之后产生的普通事件队列 */
     MyList m_ev_send_que;                 // send event queue
+
+    /* 标识该事件是否由指定线程处理(-1: 所有线程都可以处理) */
     int m_send_identify;
 };
 

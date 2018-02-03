@@ -1,5 +1,6 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
+
 // c normal
 #include <stdio.h>
 #include <stdint.h>
@@ -16,6 +17,7 @@
 #include <unistd.h>
 #include "MyHelp.h"
 #endif
+
 // log define
 #define USE_LOG
 // debug define
@@ -28,10 +30,12 @@
 #ifndef DEBUG_ERROR
 #define DEBUG_ERROR 0
 #endif
+
 // system V (msg key id)
 #define MSG_KEY 1024
 #define MSG_LEN 1
 #define USE_CONFIG 0
+
 // unuse arg
 #define UNUSE_ARG(argc,argv) \
     do{ \

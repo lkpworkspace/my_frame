@@ -2,25 +2,41 @@
 #define MYTASK_TEST_H
 #include "MyFrame.h"
 #include "MyTcp.h"
+/**
+ * 示例程序简述：
+ *      创建一个TCP服务器对象(MyTcpServerTest)
+ *      服务器接收到客户端连接后创建客户端连接对象(MyTcpSockTest)
+ *      客户端对象收到客户端发送的消息后，
+ *      将消息打包成事件(MyEventTest)发送到指定线程处理队列上(MyTaskTest)
+ */
+
+
 
 /**
- * @brief The MyEventTest class
+ * 普通事件对象，用于进行线程间传递事件消息使用
  */
 class MyEventTest : public MyEvent
 {
 public:
     MyEventTest()
     {
+        /**
+         * 设置该事件由那个线程处理
+         */
         SetSendIdentify(m_send_task);
     }
 
     void Print()
     {
-        printf("test count %d: %s\n",m_test_cout++, m_send_str.c_str());
+        printf("[print   ]: test count %d: %s\n",m_test_cout, m_send_str.c_str());
     }
-    /// override
+
+    //////////////////////////////////////// override
     EVENT_TYPE GetEventType(){return EV_NONE;}
-    void* CallBackFunc(MyEvent*){ return NULL; }
+    void* CallBackFunc(MyEvent*){
+        printf("[callback]: test count %d: %s\n",m_test_cout++, m_send_str.c_str());
+        return NULL;
+    }
 
 
     std::string m_send_str;
@@ -32,21 +48,29 @@ int MyEventTest::m_test_cout = -1;
 
 
 /**
- * @brief The MyTestSock class
+ * TCP服务器收到客户端连接就会创建该对象，
+ * 表示一个客户端连接，
+ * 并将该对象加入到监听队列中，
+ * 有事件会回调Frame函数进行处理
  */
-class MyTestSock : public MyEasyTcpSocket
+class MyTcpSockTest : public MyEasyTcpSocket
 {
 public:
-    MyTestSock(int fd, sockaddr_in addr)
+    MyTcpSockTest(int fd, sockaddr_in addr)
         :MyEasyTcpSocket(fd, addr)
     {
-
     }
 
+    /**
+     * Frame()
+     * @buf:   传入的消息的buf
+     * @len:   消息的长度(如果为0,表示客户端退出)
+     * Return: 返回true表示继续监听该事件，false表示不再监听此事件
+     */
     virtual int Frame(const char* buf, int len)
     {
         MyEventTest* met = new MyEventTest();
-        printf("something get: %s\n",buf);
+        printf("Get Msg: %s\n",buf);
         if(len == 0)
         {
             met->m_send_str = "";
@@ -57,33 +81,37 @@ public:
         return true;
     }
 };
+
+
 /**
- * @brief The MyTestServer class
+ * 创建一个TCP服务器对象，
+ * 任务是接受客户端请求的连接，
+ * 并将连接对象 加入到监听队列中
  */
-class MyTestServer : public MyTcpServer
+class MyTcpServerTest : public MyTcpServer
 {
 public:
-    MyTestServer()
+    MyTcpServerTest()
         :MyTcpServer("127.0.0.1",4399)
     {
 
     }
 
-    virtual ~MyTestServer()
+    virtual ~MyTcpServerTest()
     {
 
     }
 
     virtual void* CallBackFunc(MyEvent *ev)
     {
-        MyTestServer* serv = (MyTestServer*)ev;
+        MyTcpServerTest* serv = (MyTcpServerTest*)ev;
         sockaddr_in addr;
         while(1)
         {
             int fd = serv->Accpet(&addr);
             if(fd < 0)
                 break;
-            MyTestSock *recv = new MyTestSock(fd,addr);
+            MyTcpSockTest *recv = new MyTcpSockTest(fd,addr);
             MyDebugPrint("get client connect fd : %d, port %u, ip %s\n",
                    fd,
                    MyNet::GetAddrPort(&addr),
@@ -92,13 +120,9 @@ public:
             MyApp::theApp->AddEvent(recv);
         }
         MyApp::theApp->AddEvent(ev);
+        return NULL;
     }
 };
-
-
-
-
-
 
 
 
@@ -108,17 +132,41 @@ class MyTaskTest : public MyTask
 public:
     MyTaskTest()
     {
+        /**
+         * 设置线程是帧循环的，而不是基于事件驱动的
+         */
         SetLoop(true);
+
+        /**
+         * 设置该线程只处理指定自己ID的事件
+         */
         SetSpecifledEv(true);
     }
 
     virtual ~MyTaskTest()
     {
-
     }
 
+    ///////////////////////////////////////////////// 可以重写的函数
+    /**
+     * 线程初始化函数，仅初始化调用一次，
+     * note that: 需要调用父类中的方法
+     */
+    //virtual void OnInit();
+
+    /**
+     * 线程退出函数，仅退出调用一次，
+     * note that: 需要调用父类中的方法
+     */
+    //virtual void OnExit();
+
+    /**
+     * 每次线程收到事件便会调用此函数，如果设置线程为无限循环的(SetLoop)，
+     * 则不管有没有事件该线程会一直调用此函数，
+     * 所以需要在Update中加一点延时
+     */
     virtual void Update(MyList *evs)
-    {// delete MyEvent when used
+    {// delete MyEvent after used
         MyEvent* begin = (MyEvent*)evs->Begin();
         MyEvent* end = (MyEvent*)evs->End();
         MyEvent* me = NULL;
@@ -127,17 +175,29 @@ public:
         {
             me = (MyEvent*)begin->next;
             evs->Del(begin,false);
+
             // TODO...
             temp = (MyEventTest*)begin;
             temp->Print();
             // TODO end
+
             delete begin;
             begin = me;
         }
-//        printf("loop\n");
-        usleep(1000 * 500);
+        // TODO...
+#if 1
+        static int counter = 0;
+        printf("loop %d\n", counter++);
+#endif
+        usleep(1000 * 16);
+
+        // TODO end
     }
 
+
+    /**
+     * 入口函数
+     */
     static void Test()
     {
         MyApp app(4);
@@ -148,7 +208,7 @@ public:
         MyApp::theApp->AddEvent(tt);
 
         // tcp server
-        MyTestServer* server = new MyTestServer();
+        MyTcpServerTest* server = new MyTcpServerTest();
         server->SetReuseSock();
         server->Bind();
         server->Listen();
@@ -156,6 +216,7 @@ public:
 
         app.Exec();
     }
+
 private:
 };
 

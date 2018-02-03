@@ -42,4 +42,4 @@ easy coding on linux
 	MyHash                           散列表
 
 ## 调试笔记：
-* doc/debug.md
+* MyFrame/doc/debug.md

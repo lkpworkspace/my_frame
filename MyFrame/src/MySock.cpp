@@ -21,7 +21,7 @@ MySock::~MySock(){
 
 void* MySock::CallBackFunc(MyEvent * ev)
 {
-    MyAllEvent::BoardEvent(ev);
+//    MyAllEvent::BoardEvent(ev);
     return NULL;
 }
 

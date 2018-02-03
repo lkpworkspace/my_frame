@@ -1,19 +1,37 @@
 #ifndef MYFRAME_H
 #define MYFRAME_H
+
 #include "MyCommon.h"
-// my class
-#include "MyLog.h"
-#include "MyHelp.h"
+
+// data structure class
 #include "MyHash.h"
 #include "MyHeap.h"
 #include "MyVec.h"
 #include "MyList.h"
+
+// base class
+#include "MyLog.h"
+#include "MyHelp.h"
+#include "MyObj.h"
 #include "MyEvent.h"
+
+// Algorithm
+//#include "MyBase64.h"
+
+// database
+#include "MySqlite3.h"
+
+// thread
 #include "MyThread.h"
 #include "MyTask.h"
-#include "MyNet.h"
 #include "MyAllEvent.h"
 
+// network
+#include "MyNet.h"
+#include "MyTcp.h"
+#include "MyUdp.h"
+
+// main class
 #include "MyApp.h"
 
 #if 1
@@ -21,13 +39,9 @@ using namespace my_master;
 #endif
 
 #if 0 // user maybe used class
-#include "MySqlite3.h"
-#include "MyBase64.h"
 #include "MyMouseEvent.h"
 #include "MyKeyEvent.h"
-#include "MyUdp.h"
 #include "MyTFTP.h"
-#include "MyTcp.h"
 #endif
 
 #endif // MYFRAME_H

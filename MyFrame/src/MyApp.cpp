@@ -16,6 +16,7 @@ MyApp::MyApp(int thread_size)
     m_threadSize = thread_size;
     m_cur_thread_size = 0;
     m_cur_ev_size = 0;
+    memset(m_task_id,0,sizeof(m_task_id));
     InitApp();
 }
 MyApp::~MyApp()
@@ -52,6 +53,7 @@ int MyApp::InitApp()
 int MyApp::CreateTask()
 {
     MyTask* task = new MyTask;
+    m_task_id[task->GetIdentify()] = 1;
     this->AddEvent(task);
 
     pthread_mutex_lock(&m_app_mutex);
@@ -270,10 +272,15 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
     if(ch < 0)
     {
         // thread stop
-        // TODO... nothing
+        // TODO(lkp): maybe do not del task, i have no idear...
         MyDebugPrint("main thread : get task %d quit msg\n",task->GetThreadId());
-        delete task;
-        m_cur_thread_size--;
+        if(m_task_id[task->GetIdentify()] == 1)
+        {// maybe task has some event not processed
+         // but i don't want do something...
+            DelEvent(task);
+            delete task;
+            m_cur_thread_size--;
+        }
     }else
     {   // process task send queue
         // TODO(lkp): something not testing...

@@ -55,6 +55,13 @@ private:
 
     int m_cur_thread_size;             // how many task was create
     int m_cur_ev_size;                 // how many ev was create
+
+    /**
+     * 用与区分MyApp和用户创建的MyTask类,
+     * 主要是删除方式不一样
+     * 值为1代表MyApp创建的线程
+     */
+    int m_task_id[20];
 };
 
 } // end namespace
