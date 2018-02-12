@@ -11,6 +11,7 @@ using namespace my_master;
 MyApp* MyApp::theApp = nullptr;
 
 MyApp::MyApp(int thread_size)
+    :MyThread()
 {
     theApp = this;
     m_threadSize = thread_size;
@@ -331,10 +332,16 @@ void MyApp::HandleTaskEvent(MyEvent* ev)
             task->SendMsg(&ch,MSG_LEN);
         }else
         {
-            m_idle_tasks.AddTail(task);
+            if(task->IsLoop())
+            {
+                task->SendMsg(&ch,MSG_LEN);
+            }else
+            {
+                m_idle_tasks.AddTail(task);
 #if DEBUG_ERROR
-            MyDebugPrint("add task %d to idle queue\n",task->GetThreadId());
+                MyDebugPrint("add task %d to idle queue\n",task->GetThreadId());
 #endif
+            }
         }
     }
 }

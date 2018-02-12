@@ -9,7 +9,12 @@
  *      客户端对象收到客户端发送的消息后，
  *      将消息打包成事件(MyEventTest)发送到指定线程处理队列上(MyTaskTest)
  */
-
+#if 0
+#define IP "127.0.0.1"
+#else
+#define IP "172.16.212.139"
+#endif
+#define PORT 4399
 
 
 /**
@@ -34,7 +39,7 @@ public:
     //////////////////////////////////////// override
     EVENT_TYPE GetEventType(){return EV_NONE;}
     void* CallBackFunc(MyEvent*){
-        printf("[callback]: test count %d: %s\n",m_test_cout++, m_send_str.c_str());
+        MyDebug("[callback]: test count %d: %s\n",m_test_cout++, m_send_str.c_str());
         return NULL;
     }
 
@@ -70,7 +75,7 @@ public:
     virtual int Frame(const char* buf, int len)
     {
         MyEventTest* met = new MyEventTest();
-        printf("Get Msg: %s\n",buf);
+        MyDebug("Get Msg: %s\n",buf);
         if(len == 0)
         {
             met->m_send_str = "";
@@ -92,7 +97,7 @@ class MyTcpServerTest : public MyTcpServer
 {
 public:
     MyTcpServerTest()
-        :MyTcpServer("127.0.0.1",4399)
+        :MyTcpServer(IP,PORT)
     {
 
     }
@@ -116,6 +121,10 @@ public:
                    fd,
                    MyNet::GetAddrPort(&addr),
                    MyNet::GetAddrIp(&addr).c_str());
+            MyDebug("get client connect fd : %d, port %u, ip %s\n",
+                    fd,
+                    MyNet::GetAddrPort(&addr),
+                    MyNet::GetAddrIp(&addr).c_str());
 
             MyApp::theApp->AddEvent(recv);
         }
@@ -177,8 +186,7 @@ public:
             evs->Del(begin,false);
 
             // TODO...
-            temp = (MyEventTest*)begin;
-            temp->Print();
+
             // TODO end
 
             delete begin;
@@ -187,9 +195,9 @@ public:
         // TODO...
 #if 1
         static int counter = 0;
-        printf("loop %d\n", counter++);
+        MyDebug("loop %d\n", counter++);
 #endif
-        usleep(1000 * 16);
+        usleep(1000 * 1000 * 60 * 60);
 
         // TODO end
     }
@@ -200,6 +208,7 @@ public:
      */
     static void Test()
     {
+        MyHelp::DaemonInit();
         MyApp app(4);
 
         // provess task

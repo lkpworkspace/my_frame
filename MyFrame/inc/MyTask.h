@@ -6,7 +6,7 @@
 
 namespace my_master {
 
-class MyTask : public my_master::MyThread, public my_master::MyEvent
+class MyTask : public my_master::MyEvent, public my_master::MyThread
 {
     friend class MyApp;
 public:
@@ -19,9 +19,9 @@ public:
 public:
     MyTask();
     virtual ~MyTask();
-    void Run();    // override
-    virtual void OnInit(); // override
-    virtual void OnExit(); // override
+    virtual void Run() override;
+    virtual void OnInit() override;
+    virtual void OnExit() override;
 
     /**
      * Update() - 需要循环的函数

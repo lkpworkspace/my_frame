@@ -9,6 +9,8 @@ MyTask* MyTask::l_tasks[100] = {NULL};
 int MyTask::l_cur__max_identify = 0;
 
 MyTask::MyTask()
+    :MyEvent(),
+      MyThread()
 {
     SetIdentify(IDENTIFY_TASK + l_cur__max_identify);
     l_cur__max_identify++;
@@ -80,6 +82,7 @@ int MyTask::TaskWork()
 
 void MyTask::Update(my_master::MyList* evs)
 {// override by child class
+    (void*)evs;
     return;
 }
 

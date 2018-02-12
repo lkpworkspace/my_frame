@@ -1,0 +1,2 @@
+1. sudo apt-get install libglfw3
+2. sudo apt-get install libsdl2-dev

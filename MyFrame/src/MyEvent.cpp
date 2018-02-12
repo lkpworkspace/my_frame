@@ -2,7 +2,9 @@
 using namespace my_master;
 
 MyEvent::MyEvent()
-    :m_send_identify(-1)
+    :MyNode(),
+      MyObj(),
+    m_send_identify(-1)
 {}
 
 MyEvent::~MyEvent()

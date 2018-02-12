@@ -3,10 +3,11 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-INCLUDEPATH += ../inc ../example
+INCLUDEPATH += ../inc ../example ../../3rd_src/
 
 SOURCES += \
     ../src/MyCommon.cpp \
+    ../src/MyObj.cpp \
     ../src/MyThread.cpp \
     ../src/MyEvent.cpp \
     ../src/MyApp.cpp \
@@ -24,12 +25,13 @@ SOURCES += \
     ../src/MyAllEvent.cpp \
     ../src/MyWriteable.cpp \
     ../src/MySqlite3.cpp \
-    ../src/MySerialize.cpp \
+    ../src/MyIOStream.cpp \
+    ../src/MyGameObj.cpp \
     ../../3rd_src/Sqlite3/sqlite3.c \
     ../../3rd_src/blowfish/blowfish.cpp \
     ../../3rd_src/md5/md5.cpp \
-    ../src/main.cpp \
-    ../src/MyObj.cpp
+    ../src/main.cpp
+
 
 #   ../src/MyBase64.cpp \
 #   ../src/MyMouseEvent.cpp \
@@ -42,6 +44,7 @@ SOURCES += \
 
 HEADERS += \
     ../inc/MyCommon.h \
+    ../inc/MyObj.h \
     ../inc/MyHelp.h \
     ../inc/MyLog.h \
     ../inc/MyFrame.h \
@@ -59,14 +62,15 @@ HEADERS += \
     ../inc/MyTcp.h \
     ../inc/MyAllEvent.h \
     ../inc/MySqlite3.h \
-    ../inc/MySerialize.h \
+    ../inc/MyIOStream.h \
+    ../inc/MyGameObj.h \
+    ../inc/MyWriteable.h \
     ../../3rd_src/Sqlite3/sqlite3.h \
     ../../3rd_src/Sqlite3/sqlite3ext.h \
     ../../3rd_src/blowfish/blowfish.h \
     ../../3rd_src/md5/md5.h \
-    ../inc/MyObj.h \
+    ../../3rd_src/nuklear/nuklear.h \
     ../example/MyObj_test.h \
-    ../inc/MyWriteable.h \
     ../example/MyApp_test.h \
     ../example/MyEvent_test.h \
     ../example/MyHeap_test.h \
@@ -80,7 +84,8 @@ HEADERS += \
     ../example/MyWriteable_test.h \
     ../example/MyTest.h \
     ../example/MyAllEvent_test.h \
-    ../example/MyTask_test.h
+    ../example/MyTask_test.h \
+    ../example/MyNuklear_test.h
 
 #   ../inc/MyVec.h \
 #   ../inc/MyBase64.h \
@@ -98,7 +103,8 @@ HEADERS += \
 unix {
     DISTFILES +=
     LIBS += -lpthread -ldl -lrt
-    QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
+    LIBS += -lSDL2 -lGL -lm -lGLU -lGLEW
+    #QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
     #DESTDIR =
 }
 
