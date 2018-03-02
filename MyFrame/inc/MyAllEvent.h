@@ -3,11 +3,14 @@
 #include "MyCommon.h"
 #include "MyList.h"
 #include <mutex>
-namespace my_master {
+
 class MyEvent;
 class MyNode;
 class MyList;
-class MyAllEvent : public my_master::MyNode
+
+NS_MYFRAME_BEGIN
+
+class MyAllEvent : public MyNode
 {
 public:
     MyAllEvent();
@@ -29,5 +32,5 @@ private:
     MyNode* m_parent;
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 #endif // MYALLEVENT_H

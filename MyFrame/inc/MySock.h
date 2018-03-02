@@ -3,7 +3,8 @@
 #include "MyCommon.h"
 #include "MyEvent.h"
 #include "MyNet.h"
-namespace my_master {
+
+NS_MYFRAME_BEGIN
 
 // only IPv4
 class MySock : public MyEvent
@@ -32,7 +33,7 @@ private:
     int Socket(int domin, int type, int protocol);
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 // client:
 //      connect();
 //      read or write

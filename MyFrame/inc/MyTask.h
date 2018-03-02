@@ -4,9 +4,9 @@
 #include "MyThread.h"
 #include "MyEvent.h"
 
-namespace my_master {
+NS_MYFRAME_BEGIN
 
-class MyTask : public my_master::MyEvent, public my_master::MyThread
+class MyTask : public myframe::MyEvent, public MyThread
 {
     friend class MyApp;
 public:
@@ -27,7 +27,7 @@ public:
      * Update() - 需要循环的函数
      * @evs: 需要处理的事件队列
      */
-    virtual void Update(my_master::MyList* evs); // virtual method
+    virtual void Update(MyList* evs); // virtual method
     ////////////////////////////////////////////// override MyEvent method
     int GetEventFd(){return m_msgFd[1];}
     EVENT_TYPE GetEventType(){return EVENT_TYPE::EV_TASKFD;}
@@ -65,11 +65,11 @@ private:
     int CreateSockPair();   // communication between self and mainthread
     void ClearResource();
 private:
-    my_master::MyList m_send;              // send queue
-    my_master::MyList m_recv;              // recv queue
-    my_master::MyList m_que;               // work queue, save MyEvent class
+    MyList m_send;              // send queue
+    MyList m_recv;              // recv queue
+    MyList m_que;               // work queue, save MyEvent class
 
-    my_master::MyList m_ev_que;            // 由工作队列中的事件产生的事件队列, 交由Update函数处理的队列
+    MyList m_ev_que;            // 由工作队列中的事件产生的事件队列, 交由Update函数处理的队列
 
     //TASK_STATUS m_status;                // current thread runing status
     int m_msgFd[2];                        // 0 used by myself, 1 used by MyApp
@@ -79,5 +79,5 @@ private:
     bool m_specifledEv;                    // 是否只处理指定自己ID的事件
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 #endif // MYTASK_H

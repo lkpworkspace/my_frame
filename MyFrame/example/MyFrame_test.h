@@ -1,15 +1,18 @@
-#ifndef MYTASK_TEST_H
-#define MYTASK_TEST_H
+#ifndef MYFRAME_TEST_H
+#define MYFRAME_TEST_H
+
 #include "MyFrame.h"
-#include "MyTcp.h"
+
 /**
  * 示例程序简述：
  *      创建一个TCP服务器对象(MyTcpServerTest)
  *      服务器接收到客户端连接后创建客户端连接对象(MyTcpSockTest)
  *      客户端对象收到客户端发送的消息后，
- *      将消息打包成事件(MyEventTest)发送到指定线程处理队列上(MyTaskTest)
+ *      将消息打包成(MyMsgTest)类发送到指定线程处理队列上(MyTaskTest)
  */
-#if 0
+
+
+#if 1
 #define IP "127.0.0.1"
 #else
 #define IP "172.16.212.139"
@@ -18,15 +21,27 @@
 
 
 /**
- * 普通事件对象，用于进行线程间传递事件消息使用
+ * 普通消息对象，用于进行线程间传递事件消息使用
  */
-class MyEventTest : public MyEvent
+class MyMsgTest : public myframe::MyEvent
 {
 public:
-    MyEventTest()
+    /**
+     * 由 MyMsgPool 调用此函数创建该类
+     */
+    static MyEvent* Create()
+    {
+        return (MyEvent*)(new MyMsgTest());
+    }
+
+    MyMsgTest()
     {
         /**
-         * 设置该事件由那个线程处理
+         * 设置消息的名称
+         */
+        SetObjName("MYMSG_test");
+        /**
+         * 设置该消息由那个线程处理
          */
         SetSendIdentify(m_send_task);
     }
@@ -39,7 +54,9 @@ public:
     //////////////////////////////////////// override
     EVENT_TYPE GetEventType(){return EV_NONE;}
     void* CallBackFunc(MyEvent*){
-        MyDebug("[callback]: test count %d: %s\n",m_test_cout++, m_send_str.c_str());
+        MyDebug("[callback]: test count %d: %s",m_test_cout, m_send_str.c_str());
+        MyDebugPrint("[callback]: test count %d: %s\n",m_test_cout, m_send_str.c_str());
+        ++m_test_cout;
         return NULL;
     }
 
@@ -48,8 +65,8 @@ public:
     static int m_test_cout;
     static int m_send_task;
 };
-int MyEventTest::m_send_task = -1;
-int MyEventTest::m_test_cout = -1;
+int MyMsgTest::m_send_task = -1;
+int MyMsgTest::m_test_cout = -1;
 
 
 /**
@@ -74,8 +91,10 @@ public:
      */
     virtual int Frame(const char* buf, int len)
     {
-        MyEventTest* met = new MyEventTest();
+//        MyMsgTest* met = new MyMsgTest();
+        MyMsgTest* met = (MyMsgTest*)MyMsgPool::Instance()->Get("MYMSG_test");
         MyDebug("Get Msg: %s\n",buf);
+        MyDebugPrint("Get Msg: %s, %p\n",buf,met);
         if(len == 0)
         {
             met->m_send_str = "";
@@ -134,8 +153,6 @@ public:
 };
 
 
-
-
 class MyTaskTest : public MyTask
 {
 public:
@@ -144,7 +161,7 @@ public:
         /**
          * 设置线程是帧循环的，而不是基于事件驱动的
          */
-        SetLoop(true);
+        //SetLoop(true);
 
         /**
          * 设置该线程只处理指定自己ID的事件
@@ -175,29 +192,35 @@ public:
      * 所以需要在Update中加一点延时
      */
     virtual void Update(MyList *evs)
-    {// delete MyEvent after used
+    {
         MyEvent* begin = (MyEvent*)evs->Begin();
         MyEvent* end = (MyEvent*)evs->End();
-        MyEvent* me = NULL;
-        MyEventTest* temp = NULL;
+        MyEvent* next = NULL;
+        MyMsgTest* temp = NULL;
+
         for(;begin != end;)
         {
-            me = (MyEvent*)begin->next;
+            next = (MyEvent*)begin->next;
             evs->Del(begin,false);
 
-            // TODO...
-
+            //TODO(lkp): 事件处理
+            temp = (MyMsgTest*)begin;
+            temp->Print();
             // TODO end
 
-            delete begin;
-            begin = me;
+            MyMsgPool::Instance()->Free(temp);
+            begin = next;
         }
+
+
         // TODO...
 #if 1
         static int counter = 0;
-        MyDebug("loop %d\n", counter++);
+        MyDebug("loop %d\n", counter);
+        MyDebugPrint("loop %d\n", counter);
+        ++counter;
 #endif
-        usleep(1000 * 1000 * 60 * 60);
+        //usleep(1000 * 1000 * 60 * 60);
 
         // TODO end
     }
@@ -208,12 +231,15 @@ public:
      */
     static void Test()
     {
-        MyHelp::DaemonInit();
+        //MyHelp::DaemonInit();
         MyApp app(4);
 
-        // provess task
+        // msgpool register
+        MyMsgPool::Instance()->RegMsg("MYMSG_test", MyMsgTest::Create);
+
+        // process task
         MyTaskTest* tt = new MyTaskTest();
-        MyEventTest::m_send_task = tt->GetIdentify();
+        MyMsgTest::m_send_task = tt->GetIdentify();
         MyApp::theApp->AddEvent(tt);
 
         // tcp server

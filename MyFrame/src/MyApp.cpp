@@ -7,7 +7,8 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
-using namespace my_master;
+USING_MYFRAME;
+
 MyApp* MyApp::theApp = nullptr;
 
 MyApp::MyApp(int thread_size)

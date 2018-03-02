@@ -2,6 +2,8 @@
 #include "MyLog.h"
 #include <string.h>
 
+USING_MYFRAME;
+
 std::unordered_set<std::string> MyObj::l_obj_name;
 std::unordered_set<int> MyObj::l_tag;
 int MyObj::l_count_name = 0;
@@ -17,6 +19,7 @@ MyObj::MyObj(std::string key)
     :m_identify(-1),
       m_tag(-1)
 {
+#if 0
     auto name = l_obj_name.find(key);
     if(name == l_obj_name.end())
     {
@@ -31,15 +34,18 @@ MyObj::MyObj(std::string key)
         key = buf;
         l_obj_name.insert(key);
     }
+#endif
     m_obj_name = key;
 }
 
 MyObj::~MyObj()
 {
+#if 0
     auto k = l_obj_name.find(m_obj_name);
-    auto t = l_tag.find(m_tag);
     if(k != l_obj_name.end())
         l_obj_name.erase(m_obj_name);
+#endif
+    auto t = l_tag.find(m_tag);
     if(t != l_tag.end())
         l_tag.erase(m_tag);
 }
@@ -51,6 +57,7 @@ std::string& MyObj::GetObjName()
 
 bool MyObj::SetObjName(std::string name)
 {
+#if 0
     auto k = l_obj_name.find(name);
     if(k == l_obj_name.end())
     {
@@ -62,6 +69,9 @@ bool MyObj::SetObjName(std::string name)
         MyDebugPrint("[Warning]: Object has key [%s]\n",name.c_str());
         return false;
     }
+#else
+    m_obj_name = name;
+#endif
     return true;
 }
 

@@ -7,7 +7,8 @@
 #include "MyThread.h"
 #include "MyTimer.h"
 
-namespace my_master {
+NS_MYFRAME_BEGIN
+
 class MyTask;
 class MyEvent;
 class MyNormalEvent;
@@ -41,8 +42,8 @@ private:
     void HandleEvent(struct epoll_event* epev, int count);
     void HandleTaskEvent(MyEvent*);
 private:
-    my_master::MyList m_idle_tasks;    // save MyTask class
-    my_master::MyList m_ev_recv;       // recv task event, save MyEvent class
+    MyList m_idle_tasks;    // save MyTask class
+    MyList m_ev_recv;       // recv task event, save MyEvent class
     pthread_mutex_t m_app_mutex;
     int m_epollFd;                     // listen Event file des
     int m_threadSize;                  // thread size (const var)
@@ -64,5 +65,5 @@ private:
     int m_task_id[20];
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 #endif // MYAPP_H

@@ -1,6 +1,5 @@
 #include "../inc/MyList.h"
 
-using namespace my_master;
 // init
 void MyList::__Init()
 {

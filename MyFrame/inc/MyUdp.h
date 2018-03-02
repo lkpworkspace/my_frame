@@ -4,13 +4,14 @@
 #include "MySock.h"
 #include "MyNet.h"
 #include <mutex>
-namespace my_master {
+
+NS_MYFRAME_BEGIN
 
 /*  udp package size  : suggest < 567 byte
  */
 
 #define RECV_SIZE 65535
-class MyUdp : public my_master::MySock
+class MyUdp : public myframe::MySock
 {
 public:
     // you need write you local ip and port
@@ -30,7 +31,7 @@ private:
     std::mutex m_mutex;
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 #endif // MYUDP_H
 
 

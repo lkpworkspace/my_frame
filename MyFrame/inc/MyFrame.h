@@ -14,6 +14,7 @@
 #include "MyHelp.h"
 #include "MyObj.h"
 #include "MyEvent.h"
+#include "MyMsgPool.h"
 
 // Algorithm
 //#include "MyBase64.h"
@@ -35,7 +36,7 @@
 #include "MyApp.h"
 
 #if 1
-using namespace my_master;
+USING_MYFRAME;
 #endif
 
 #if 0 // user maybe used class

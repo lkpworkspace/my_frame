@@ -1,5 +1,6 @@
 #include "../inc/MySqlite3.h"
-using namespace my_master;
+
+USING_MYFRAME;
 
 int MySqlite3::sqlite_callback(void *params,int column_size,
                     char **column_value,

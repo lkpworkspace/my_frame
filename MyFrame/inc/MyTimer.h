@@ -34,7 +34,7 @@ private:
     std::mutex m_mutex;       //
     static std::multimap<uint64_t,MyTimer*> l_timers;
     static std::mutex l_mutex;
-    static void CallFunc(my_master::MyEvent*);
+    static void CallFunc(myframe::MyEvent*);
 };
 
 #endif // MYTIMER_H

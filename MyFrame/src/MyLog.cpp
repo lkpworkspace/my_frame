@@ -1,7 +1,7 @@
 #include "../inc/MyLog.h"
 #include <time.h>
 #include <stdio.h>
-using namespace my_master;
+
 MyLog *MyLog::instance = nullptr;
 char MyLog::m_szLogPath[MAX_PATH] = {0};
 

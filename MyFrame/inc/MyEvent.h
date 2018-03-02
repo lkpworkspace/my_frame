@@ -5,9 +5,9 @@
 #include "MyList.h"
 #include "MyObj.h"
 
-namespace my_master {
+NS_MYFRAME_BEGIN
 
-class MyEvent : public my_master::MyNode, public MyObj
+class MyEvent : public MyNode, public MyObj
 {
     friend class MyTask;
 public:
@@ -72,5 +72,5 @@ private:
     int m_send_identify;
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 #endif // MYEVENT_H

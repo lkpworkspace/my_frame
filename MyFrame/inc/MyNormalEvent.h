@@ -2,9 +2,9 @@
 #define MYNORMALEVENT_H
 #include "MyEvent.h"
 
-namespace my_master {
+NS_MYFRAME_BEGIN
 
-class MyNormalEvent : public my_master::MyEvent
+class MyNormalEvent : public myframe::MyEvent
 {
 public:
     MyNormalEvent();
@@ -16,7 +16,7 @@ public:
     virtual void* CallBackFunc(MyEvent *);
 
     int Work();                                        // invoke by child class
-    void SetFunc(void(*func)(my_master::MyEvent*)){m_event_func = func;}
+    void SetFunc(void(*func)(myframe::MyEvent*)){m_event_func = func;}
 private:
     int RecvMsg(char *buf, int len);                  // invoke by myself
     int SendMsg(const char* buf, int len);             // invoke by child class
@@ -24,8 +24,8 @@ private:
     void Close(){close(m_msgFd[0]);close(m_msgFd[1]);}
     int m_msgFd[2];
     uint8_t m_msgBuf[MSG_LEN];
-    void (*m_event_func)(my_master::MyEvent* ev);
+    void (*m_event_func)(myframe::MyEvent* ev);
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 #endif // MYNORMALEVENT_H

@@ -44,5 +44,8 @@
     }while(0)
 #define UNUSE(arg) (arg) = (arg)
 
+#define USING_MYFRAME       using namespace myframe
+#define NS_MYFRAME_BEGIN    namespace myframe {
+#define NS_MYFRAME_END      }
 
 #endif // COMMON_H

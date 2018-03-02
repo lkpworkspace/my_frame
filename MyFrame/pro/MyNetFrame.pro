@@ -3,36 +3,36 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-INCLUDEPATH += ../inc ../example ../../3rd_src/
+INCLUDEPATH += ../inc ../example ../../3rd_src/ ../inc/MyGameEngine
 
 SOURCES += \
     ../src/MyCommon.cpp \
     ../src/MyObj.cpp \
     ../src/MyThread.cpp \
     ../src/MyEvent.cpp \
+    ../src/MyMsgPool.cpp \
     ../src/MyApp.cpp \
     ../src/MyLog.cpp \
     ../src/MyHelp.cpp \
     ../src/MyTask.cpp \
     ../src/MyList.cpp \
-    ../src/MyControls.cpp \
     ../src/MyNet.cpp \
     ../src/MySock.cpp \
     ../src/MyUdp.cpp \
     ../src/MyTcp.cpp \
     ../src/MyNormalEvent.cpp \
     ../src/MyTimer.cpp \
-    ../src/MyAllEvent.cpp \
-    ../src/MyWriteable.cpp \
     ../src/MySqlite3.cpp \
     ../src/MyIOStream.cpp \
-    ../src/MyGameObj.cpp \
+    ../src/MyGameEngine/MyGameObj.cpp \
     ../../3rd_src/Sqlite3/sqlite3.c \
     ../../3rd_src/blowfish/blowfish.cpp \
     ../../3rd_src/md5/md5.cpp \
     ../src/main.cpp
 
-
+#   ../src/MyWriteable.cpp \
+#   ../src/MyControls.cpp \
+#   ../src/MyAllEvent.cpp \
 #   ../src/MyBase64.cpp \
 #   ../src/MyMouseEvent.cpp \
 #   ../src/MyKeyEvent.cpp \
@@ -53,18 +53,16 @@ HEADERS += \
     ../inc/MyTask.h \
     ../inc/MyThread.h \
     ../inc/MyEvent.h \
+    ../inc/MyMsgPool.h \
     ../inc/MyTimer.h \
     ../inc/MySock.h \
     ../inc/MyNet.h \
-    ../inc/MyNormalEvent.h \
-    ../inc/MyControls.h \
     ../inc/MyUdp.h \
     ../inc/MyTcp.h \
-    ../inc/MyAllEvent.h \
+    ../inc/MyNormalEvent.h \
     ../inc/MySqlite3.h \
     ../inc/MyIOStream.h \
-    ../inc/MyGameObj.h \
-    ../inc/MyWriteable.h \
+    ../inc/MyGameEngine/MyGameObj.h \
     ../../3rd_src/Sqlite3/sqlite3.h \
     ../../3rd_src/Sqlite3/sqlite3ext.h \
     ../../3rd_src/blowfish/blowfish.h \
@@ -84,9 +82,13 @@ HEADERS += \
     ../example/MyWriteable_test.h \
     ../example/MyTest.h \
     ../example/MyAllEvent_test.h \
-    ../example/MyTask_test.h \
+    ../example/MyFrame_test.h \
     ../example/MyNuklear_test.h
 
+
+#   ../inc/MyWriteable.h \
+#   ../inc/MyControls.h \
+#   ../inc/MyAllEvent.h \
 #   ../inc/MyVec.h \
 #   ../inc/MyBase64.h \
 #   ../inc/MyHeap.h \
@@ -103,7 +105,7 @@ HEADERS += \
 unix {
     DISTFILES +=
     LIBS += -lpthread -ldl -lrt
-    LIBS += -lSDL2 -lGL -lm -lGLU -lGLEW
+    #LIBS += -lSDL2 -lGL -lm -lGLU -lGLEW
     #QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
     #DESTDIR =
 }

@@ -4,7 +4,9 @@
 #include "../inc/MyEvent.h"
 #include "../inc/MyAllEvent.h"
 #include "../inc/MyLog.h"
-using namespace my_master;
+
+USING_MYFRAME;
+
 MySock::MySock(std::string ip, uint16_t port, int type, int protol)
     :m_sock(-1),
       m_port(port),
@@ -21,7 +23,7 @@ MySock::~MySock(){
 
 void* MySock::CallBackFunc(MyEvent * ev)
 {
-//    MyAllEvent::BoardEvent(ev);
+    UNUSE(ev);
     return NULL;
 }
 

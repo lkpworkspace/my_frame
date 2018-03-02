@@ -3,7 +3,8 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/syscall.h>
-namespace my_master {
+
+#include "MyCommon.h"
 
 class MyThread
 {
@@ -29,6 +30,4 @@ private:
     bool CheckStatus();
     bool m_isRuning;
 };
-
-} // end namespace
 #endif

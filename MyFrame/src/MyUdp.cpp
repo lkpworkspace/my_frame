@@ -2,7 +2,8 @@
 #include "../inc/MyLog.h"
 #include "../inc/MyApp.h"
 
-using namespace my_master;
+USING_MYFRAME;
+
 MyUdp::MyUdp(std::string ip, uint16_t port)
     :MySock(ip,port,SOCK_DGRAM)
 {

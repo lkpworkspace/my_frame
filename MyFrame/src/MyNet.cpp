@@ -1,6 +1,8 @@
 #include "../inc/MyNet.h"
 #include <assert.h>
-using namespace my_master;
+
+USING_MYFRAME;
+
 /*
  *  net error: h_error
  *      HOST_NOT_FOUND

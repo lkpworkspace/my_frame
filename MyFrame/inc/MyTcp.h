@@ -4,9 +4,10 @@
 #include "MySock.h"
 #include <queue>
 
-namespace my_master {
+NS_MYFRAME_BEGIN
+
 class MyTcpSocket;
-class MyTcpServer : public my_master::MySock
+class MyTcpServer : public myframe::MySock
 {
 public:
     MyTcpServer(std::string ip,uint16_t port);
@@ -16,7 +17,7 @@ public:
     int Accpet(struct sockaddr_in *addr);
 };
 
-class MyTcpClient : public my_master::MySock
+class MyTcpClient : public myframe::MySock
 {
 public:
     MyTcpClient(std::string ip,uint16_t port);
@@ -27,7 +28,7 @@ public:
     int Connect();
 };
 
-class MyTcpSocket : public my_master::MyEvent
+class MyTcpSocket : public myframe::MyEvent
 {
 public:
     MyTcpSocket(int fd, sockaddr_in addr);
@@ -113,7 +114,7 @@ private:
     virtual void* CallBackFunc(MyEvent *);
 };
 
-} // end namespace
+NS_MYFRAME_END // end namespace
 #endif // MYTCP_H
 
 

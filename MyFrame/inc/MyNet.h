@@ -16,7 +16,9 @@
 #include <netdb.h>
 #endif
 
-namespace my_master {
+#include "MyCommon.h"
+
+NS_MYFRAME_BEGIN
 // only support IPv4
 class MyAddrInfo;
 class MyNet
@@ -102,6 +104,14 @@ private:
 
     struct sockaddr_in m_remote_addr;      // remote udp sockaddr
 };
+
+NS_MYFRAME_END // end namespace
+
+
+
+
+
+
 /*
  *#include <arpa/inet.h>
  * // 本地序列转换网络字节序列
@@ -371,5 +381,5 @@ if(-1 == ioctl(sock_raw_fd, SIOCSIFINDEX, &req))    //网卡设置混杂模式
 //                    struct addrinfo **res);
 //    void freeaddrinfo(struct addrinfo *res);
 //    struct sockaddr_in:
-} // end namespace
+
 #endif // MYNET_H

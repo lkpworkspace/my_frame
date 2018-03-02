@@ -1,4 +1,4 @@
-#include "MyFrame.h"
+//#include "MyFrame.h"
 //#include "MyObj_test.h"
 //#include "MyTimer_test.h"
 //#include "MyApp_test.h"
@@ -12,7 +12,7 @@
 //#include "MyEvent_test.h"
 //#include "MyNormalEvent_test.h"
 //#include "MyTFTP_test.h"
-#include "MyTask_test.h"
+#include "MyFrame_test.h"
 //#include "MyNuklear_test.h"
 
 int main()

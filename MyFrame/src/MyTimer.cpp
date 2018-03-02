@@ -1,5 +1,6 @@
 #include "../inc/MyApp.h"
-using namespace my_master;
+
+USING_MYFRAME;
 
 std::multimap<uint64_t,MyTimer*> MyTimer::l_timers;
 std::mutex MyTimer::l_mutex;
@@ -21,7 +22,7 @@ void MyTimer::SetCallFunc(common_func_t func, void *arg)
     m_arg = arg;
 }
 
-void MyTimer::CallFunc(my_master::MyEvent* ev)
+void MyTimer::CallFunc(myframe::MyEvent* ev)
 {
     MyTimer* mt = (MyTimer*)ev;
     MyDebugPrint("Timer was called\n");

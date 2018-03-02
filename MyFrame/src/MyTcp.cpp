@@ -2,7 +2,8 @@
 #include "../inc/MyApp.h"
 #include "../inc/MyAllEvent.h"
 #include "../inc/MyUdp.h"
-using namespace my_master;
+
+USING_MYFRAME;
 ////////////////////////////////////////////////////
 /// MyTcpServer
 MyTcpServer::MyTcpServer(std::string ip, uint16_t port)
@@ -99,7 +100,7 @@ unsigned short MyTcpSocket::GetPort()
 
 void* MyTcpSocket::CallBackFunc(MyEvent *ev)
 {
-    MyAllEvent::BoardEvent(ev);
+    UNUSE(ev);
     return NULL;
 }
 

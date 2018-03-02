@@ -1,7 +1,6 @@
 #include "MyThread.h"
-#include "MyCommon.h"
 #include "MyLog.h"
-using namespace my_master;
+
 MyThread::MyThread()
 {
     m_thread = -1;

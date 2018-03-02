@@ -4,7 +4,8 @@
 #include <string.h>
 #include <errno.h>
 #include "MyHelp.h"
-namespace my_master {
+
+
 
 #define LOG_NAME "myframe.log"
 #define MAX_PATH 255
@@ -38,7 +39,7 @@ private:
         __temp += MyHelp::ToStr(__LINE__,10); \
         __temp += ": "; \
         __temp += str; \
-        my_master::MyLog::GetInstance()->AddLog(__temp); \
+        MyLog::GetInstance()->AddLog(__temp); \
     }while(0)
 
 #define __MyDebugPrint(str) do \
@@ -51,7 +52,7 @@ private:
         __temp += MyHelp::ToStr(__LINE__,10); \
         __temp += ": "; \
         __temp += str; \
-        my_master::MyLog::GetInstance()->PrintLog(__temp); \
+        MyLog::GetInstance()->PrintLog(__temp); \
     }while(0)
 
 
@@ -90,5 +91,4 @@ private:
         exit(-1); \
     }while(0)
 
-} // end namespace
 #endif // MyLog_h

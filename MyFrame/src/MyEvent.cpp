@@ -1,5 +1,6 @@
 #include "../inc/MyEvent.h"
-using namespace my_master;
+
+USING_MYFRAME;
 
 MyEvent::MyEvent()
     :MyNode(),

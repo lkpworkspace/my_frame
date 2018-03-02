@@ -3,6 +3,8 @@
 #include "MyCommon.h"
 #include <unordered_set>
 
+NS_MYFRAME_BEGIN
+
 class MyObj
 {
 public:
@@ -50,6 +52,7 @@ private:
     static int l_count_tag;
 };
 
+NS_MYFRAME_END // end namespace
 #endif // MYOBJ_H
 
 

@@ -1,5 +1,6 @@
 #include "../inc/MyAllEvent.h"
-using namespace my_master;
+
+USING_MYFRAME;
 
 MyList MyAllEvent::g_event;
 std::mutex MyAllEvent::g_event_mutex;

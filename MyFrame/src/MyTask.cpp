@@ -3,7 +3,8 @@
 #include "../inc/MyLog.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
-using namespace my_master;
+
+USING_MYFRAME;
 
 MyTask* MyTask::l_tasks[100] = {NULL};
 int MyTask::l_cur__max_identify = 0;
@@ -80,7 +81,7 @@ int MyTask::TaskWork()
 }
 
 
-void MyTask::Update(my_master::MyList* evs)
+void MyTask::Update(MyList* evs)
 {// override by child class
     (void*)evs;
     return;

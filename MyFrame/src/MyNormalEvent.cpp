@@ -4,7 +4,8 @@
 #include <sys/socket.h>
 #include "../inc/MyApp.h"
 #include <string.h>
-using namespace my_master;
+
+USING_MYFRAME;
 
 MyNormalEvent::MyNormalEvent()
 {

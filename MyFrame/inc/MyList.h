@@ -25,7 +25,6 @@
  *         MyList<MyNode_list*> list;
  *         ok ok gogogo
  */
-namespace my_master {
 
 class MyNode
 {
@@ -68,7 +67,6 @@ private:
     int m_count;
 };
 
-} // end namespace
 #endif // MY_LIST_H
 
 

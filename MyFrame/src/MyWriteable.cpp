@@ -1,5 +1,7 @@
 #include "../inc/MyWriteable.h"
-using namespace my_master;
+
+USING_MYFRAME;
+
 MyWriteable::MyWriteable()
 {
     m_evc = 10;
@@ -26,7 +28,7 @@ void MyWriteable::Writeable(struct epoll_event* evs, int count)
     }
 }
 
-void MyWriteable::AddWriteEvent(my_master::MyEvent* ev)
+void MyWriteable::AddWriteEvent(myframe::MyEvent* ev)
 {
     //TODO...
     struct epoll_event event;
@@ -45,13 +47,13 @@ sem_t *MyWriteable::CreateSem()
     return temp;
 }
 
-sem_t* MyWriteable::SemFind(my_master::MyEvent* ev)
+sem_t* MyWriteable::SemFind(myframe::MyEvent* ev)
 {
     return m_members.Get(ev);
 }
 
 // call by user
-void MyWriteable::WaitWriteable(my_master::MyEvent* ev)
+void MyWriteable::WaitWriteable(myframe::MyEvent* ev)
 {
     sem_t* temp = SemFind(ev);
     //if(temp)
