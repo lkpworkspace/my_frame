@@ -247,6 +247,7 @@ public:
         server->SetReuseSock();
         server->Bind();
         server->Listen();
+        server->SetNonblock(true);
         app.AddEvent(server);
 
         app.Exec();

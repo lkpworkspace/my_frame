@@ -16,25 +16,31 @@ easy coding on linux
 		git remote add origin git@github.com:lkpworkspace/my_frame.git
 		git push -u origin master
 
-| Event类         |  block      |    说明                     |   是否让MyAllEvent接收此事件| listen event|
-|-----------------|:------------|:----------------------------|-------------------------:|---------------|
-| MyEvent          |        |    抽象事件类                 |     no                   ||
-| MySock           |        |    抽象套接字类，继承MyEvent   |  no                    ||
-| MyUdp            |  yes   |    Udp事件类，继承MySock类    |    yes                   | epollin |
-| MyTcpServer      |  yes   |    Tcp事件类，继承MySock类    |    yes                  | epollin |
-| MyTcpClient      |  yes   |    Tcp事件类，继承MySock类    |    yes                  | epollin epollout |
-| MyTcpSocket      |  no    |    Tcp事件类，继承MyEvent类   |    yes                  | epollin epollout |
-| MyEasyTcpSocket  |  no    |   TCP socket，继承MyTcpFrame，MyTcpSocket|||
-| MyEasyTcpClient  |  no    |   TCP client，继承MyTcpFrame，MyTcpClient|||
-| MyNormalEvent    |  no    |    通用的事件类               |     yes                 | epollin |
-| MyTimer          |  no    |    继承MyNormalEvent        | no||
+## 基于事件驱动的程序框架
+
+|       类         |  block  |    说明                      |   继承                    | listen event|
+|-----------------|:--------|:----------------------------|:-------------------------|---------------|
+| MyEvent          |        |    抽象事件类                 |                          ||
+| MySock           |        |    抽象套接字类               |  MyEvent                 ||
+| MyUdp            |  yes   |    Udp事件类                 |  MySock                  | epollin |
+| MyTcpServer      |  yes   |    Tcp事件类                 |  MySock                  | epollin |
+| MyTcpClient      |  yes   |    Tcp事件类                 |  MySock                  | epollin |
+| MyTcpSocket      |  no    |    Tcp事件类                 |  MyEvent                 | epollin |
+| MyEasyTcpSocket  |  no    |   TCP socket                | MyTcpFrame，MyTcpSocket  | epollin |
+| MyEasyTcpClient  |  no    |   TCP client                | MyTcpFrame，MyTcpClient  | epollin |
+| MyNormalEvent    |  no    |    通用的事件类               | MyEvent                 | epollin |
+| MyTask           |        |任务类，用于处理套接字消息       | MyEvent， MyThread       | epoolin |
+| MyTimer          |        |    定时器类                  |                          ||
 | MyRawSock        |        |    // TODO...               |                          ||
-| MyFileEvent      |  no    |    // TODO...               |                          ||
-| MyKeyEvent       |  yes   |    监听键盘消息的事件类 //TODO...| yes                    ||
-| MyMouseEvent     |  yes   |    监听鼠标消息的事件类  //TODO...      | yes                      ||
-| MyTFTP           |  no    |    TFTP事件类，继承MyUdp类 //TODO...    |    no   ||
+| MyFileEvent      |        |    // TODO...               |                          ||
+| MyKeyEvent       |        |    监听键盘消息的事件类 //TODO...|                         ||
+| MyMouseEvent     |        |    监听鼠标消息的事件类  //TODO...|                        ||
+| MyTFTP           |        |    TFTP事件类，继承MyUdp类 //TODO...|                     ||
 
 * block可以通过SetNonblock函数设置是否阻塞(默认为阻塞)
+* 该项目使用纯C/C++以及Linux api编写，只使用QtCreator作为开发IDE
+* 目前该框架主要用于网络服务器的快速开发
+
 ## 数据结构类
 	MyList                           双向循环链表
 	MyVec                            动态数组
