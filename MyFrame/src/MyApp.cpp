@@ -46,7 +46,7 @@ int MyApp::InitApp()
         CreateTask();
     }
     // init normal event
-    m_nor_event = new MyNormalEvent;
+    m_nor_event = new MyNormalEvent();
 
     // ingore SIGPIPE signal
     signal(SIGPIPE,SIG_IGN);
@@ -103,6 +103,7 @@ int MyApp::DelEvent(MyEvent* ev)
     int res = epoll_ctl(m_epollFd,EPOLL_CTL_DEL,ev->GetEventFd(),NULL);
     if(res)
     {
+        perror("fd del from epoll\n");
         #if DEBUG_INFO
             MyDebugPrint("del event fail %d\n", res);
         #endif

@@ -15,6 +15,7 @@
 #include "MyObj.h"
 #include "MyEvent.h"
 #include "MyMsgPool.h"
+#include "MyIOStream.h"
 
 // Algorithm
 //#include "MyBase64.h"

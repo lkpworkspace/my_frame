@@ -1,6 +1,5 @@
 #ifndef __MyTest_h__
 #define __MyTest_h__
-#include <thread>
 
 class MyTest
 {

@@ -20,10 +20,12 @@ int MyTcpServer::Listen(int backlog)
     return res;
 }
 
-int MyTcpServer::Accpet(struct sockaddr_in *addr)
+int MyTcpServer::Accpet(MyAddrInfo &addrinfo)
 {
     socklen_t addrlen = sizeof(struct sockaddr_in);
-    int res = accept(m_sock,(sockaddr*)addr,&addrlen);
+    sockaddr_in addr;
+    int res = accept(m_sock,(sockaddr*)&addr,&addrlen);
+    addrinfo.SetAddr(addr);
     return res; // file descriptor
 }
 ////////////////////////////////////////////////////
@@ -229,19 +231,28 @@ int MyTcpFrame::GetBuf1()
     while(1)
     {
         //int read_byte = Common::BytesAvailable(GetFd());
+        // 读socket
         res = ReadBuf(buf,sizeof(buf));
         //MyDebugPrint("get read bytes %d, res : %d\n",read_byte,res);
+
+        // 客户端socket断开连接
         if(res == 0)
         {
             return Frame(NULL,0);
         }
+
+        // 数据读完返回
         if(res < 0)
             break;
+
+        // 将读到的数据存入缓存
         for(int i = 0; i < res; ++i)
             m_datas.push(buf[i]);
 
+        // 解析数据
         while(1)
         {
+            // 如果是一条数据帧的开始，并且缓存中有数据帧长度的字节
             if(m_iscomplete && m_datas.size() >= 2)
             {
                 buf_len[0] = m_datas.front();
@@ -249,6 +260,8 @@ int MyTcpFrame::GetBuf1()
                 buf_len[1] = m_datas.front();
                 m_datas.pop();
                 memcpy(&m_len,buf_len,sizeof(m_len));
+
+
                 if(m_datas.size() >= m_len)
                 {
 //                    if(m_len == 0)

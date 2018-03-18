@@ -1,3 +1,5 @@
+#ifndef MyIOStream_H
+#define MyIOStream_H
 
 #include <cstdint>
 #include <cstdlib>
@@ -82,20 +84,34 @@ private:
     uint32_t	mBitCapacity;
 };
 
-class MyInputStream
+/**
+ * @brief The MyInputStream class
+ * 继承 MyEvent 可以使得该对象可以进行线程间传递消息
+ */
+class MyInputStream : public myframe::MyEvent
 {
 public:
+    MyInputStream() :
+        mBitCapacity( 0 ),
+        mBitHead( 0 ),
+        mBuffer( nullptr ),
+        mIsBufferOwner( true )
+    {}
 
-    MyInputStream( char* inBuffer, uint32_t inBitCount ) :
-    mBuffer( inBuffer ),
-    mBitCapacity( inBitCount ),
-    mBitHead( 0 ),
-    mIsBufferOwner( false ) {}
+    MyInputStream( const char* inBuffer, uint32_t inBitCount ) :
+        mBitCapacity( inBitCount ),
+        mBitHead( 0 ),
+        mIsBufferOwner( true )
+    {
+        int byteCount = mBitCapacity / 8;
+        mBuffer = static_cast< char* >( malloc( byteCount ) );
+        memcpy( mBuffer, inBuffer, byteCount );
+    }
 
     MyInputStream( const MyInputStream& inOther ) :
-    mBitCapacity( inOther.mBitCapacity ),
-    mBitHead( inOther.mBitHead ),
-    mIsBufferOwner( true )
+        mBitCapacity( inOther.mBitCapacity ),
+        mBitHead( inOther.mBitHead ),
+        mIsBufferOwner( true )
     {
         //allocate buffer of right size
         int byteCount = mBitCapacity / 8;
@@ -106,14 +122,28 @@ public:
 
     ~MyInputStream()	{ if( mIsBufferOwner ) { free( mBuffer ); }; }
 
+    /* 重写MyEvent的虚函数 */
+    EVENT_TYPE GetEventType(){ return EV_MSG; }
+    /* MyEvent 对象的回调函数 */
+    void* CallBackFunc(MyEvent*){ return nullptr; }
+    /* do nothing */
+    void Reset(){ return; }
+    /* 获得buf指针 */
     const 	char*	GetBufferPtr()		const	{ return mBuffer; }
+    /* 获得buf长度 */
+    uint32_t		GetBitLength()		const	{ return mBitCapacity; }
+    uint32_t		GetByteLength()		const	{ return ( mBitCapacity + 7 ) >> 3; }
+    /* 获得剩余的空间 */
     uint32_t	GetRemainingBitCount() 	const { return mBitCapacity - mBitHead; }
+    /* 重置空间大小，下标归0(真正大小不会改变) */
+    void		ResetToCapacity( uint32_t inByteCapacity )				{ mBitCapacity = inByteCapacity << 3; mBitHead = 0; }
+    /* 设置要读的buf */
+    void SetBuffer(const char *inBuffer, uint32_t inBitCount);
 
+    /* read */
     void		ReadBits( uint8_t& outData, uint32_t inBitCount );
     void		ReadBits( void* outData, uint32_t inBitCount );
-
     void		ReadBytes( void* outData, uint32_t inByteCount )		{ ReadBits( outData, inByteCount << 3 ); }
-
     template< typename T >
     void Read( T& inData, uint32_t inBitCount = sizeof( T ) * 8 )
     {
@@ -135,9 +165,6 @@ public:
 
     void		Read( MyQuaternion& outQuat );
 
-    void		ResetToCapacity( uint32_t inByteCapacity )				{ mBitCapacity = inByteCapacity << 3; mBitHead = 0; }
-
-
     void Read( std::string& inString )
     {
         uint32_t elementCount;
@@ -158,3 +185,5 @@ private:
     bool		mIsBufferOwner;
 
 };
+
+#endif

@@ -86,22 +86,18 @@ public:
     /// get method
     std::string GetIp();
     unsigned short GetPort();
-    sockaddr_in GetAddr();
+    sockaddr_in& GetAddr();
     //////////////////////////////////////////////////
     /// set method
     void SetIP(const std::string ip);
     void SetPort(const unsigned short port);
     void SetIpAndPort(const std::string ip, const unsigned short port);
     void SetBoardAddr(const unsigned short port);
+    void SetAddr(const struct sockaddr_in& addr);
 
     MyAddrInfo& operator=(MyAddrInfo& other);
     bool operator==(const MyAddrInfo& other) const;
-    int GetData(char** buf);           // no use
-    void SetData(char* buf, int len);  // no use
 private:
-    char* m_buf;
-    int m_len;
-
     struct sockaddr_in m_remote_addr;      // remote udp sockaddr
 };
 

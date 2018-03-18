@@ -1,4 +1,4 @@
-#include "MyIOStream.h"
+#include "MyGameEngineShared.h"
 
 void MyOutputStream::WriteBits( uint8_t inData,
                                       uint32_t inBitCount )
@@ -105,6 +105,39 @@ void test1()
 
     mbs.WriteBits( 11, 5 );
     mbs.WriteBits( 52, 6 );
+}
+
+void MyInputStream::SetBuffer(const char* inBuffer, uint32_t inBitCount)
+{
+    if( inBuffer == nullptr ) return;
+
+    if( mBuffer == nullptr )
+    {
+        //just need to memset on first allocation
+        mBuffer = static_cast<char*>( std::malloc( inBitCount >> 3 ) );
+        memset( mBuffer, 0, inBitCount >> 3 );
+        memcpy( mBuffer, inBuffer, inBitCount >> 3 );
+    }
+    else
+    {
+        if(inBitCount > mBitCapacity)
+        {
+            //need to memset, then copy the buffer
+            char* tempBuffer = static_cast<char*>( std::malloc( inBitCount >> 3 ) );
+            memset( tempBuffer, 0, inBitCount >> 3 );
+            memcpy( tempBuffer, inBuffer, inBitCount >> 3 );
+            std::free( mBuffer );
+            mBuffer = tempBuffer;
+        }else
+        {
+            memset( mBuffer, 0, mBitCapacity >> 3 );
+            memcpy( mBuffer, inBuffer, inBitCount >> 3 );
+        }
+    }
+
+    //handle realloc failure
+    //...
+    mBitCapacity = inBitCount;
 }
 
 void MyInputStream::ReadBits( uint8_t& outData, uint32_t inBitCount )

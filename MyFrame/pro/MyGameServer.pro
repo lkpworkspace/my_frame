@@ -3,6 +3,8 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
+DEFINES += mygameengine
+
 INCLUDEPATH += ../inc ../example ../../3rd_src/
 
 SOURCES += \
@@ -22,8 +24,7 @@ SOURCES += \
     ../src/MyTcp.cpp \
     ../src/MyNormalEvent.cpp \
     ../src/MyTimer.cpp \
-    ../src/MyIOStream.cpp \
-    ../src/main.cpp
+    ../src/MyIOStream.cpp
 
 HEADERS += \
     ../inc/MyCommon.h \
@@ -44,19 +45,7 @@ HEADERS += \
     ../inc/MyUdp.h \
     ../inc/MyTcp.h \
     ../inc/MyNormalEvent.h \
-    ../inc/MyIOStream.h \
-    ../example/MyObj_test.h \
-    ../example/MyApp_test.h \
-    ../example/MyHeap_test.h \
-    ../example/MyNormalEvent_test.h \
-    ../example/MyTFTP_test.h \
-    ../example/MyTimer_test.h \
-    ../example/MyUdp_test.h \
-    ../example/MyWriteable_test.h \
-    ../example/MyTest.h \
-    ../example/MyAllEvent_test.h \
-    ../example/MyFrame_test.h \
-    ../example/MyIOStream_test.h
+    ../inc/MyIOStream.h
 
 unix {
 
@@ -65,6 +54,45 @@ unix {
 
     #QMAKE_CXXFLAGS += -fno-stack-protector -Wno-reorder
     #DESTDIR =
+}
+
+contains(DEFINES,mygameengine){
+    message('[DEFINES]: use_mygameengine')
+    INCLUDEPATH += ../inc/MyGameEngine
+    # engine <-- server
+    HEADERS += \
+        ../inc/MyGameEngine/MyGameMsg.h \
+        ../inc/MyGameEngine/MyGameObj.h \
+        ../inc/MyGameEngine/MyWorld.h \
+        ../inc/MyGameEngine/MyEngine.h \
+        ../inc/MyGameEngine/MyInputState.h \
+        ../inc/MyGameEngine/MyMove.h \
+        ../inc/MyGameEngine/MyMoveList.h \
+        ../inc/MyGameEngine/MyTiming.h \
+        ../inc/MyGameEngine/MyGameEngineShared.h \
+        ../inc/MyGameEngine/MyNetworkManager.h \
+        ../inc/MyGameEngine/Server/MyClientProxy.h \
+        ../inc/MyGameEngine/Server/MyNetworkManagerServer.h \
+        ../inc/MyGameEngine/Server/MyServer.h \
+        ../inc/MyGameEngine/Server/MyServerShared.h
+
+    SOURCES += \
+        ../src/MyGameEngine/MyGameMsg.cpp \
+        ../src/MyGameEngine/MyGameObj.cpp \
+        ../src/MyGameEngine/MyWorld.cpp \
+        ../src/MyGameEngine/MyEngine.cpp \
+        ../src/MyGameEngine/MyInputState.cpp \
+        ../src/MyGameEngine/MyMove.cpp \
+        ../src/MyGameEngine/MyMoveList.cpp \
+        ../src/MyGameEngine/MyTiming.cpp \
+        ../src/MyGameEngine/MyNetworkManager.cpp \
+        ../src/MyGameEngine/Server/MyClientProxy.cpp \
+        ../src/MyGameEngine/Server/MyNetworkManagerServer.cpp \
+        ../src/MyGameEngine/Server/MyServer.cpp \
+        ../src/MyGameEngine/Server/main.cpp
+
+}else{
+    message('[DEFINES]: no_mygameengine)')
 }
 
 

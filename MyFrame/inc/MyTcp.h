@@ -14,7 +14,7 @@ public:
     virtual ~MyTcpServer();
 
     int Listen(int backlog = 10);
-    int Accpet(struct sockaddr_in *addr);
+    int Accpet(MyAddrInfo& addrinfo);
 };
 
 class MyTcpClient : public myframe::MySock

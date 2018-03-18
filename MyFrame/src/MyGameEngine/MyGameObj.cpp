@@ -1,4 +1,4 @@
-#include "MyGameObj.h"
+#include "MyGameEngineShared.h"
 
 MyGameObj::MyGameObj() :
     mIndexInWorld( -1 ),

@@ -1,6 +1,5 @@
-#include "MyFrame.h"
-#include "MyIOStream.h"
-#include<memory>
+#ifndef MyGameObj_H
+#define MyGameObj_H
 
 #define CLASS_IDENTIFICATION( inCode, inClass ) \
 enum { kClassId = inCode }; \
@@ -46,13 +45,14 @@ public:
 
             MyVec3		GetForwardVector()			const;
 
-
+            /* get/set clolor */
             void		SetColor( const MyVec3& inColor )					{ mColor = inColor; }
     const MyVec3&		GetColor()					const				{ return mColor; }
-
+            /* 是否死亡 */
             bool		DoesWantToDie()				const				{ return mDoesWantToDie; }
             void		SetDoesWantToDie( bool inWants )				{ mDoesWantToDie = inWants; }
 
+            /* get/set 网络标识 */
             int			GetNetworkId()				const				{ return mNetworkId; }
             void		SetNetworkId( int inNetworkId );
 
@@ -60,21 +60,24 @@ public:
     virtual void		Read( MyInputStream& inInputStream )									{ ( void ) inInputStream; }
 
 private:
-
+    /* 坐标 */
     MyVec3 mLocation;
+    /* 颜色 */
     MyVec3 mColor;
-
+    /* 碰撞半径 */
     float  mCollisionRadius;
-
-
+    /* 旋转 */
     float  mRotation;
+    /* 缩放比例 */
     float  mScale;
     int    mIndexInWorld;
 
     bool   mDoesWantToDie;
-
+    /* 网络标识 */
     int    mNetworkId;
 
 };
 
 typedef std::shared_ptr< MyGameObj >	MyGameObjPtr;
+
+#endif

@@ -2,8 +2,9 @@
 #define MYEVENTPOOL_H
 #include <unordered_map>
 #include <list>
-#include "MyEvent.h"
+#include <mutex>
 
+#include "MyEvent.h"
 
 
 NS_MYFRAME_BEGIN
@@ -13,27 +14,25 @@ NS_MYFRAME_BEGIN
     注意事项:  消息类必须继承 MyEvent
               消息名以 MYMSG_ 开头
     子类需要实现的方法:
-        static MyEvent* Create();
+        static MyEvent* StaticCreate();
 
 */
-
-typedef MyEvent* (*MyMsgCreate)();
-typedef std::list<MyEvent*> MyMsgList_t;
 class MyMsgPool
 {
+    typedef MyEvent* (*MyMsgCreateFunc)();
+    typedef std::list<MyEvent*> MyMsgList_t;
 public:
-    static MyMsgPool* Instance();
-    bool RegMsg(std::string name, MyMsgCreate regfunc);
+    bool RegMsg(std::string name, MyMsgCreateFunc regfunc);
     bool UnregMsg(std::string name);
     MyEvent* Get(std::string name);
     void Free(MyEvent* msg);
-protected:
+public:
     MyMsgPool(){}
     ~MyMsgPool(){}
 private:
-    std::unordered_map<std::string, MyMsgCreate> m_msgs_create;
+    std::unordered_map<std::string, MyMsgCreateFunc> m_msgs_create;
     std::unordered_map<std::string, MyMsgList_t> m_free_msgs;
-    static MyMsgPool* l_instance;
+    std::mutex m_mutex;
 };
 
 NS_MYFRAME_END // namespace

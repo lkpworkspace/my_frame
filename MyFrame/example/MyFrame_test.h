@@ -19,6 +19,7 @@
 #endif
 #define PORT 4399
 
+MyMsgPool g_msgpool;
 
 /**
  * 普通消息对象，用于进行线程间传递事件消息使用
@@ -92,7 +93,7 @@ public:
     virtual int Frame(const char* buf, int len)
     {
 //        MyMsgTest* met = new MyMsgTest();
-        MyMsgTest* met = (MyMsgTest*)MyMsgPool::Instance()->Get("MYMSG_test");
+        MyMsgTest* met = (MyMsgTest*)g_msgpool.Get("MYMSG_test");
         MyDebug("Get Msg: %s\n",buf);
         MyDebugPrint("Get Msg: %s, %p\n",buf,met);
         if(len == 0)
@@ -129,21 +130,17 @@ public:
     virtual void* CallBackFunc(MyEvent *ev)
     {
         MyTcpServerTest* serv = (MyTcpServerTest*)ev;
-        sockaddr_in addr;
+        MyAddrInfo info;
         while(1)
         {
-            int fd = serv->Accpet(&addr);
+            int fd = serv->Accpet(info);
             if(fd < 0)
                 break;
-            MyTcpSockTest *recv = new MyTcpSockTest(fd,addr);
+            MyTcpSockTest *recv = new MyTcpSockTest(fd,info.GetAddr());
             MyDebugPrint("get client connect fd : %d, port %u, ip %s\n",
                    fd,
-                   MyNet::GetAddrPort(&addr),
-                   MyNet::GetAddrIp(&addr).c_str());
-            MyDebug("get client connect fd : %d, port %u, ip %s\n",
-                    fd,
-                    MyNet::GetAddrPort(&addr),
-                    MyNet::GetAddrIp(&addr).c_str());
+                   info.GetPort(),
+                   info.GetIp().c_str());
 
             MyApp::theApp->AddEvent(recv);
         }
@@ -208,7 +205,7 @@ public:
             temp->Print();
             // TODO end
 
-            MyMsgPool::Instance()->Free(temp);
+            g_msgpool.Free(temp);
             begin = next;
         }
 
@@ -235,7 +232,7 @@ public:
         MyApp app(4);
 
         // msgpool register
-        MyMsgPool::Instance()->RegMsg("MYMSG_test", MyMsgTest::Create);
+        g_msgpool.RegMsg("MYMSG_test", MyMsgTest::Create);
 
         // process task
         MyTaskTest* tt = new MyTaskTest();

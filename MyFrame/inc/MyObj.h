@@ -34,13 +34,18 @@ public:
     int GetObjTag(){return m_tag;}
     int SetObjUniqueTag();
 
+    /**
+     * 用于子类之间获得唯一标识，唯一标识由子类维护，
+     * 此处只给出具体子类标识的取值范围, 见 enum OBJ_IDENTIFY
+     */
+    int GetIdentify(){ return m_identify; }
+
 protected:
     /**
      * 用于子类之间设置唯一标识，唯一标识由子类维护，
      * 此处只给出具体子类标识的取值范围, 见 enum OBJ_IDENTIFY
      */
     void SetIdentify(int identify){ m_identify = identify; }
-    int GetIdentify(){ return m_identify; }
 
 private:
     std::string m_obj_name;

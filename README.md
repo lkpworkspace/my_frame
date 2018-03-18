@@ -31,6 +31,7 @@ easy coding on linux
 | MyNormalEvent    |  no    |    通用的事件类               | MyEvent                 | epollin |
 | MyTask           |        |任务类，用于处理套接字消息       | MyEvent， MyThread       | epoolin |
 | MyTimer          |        |    定时器类                  |                          ||
+| MyMsgPool        |        |消息池，用于管理线程间传递消息对象的创建和销毁 |                          ||
 | MyRawSock        |        |    // TODO...               |                          ||
 | MyFileEvent      |        |    // TODO...               |                          ||
 | MyKeyEvent       |        |    监听键盘消息的事件类 //TODO...|                         ||

@@ -177,35 +177,17 @@ MyAddrInfo::MyAddrInfo(const std::string ip, const unsigned short port)
 }
 
 MyAddrInfo::~MyAddrInfo()
-{
-    if(m_buf != nullptr)
-        delete []m_buf;
-    m_len = 0;
-}
+{}
 
 void MyAddrInfo::Init()
 {
-    m_buf = nullptr;
-    m_len = 0;
     memset(&m_remote_addr,0,sizeof(struct sockaddr_in));
     m_remote_addr.sin_family = AF_INET;
 }
 
 MyAddrInfo& MyAddrInfo::operator=(MyAddrInfo& other)
 {
-    if(m_buf != nullptr)
-    {
-        delete[] m_buf;
-        m_buf = nullptr;
-    }
-    if(other.m_buf != nullptr)
-    {
-        m_buf = new char[other.m_len];
-        memcpy(m_buf,other.m_buf,m_len);
-    }
-
     memcpy(&m_remote_addr,&other.m_remote_addr,sizeof(struct sockaddr_in));
-    m_len = other.m_len;
     return *this;
 }
 
@@ -216,32 +198,19 @@ bool MyAddrInfo::operator==(const MyAddrInfo& other) const
     return false;
 }
 
-int MyAddrInfo::GetData(char** buf)
-{
-    *buf = m_buf;
-    return m_len;
-}
-
-void MyAddrInfo::SetData(char* buf, int len)
-{
-    if(m_buf != nullptr)
-        delete[] m_buf;
-    m_buf = new char[len];
-    memcpy(m_buf,buf,len);
-    m_len = len;
-}
-
 std::string MyAddrInfo::GetIp()
 {
-    return MyNet::GetAddrIp(&m_remote_addr);
+    char ip_buf[64] = {0};
+    inet_ntop(AF_INET,&(m_remote_addr.sin_addr),ip_buf,sizeof(ip_buf));
+    return std::string(ip_buf);
 }
 
 unsigned short MyAddrInfo::GetPort()
 {
-    return MyNet::GetAddrPort(&m_remote_addr);
+    return ntohs(m_remote_addr.sin_port);
 }
 
-sockaddr_in MyAddrInfo::GetAddr()
+sockaddr_in &MyAddrInfo::GetAddr()
 {
     return m_remote_addr;
 }
@@ -270,6 +239,11 @@ void MyAddrInfo::SetBoardAddr(const unsigned short port)
     m_remote_addr.sin_family=AF_INET;
     m_remote_addr.sin_addr.s_addr=htonl(INADDR_BROADCAST);
     m_remote_addr.sin_port=htons(port);
+}
+
+void MyAddrInfo::SetAddr(const struct sockaddr_in& addr)
+{
+    memcpy(&m_remote_addr,&addr,sizeof(struct sockaddr_in));
 }
 
 

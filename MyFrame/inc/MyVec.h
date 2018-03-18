@@ -17,8 +17,9 @@
     {
         cout << vec.Get(i) << endl;
     }
+
+    // TODO: 抽空把该数组的数据结构做成 ring buffer
 */
-namespace my_master {
 
 template<typename T>
 class MyVec
@@ -29,16 +30,40 @@ public:
     { Create(); }
     ~MyVec(){ Destory(); }
 
-    void Add(T data);
+    /**
+     * 添加
+     */
+    void Add(T &data);
+
+    /**
+     * 删除
+     */
     void Remove(int index);
+
+    /**
+     * 快速删除(将最后一个移到要删除的位置)
+     */
+    void FastRemove(int index);
+
+    /**
+     * 返回当前数组中存储的元素数量
+     */
     int Count(){return m_count;}
-    T Get(int index);
+
+    /**
+     * 返回该下标的数据
+     */
+    T &Get(int index);
+
+    /**
+     * 返回存储缓存指针
+     */
     T* GetBuf(){ return m_vs; }
 private:
     void Create();
     void Destory();
 private:
-    T* m_vs;
+    T* m_vs;        /* malloc buffer */
     int m_size;     /* total size */
     int m_count;    /* count now */
     int m_step;     /* when size not enough, make more */
@@ -53,12 +78,13 @@ void MyVec<T>::Create()
 template<typename T>
 void MyVec<T>::Destory()
 {
-    delete m_vs;
+    if(m_vs == NULL)
+        delete m_vs;
     m_vs = NULL;
 }
 
 template<typename T>
-void MyVec<T>::Add(T data)
+void MyVec<T>::Add(T& data)
 {
     if(m_size == m_count)
     {
@@ -88,13 +114,20 @@ void MyVec<T>::Remove(int index)
 }
 
 template<typename T>
-T MyVec<T>::Get(int index)
+void MyVec<T>::FastRemove(int index)
+{
+    if(index >= m_count || index < 0) return;
+    m_vs[index] = m_vs[m_count -1];
+    m_count--;
+}
+
+template<typename T>
+T& MyVec<T>::Get(int index)
 {
     if(index >= m_count || index < 0) return NULL;
     return m_vs[index];
 }
 
-} // end namespace
 
 #endif // MYVEC_HPP
 

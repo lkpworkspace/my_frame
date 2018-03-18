@@ -15,6 +15,7 @@ public:
         EV_TASKFD,
         EV_FILEFD,
         EV_SOCKFD,
+        EV_MSG,
         EV_NONE
     };
 
