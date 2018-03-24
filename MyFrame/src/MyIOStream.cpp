@@ -1,4 +1,4 @@
-#include "MyGameEngineShared.h"
+#include "MyIOStream.h"
 
 void MyOutputStream::WriteBits( uint8_t inData,
                                       uint32_t inBitCount )

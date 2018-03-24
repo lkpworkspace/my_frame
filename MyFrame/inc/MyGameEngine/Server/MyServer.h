@@ -130,6 +130,8 @@ public:
     void SpawnPlaneForPlayer(int inPlayerId);
 
     int mGameEngineTaskId;
+
+    MyMsgPool mMsgPool;
 private:
     MyGameServer();
 

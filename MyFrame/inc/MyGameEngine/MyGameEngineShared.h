@@ -39,5 +39,6 @@ class MyGameObj;
 
 #include "MyNetworkManager.h"
 
+#include "MyPlane.h"
 
 #endif

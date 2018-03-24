@@ -36,7 +36,7 @@ void	MyNetworkManagerServer::ProcessPacket( MyInputStream* inGameMsg)
         MyDebugPrint( "Unknown packet type received from %s", client->GetIp().c_str());
         break;
     }
-
+    //MyGameServer::sInstance->mMsgPool.Free(msg);
 #if 0 // test
     const char* buf = msg->GetBufferPtr();
     const int len = msg->GetByteLength();

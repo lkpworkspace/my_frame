@@ -13,11 +13,14 @@
 #include "MyFrame_test.h"
 //#include "MyNuklear_test.h"
 //#include "MyIOStream_test.h"
+#include <iostream>
+#include "MyVec.h"
 
 int main()
 {
 //    MyNuklearTest::Test();
-    MyTaskTest::Test();
+//    MyTaskTest::Test();
+    MyVec<int>::Test();
     return 0;
 }
 

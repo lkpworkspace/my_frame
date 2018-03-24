@@ -71,6 +71,8 @@ contains(DEFINES,mygameengine){
         ../inc/MyGameEngine/MyTiming.h \
         ../inc/MyGameEngine/MyGameEngineShared.h \
         ../inc/MyGameEngine/MyNetworkManager.h \
+        ../inc/MyGameEngine/MyReplicationCommand.h \
+        ../inc/MyGameEngine/MyPlane.h \
         ../inc/MyGameEngine/Server/MyClientProxy.h \
         ../inc/MyGameEngine/Server/MyNetworkManagerServer.h \
         ../inc/MyGameEngine/Server/MyServer.h \
@@ -86,6 +88,7 @@ contains(DEFINES,mygameengine){
         ../src/MyGameEngine/MyMoveList.cpp \
         ../src/MyGameEngine/MyTiming.cpp \
         ../src/MyGameEngine/MyNetworkManager.cpp \
+        ../src/MyGameEngine/MyPlane.cpp \
         ../src/MyGameEngine/Server/MyClientProxy.cpp \
         ../src/MyGameEngine/Server/MyNetworkManagerServer.cpp \
         ../src/MyGameEngine/Server/MyServer.cpp \

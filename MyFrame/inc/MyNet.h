@@ -3,7 +3,14 @@
 #include <string>
 #include <vector>
 #ifdef WIN32
-#include <winsock2.h>
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+
+#include "Windows.h"
+#include "WinSock2.h"
+#include "Ws2tcpip.h"
+typedef int socklen_t;
+//typedef char* receiveBufer_t;
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <sys/types.h>
@@ -14,11 +21,13 @@
 #include <sys/un.h>
 #include <netinet/tcp.h>
 #include <netdb.h>
+
+typedef int SOCKET;
 #endif
 
 #include "MyCommon.h"
 
-NS_MYFRAME_BEGIN
+
 // only support IPv4
 class MyAddrInfo;
 class MyNet
@@ -100,8 +109,6 @@ public:
 private:
     struct sockaddr_in m_remote_addr;      // remote udp sockaddr
 };
-
-NS_MYFRAME_END // end namespace
 
 
 

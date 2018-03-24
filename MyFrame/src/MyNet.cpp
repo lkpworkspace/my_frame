@@ -1,8 +1,6 @@
 #include "../inc/MyNet.h"
 #include <assert.h>
 
-USING_MYFRAME;
-
 /*
  *  net error: h_error
  *      HOST_NOT_FOUND
@@ -57,7 +55,12 @@ MyAddrInfo MyNet::GetRemoteSockInfo(const int fd)
 int MyNet::SetReuseSock(int fd)
 {
     int flag = 1,len = sizeof(int);
+    char flag_ch;
+#ifdef linux
     if(setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &flag, len) == -1)
+#else
+    if(setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&flag_ch, len) == -1)
+#endif
     {
         perror("setsockopt");
         return -1;

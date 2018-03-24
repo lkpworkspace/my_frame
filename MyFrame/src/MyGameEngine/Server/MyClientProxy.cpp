@@ -9,7 +9,8 @@
  */
 int MyClientProxy::Frame(const char* buf, int len)
 {
-    MyGameMsg* msg = new MyGameMsg();
+    //MyGameMsg* msg = new MyGameMsg();
+    MyGameMsg* msg = (MyGameMsg*)MyGameServer::sInstance->mMsgPool.Get("MSG_GameMsg");
 
     if(len == 0)
     {

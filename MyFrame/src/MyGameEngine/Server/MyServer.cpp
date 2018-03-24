@@ -76,6 +76,8 @@ MyGameServer::MyGameServer()
     //TODO(lkp): server init ...
     MyNetworkManagerServer::StaticInit();
 
+    mMsgPool.RegMsg("MSG_GameMsg",MyGameMsg::StaticCreate);
+
 }
 
 bool MyGameServer::StaticInit()
