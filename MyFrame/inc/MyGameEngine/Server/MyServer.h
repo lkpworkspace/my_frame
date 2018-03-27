@@ -6,57 +6,6 @@
  */
 
 
-
-#if 0
-/**
- * 普通消息对象，用于进行线程间传递事件消息使用
- */
-class MyMsgTest : public myframe::MyEvent
-{
-public:
-    /**
-     * 由 MyMsgPool 调用此函数创建该类
-     */
-    static MyEvent* Create()
-    {
-        return (MyEvent*)(new MyMsgTest());
-    }
-
-    MyMsgTest()
-    {
-        /**
-         * 设置消息的名称
-         */
-        SetObjName("MYMSG_test");
-        /**
-         * 设置该消息由那个线程处理
-         */
-        SetSendIdentify(m_send_task);
-    }
-
-    void Print()
-    {
-        printf("[print   ]: test count %d: %s\n",m_test_cout, m_send_str.c_str());
-    }
-
-    //////////////////////////////////////// override
-    EVENT_TYPE GetEventType(){return EV_NONE;}
-    void* CallBackFunc(MyEvent*){
-        MyDebug("[callback]: test count %d: %s",m_test_cout, m_send_str.c_str());
-        MyDebugPrint("[callback]: test count %d: %s\n",m_test_cout, m_send_str.c_str());
-        ++m_test_cout;
-        return NULL;
-    }
-
-
-    std::string m_send_str;
-    static int m_test_cout;
-    static int m_send_task;
-};
-int MyMsgTest::m_send_task = -1;
-int MyMsgTest::m_test_cout = -1;
-#endif
-
 /**
  * 创建一个TCP的游戏服务器对象，
  * 任务是接受客户端请求的连接，

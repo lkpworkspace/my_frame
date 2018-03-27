@@ -1,5 +1,4 @@
 #include "MySimpleClient/MyEasyTcpClient.h"
-#include "MyLog.h"
 
 #ifdef linux
 #include <unistd.h>
@@ -11,7 +10,8 @@
 
 MyDataParser::MyDataParser()
     :mFrameBuffer(nullptr),
-      mWriteBuffer(nullptr)
+      mWriteBuffer(nullptr),
+      mRecvCache(nullptr)
 {
     CreateFrameBuffer();
 }
@@ -60,8 +60,7 @@ int MyDataParser::GetFrame(char** outBuf)
 
 int MyDataParser::WriteFrame(const char *inBuf, int inLen, char **outBuf)
 {
-    unsigned short return_len = inLen + 2;
-    memcpy(mWriteBuffer,&return_len,2);
+    memcpy(mWriteBuffer,&inLen,2);
     memcpy(&mWriteBuffer[2],inBuf,inLen);
     *outBuf = mWriteBuffer;
     return (inLen + 2);
@@ -74,6 +73,8 @@ void MyDataParser::CreateFrameBuffer()
         mFrameBuffer = (char*)malloc(FRAME_BUFFER_SIZE);
     if(mWriteBuffer == nullptr)
         mWriteBuffer = (char*)malloc(FRAME_BUFFER_SIZE);
+    if(mRecvCache == nullptr)
+        mRecvCache = (char*)malloc(FRAME_BUFFER_SIZE);
 }
 
 void MyDataParser::DestoryFrameBuffer()
@@ -81,7 +82,9 @@ void MyDataParser::DestoryFrameBuffer()
     if(mFrameBuffer != nullptr)
         free(mFrameBuffer);
     if(mWriteBuffer != nullptr)
-        mWriteBuffer = (char*)malloc(FRAME_BUFFER_SIZE);
+        free(mWriteBuffer);
+    if(mWriteBuffer != nullptr)
+        free(mRecvCache);
 }
 
 void MyDataParser::Test()
@@ -170,6 +173,24 @@ int32_t MyEasyTcpClient::Recv(void* inData, size_t inLen)
     return bytesReceivedCount;
 }
 
+int32_t MyEasyTcpClient::EasySend(const char* inData, size_t inLen)
+{
+    char* temp_buf = nullptr;
+    int temp_len = mParser.WriteFrame(inData,inLen,&temp_buf);
+    return Send(temp_buf,temp_len);
+}
+
+void MyEasyTcpClient::EasyRecv()
+{
+    int len = Recv(mParser.mRecvCache,FRAME_BUFFER_SIZE);
+    mParser.GetDataFromSocket(mParser.mRecvCache,len);
+}
+
+int MyEasyTcpClient::GetFrame(char **outBuf)
+{
+    return mParser.GetFrame(outBuf);
+}
+
 int MyEasyTcpClient::Socket()
 {
     mSock = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
@@ -187,6 +208,7 @@ int MyEasyTcpClient::Socket()
 bool MyEasyTcpClient::Init()
 {
 #ifdef linux
+    return true;
 #else
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);

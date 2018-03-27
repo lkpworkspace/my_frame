@@ -1,9 +1,10 @@
 #ifndef MyEasyTcpClient_H
 #define MyEasyTcpClient_H
 
+#include <stdint.h>
+
 #include "MyNet.h"
 #include "MyVec.h"
-
 
 /**
  * 限制：
@@ -11,6 +12,7 @@
  */
 class MyDataParser
 {
+    friend class MyEasyTcpClient;
 public:
     MyDataParser();
     virtual ~MyDataParser();
@@ -46,6 +48,7 @@ private:
     MyVec<char> mRecvDataCache;
     char* mFrameBuffer;
     char* mWriteBuffer;
+    char* mRecvCache;
 };
 
 class MyEasyTcpClient
@@ -56,9 +59,13 @@ public:
 
     int Connect();
     int SetReuseSock();
+
+    int32_t EasySend(const char* inData, size_t inLen);
+    void EasyRecv();
+    int GetFrame(char **outBuf);
+protected:
     int32_t Send(const char* inData, size_t inLen);
     int32_t Recv(void* inData, size_t inLen);
-protected:
     int Socket();
     int SetNonBlocking(bool b);
 private:
@@ -66,6 +73,7 @@ private:
     void Exit();
 private:
     MyAddrInfo mAddrInfo;
+    MyDataParser mParser;
     SOCKET mSock;
 };
 

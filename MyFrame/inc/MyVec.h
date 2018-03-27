@@ -1,6 +1,8 @@
 #ifndef MYVEC_HPP
 #define MYVEC_HPP
 
+#include <iostream>
+
 /**
  * 该数组使用 ring buffer 进行实现
  */

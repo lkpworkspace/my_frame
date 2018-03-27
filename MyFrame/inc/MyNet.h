@@ -25,8 +25,6 @@ typedef int socklen_t;
 typedef int SOCKET;
 #endif
 
-#include "MyCommon.h"
-
 
 // only support IPv4
 class MyAddrInfo;
