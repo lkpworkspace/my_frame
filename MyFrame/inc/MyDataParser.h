@@ -1,9 +1,6 @@
-#ifndef MyEasyTcpClient_H
-#define MyEasyTcpClient_H
+#ifndef MyDataParser_H
+#define MyDataParser_H
 
-#include <stdint.h>
-
-#include "MyNet.h"
 #include "MyVec.h"
 
 /**
@@ -12,7 +9,7 @@
  */
 class MyDataParser
 {
-    friend class MyEasyTcpClient;
+    friend class MySimpleTcpClient;
 public:
     MyDataParser();
     virtual ~MyDataParser();
@@ -51,30 +48,5 @@ private:
     char* mRecvCache;
 };
 
-class MyEasyTcpClient
-{
-public:
-    MyEasyTcpClient(MyAddrInfo& inAddrInfo);
-    virtual ~MyEasyTcpClient();
-
-    int Connect();
-    int SetReuseSock();
-
-    int32_t EasySend(const char* inData, size_t inLen);
-    void EasyRecv();
-    int GetFrame(char **outBuf);
-protected:
-    int32_t Send(const char* inData, size_t inLen);
-    int32_t Recv(void* inData, size_t inLen);
-    int Socket();
-    int SetNonBlocking(bool b);
-private:
-    bool Init();
-    void Exit();
-private:
-    MyAddrInfo mAddrInfo;
-    MyDataParser mParser;
-    SOCKET mSock;
-};
 
 #endif

@@ -28,9 +28,13 @@ public:
     void SetPlayerId( int inPlayerId) { mPlayerId = inPlayerId; }
     void SetName(const std::string inName){ mName = inName; }
 
+    MyReplicationManagerServer& GetReplicationManagerServer(){
+        return mReplicationManagerServer;
+    }
+
     MyList mUnProcessMsgs;
 private:
-    //ReplicationManagerServer	mReplicationManagerServer;
+    MyReplicationManagerServer	mReplicationManagerServer;
     std::string			mName;
     int				mPlayerId;
     bool mIsLogin;

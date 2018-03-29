@@ -9,6 +9,9 @@ public:
 
     virtual void	ProcessPacket( MyInputStream* inGameMsg);
     void SendOutgoingPackets();
+
+    MyGameObj* RegisterGameObject( MyGameObj* inGameObject );
+    void SetStateDirty( int inNetworkId, uint32_t inDirtyState );
 private:
     MyNetworkManagerServer();
 
@@ -16,13 +19,16 @@ private:
     void HandleInputPack(MyGameMsg* inGameMsg, MyClientProxy* inClient);
     void SendWelcomePack(MyClientProxy* inClient);
 
+    void SendStatePacketToClient( MyClientProxy* inClientProxy );
+    void HandleNewClient( MyClientProxy* inClientProxy );
+    void HandleLostClient( MyClientProxy* inClientProxy );
+
 private:
     int				mNewPlayerId;
     int				mNewNetworkId;
 
-    typedef unordered_map< int, MyGameObj* > IntToGameObjectMap_t;
+
     typedef unordered_map< int, MyClientProxy* > IntToClientMap_t;
-    IntToGameObjectMap_t mNetworkIdToGameObjectMap;
     IntToClientMap_t mPlayerIdToClientMap;
 };
 

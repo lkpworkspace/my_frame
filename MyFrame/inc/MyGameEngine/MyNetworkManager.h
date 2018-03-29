@@ -1,6 +1,8 @@
 #ifndef MyNetworkManager_H
 #define MyNetworkManager_H
 
+typedef unordered_map< int, MyGameObj* > IntToGameObjectMap_t;
+
 class MyNetworkManager
 {
 public:
@@ -13,13 +15,27 @@ public:
     virtual void	ProcessPacket( MyInputStream* inGameMsg) = 0;
 
     void	ProcessIncomingPackets(MyList* inList);
-
+    inline	MyGameObj*	GetGameObject( int inNetworkId ) const;
 protected:
+    IntToGameObjectMap_t mNetworkIdToGameObjectMap;
 private:
     void	ReadIncomingPacketsIntoQueue(MyList* inList);
     void	ProcessQueuedPackets();
 
     MyList mPacketQueue;
 };
+
+inline	MyGameObj* MyNetworkManager::GetGameObject( int inNetworkId ) const
+{
+    auto gameObjectIt = mNetworkIdToGameObjectMap.find( inNetworkId );
+    if( gameObjectIt != mNetworkIdToGameObjectMap.end() )
+    {
+        return gameObjectIt->second;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
 
 #endif

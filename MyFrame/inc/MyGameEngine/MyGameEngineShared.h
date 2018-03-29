@@ -38,6 +38,7 @@ class MyGameObj;
 #include "MyTiming.h"
 
 #include "MyNetworkManager.h"
+#include "MyReplicationCommand.h"
 
 #include "MyPlane.h"
 

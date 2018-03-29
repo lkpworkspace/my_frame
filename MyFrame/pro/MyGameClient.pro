@@ -5,50 +5,27 @@ CONFIG -= qt
 
 DEFINES += mygameengine
 
-INCLUDEPATH += ../inc ../example ../../3rd_src/
+INCLUDEPATH += ../inc
 
 SOURCES += \
-    ../src/MyCommon.cpp \
     ../src/MyObj.cpp \
-    ../src/MyThread.cpp \
-    ../src/MyEvent.cpp \
-    ../src/MyMsgPool.cpp \
-    ../src/MyApp.cpp \
-    ../src/MyLog.cpp \
-    ../src/MyHelp.cpp \
-    ../src/MyTask.cpp \
     ../src/MyList.cpp \
+    ../src/MyEvent.cpp \
     ../src/MyNet.cpp \
-    ../src/MySock.cpp \
-    ../src/MyUdp.cpp \
-    ../src/MyTcp.cpp \
-    ../src/MyNormalEvent.cpp \
-    ../src/MyTimer.cpp \
-    ../src/MyIOStream.cpp
+    ../src/MyIOStream.cpp \
+    ../src/MyDataParser.cpp \
+    ../src/MyMath.cpp
 
 HEADERS += \
-    ../inc/MyCommon.h \
     ../inc/MyObj.h \
-    ../inc/MyHelp.h \
-    ../inc/MyLog.h \
-    ../inc/MyFrame.h \
-    ../inc/MyApp.h \
-    ../inc/MyVec.h \
     ../inc/MyList.h \
-    ../inc/MyTask.h \
-    ../inc/MyThread.h \
     ../inc/MyEvent.h \
-    ../inc/MyMsgPool.h \
-    ../inc/MyTimer.h \
-    ../inc/MySock.h \
-    ../inc/MyNet.h \
-    ../inc/MyUdp.h \
-    ../inc/MyTcp.h \
-    ../inc/MyNormalEvent.h \
-    ../inc/MyIOStream.h
+    ../inc/MyVec.h \
+    ../inc/MyMath.h \
+    ../inc/MyIOStream.h \
+	../inc/MyDataParser.h
 
 unix {
-
     DISTFILES +=
     LIBS += -lpthread -ldl -lrt
 
@@ -59,7 +36,8 @@ unix {
 contains(DEFINES,mygameengine){
     message('[DEFINES]: use_mygameengine')
     INCLUDEPATH += ../inc/MyGameEngine
-    # engine <-- server
+    INCLUDEPATH += ../inc/MySimpleClient
+
     HEADERS += \
         ../inc/MyGameEngine/MyGameMsg.h \
         ../inc/MyGameEngine/MyGameObj.h \
@@ -70,7 +48,12 @@ contains(DEFINES,mygameengine){
         ../inc/MyGameEngine/MyMoveList.h \
         ../inc/MyGameEngine/MyTiming.h \
         ../inc/MyGameEngine/MyGameEngineShared.h \
-        ../inc/MyGameEngine/MyNetworkManager.h
+        ../inc/MyGameEngine/MyNetworkManager.h \
+        ../inc/MyGameEngine/MyPlane.h \
+        ../inc/MyGameEngine/Client/MyGameClientShared.h \
+        ../inc/MyGameEngine/Client/MyNetworkManagerClient.h \
+        ../inc/MyGameEngine/Client/MyPlaneClient.h \
+		../inc/MySimpleClient/MySimpleTcpClient.h
 
     SOURCES += \
         ../src/MyGameEngine/MyGameMsg.cpp \
@@ -82,7 +65,11 @@ contains(DEFINES,mygameengine){
         ../src/MyGameEngine/MyMoveList.cpp \
         ../src/MyGameEngine/MyTiming.cpp \
         ../src/MyGameEngine/MyNetworkManager.cpp \
-        ../src/MyGameEngine/Client/main.cpp
+        ../src/MyGameEngine/MyPlane.cpp \
+        ../src/MyGameEngine/Client/MyPlaneClient.cpp \
+        ../src/MyGameEngine/Client/MyNetworkManagerClient.cpp \
+        ../src/MyGameEngine/Client/main.cpp \
+        ../src/MySimpleClient/MySimpleTcpClient.cpp
 
 }else{
     message('[DEFINES]: no_mygameengine)')

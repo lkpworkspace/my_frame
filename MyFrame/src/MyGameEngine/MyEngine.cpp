@@ -13,7 +13,7 @@ MyEngine::MyEngine()
     GameObjectRegistry::StaticInit();
 
 
-    World::StaticInit();
+
 
     ScoreBoardManager::StaticInit();
 

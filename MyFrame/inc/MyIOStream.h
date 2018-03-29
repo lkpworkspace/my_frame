@@ -1,11 +1,14 @@
 #ifndef MyIOStream_H
 #define MyIOStream_H
 
+#include <string.h>
+
 #include <cstdint>
 #include <cstdlib>
 #include <string>
-#include "MyFrame.h"
 
+#include "MyMath.h"
+#include "MyEvent.h"
 
 
 inline uint32_t ConvertToFixed( float inNumber, float inMin, float inPrecision )

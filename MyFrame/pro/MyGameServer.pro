@@ -24,7 +24,9 @@ SOURCES += \
     ../src/MyTcp.cpp \
     ../src/MyNormalEvent.cpp \
     ../src/MyTimer.cpp \
-    ../src/MyIOStream.cpp
+    ../src/MyIOStream.cpp \
+    ../src/MyDataParser.cpp \
+    ../src/MyMath.cpp
 
 HEADERS += \
     ../inc/MyCommon.h \
@@ -45,7 +47,9 @@ HEADERS += \
     ../inc/MyUdp.h \
     ../inc/MyTcp.h \
     ../inc/MyNormalEvent.h \
-    ../inc/MyIOStream.h
+    ../inc/MyIOStream.h \
+    ../inc/MyDataParser.h \
+    ../inc/MyMath.h \
 
 unix {
 
@@ -76,7 +80,9 @@ contains(DEFINES,mygameengine){
         ../inc/MyGameEngine/Server/MyClientProxy.h \
         ../inc/MyGameEngine/Server/MyNetworkManagerServer.h \
         ../inc/MyGameEngine/Server/MyServer.h \
-        ../inc/MyGameEngine/Server/MyServerShared.h
+        ../inc/MyGameEngine/Server/MyServerShared.h \
+        ../inc/MyGameEngine/Server/MyReplicationManagerServer.h \
+        ../inc/MyGameEngine/Server/MyPlaneServer.h
 
     SOURCES += \
         ../src/MyGameEngine/MyGameMsg.cpp \
@@ -92,6 +98,8 @@ contains(DEFINES,mygameengine){
         ../src/MyGameEngine/Server/MyClientProxy.cpp \
         ../src/MyGameEngine/Server/MyNetworkManagerServer.cpp \
         ../src/MyGameEngine/Server/MyServer.cpp \
+        ../src/MyGameEngine/Server/MyReplicationManagerServer.cpp \
+        ../src/MyGameEngine/Server/MyPlaneServer.cpp \
         ../src/MyGameEngine/Server/main.cpp
 
 }else{

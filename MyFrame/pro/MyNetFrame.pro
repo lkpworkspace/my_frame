@@ -23,6 +23,8 @@ SOURCES += \
     ../src/MyNormalEvent.cpp \
     ../src/MyTimer.cpp \
     ../src/MyIOStream.cpp \
+	../src/MyDataParser.cpp \
+    ../src/MyMath.cpp \
     ../src/main.cpp
 
 HEADERS += \
@@ -45,6 +47,8 @@ HEADERS += \
     ../inc/MyTcp.h \
     ../inc/MyNormalEvent.h \
     ../inc/MyIOStream.h \
+	../inc/MyDataParser.h \
+    ../inc/MyMath.h \
     ../example/MyObj_test.h \
     ../example/MyApp_test.h \
     ../example/MyHeap_test.h \

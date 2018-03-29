@@ -12,9 +12,12 @@
 #include "MyGameEngineShared.h"
 
 
+#include "Server/MyReplicationManagerServer.h"
+
 #include "Server/MyClientProxy.h"
 #include "Server/MyNetworkManagerServer.h"
 #include "Server/MyServer.h"
 
+#include "Server/MyPlaneServer.h"
 
 #endif

@@ -1,5 +1,10 @@
+#include "MySimpleClient/MyEasyTcpClient.h"
+#include "MyVec.h"
+#include "MyEasyTcpClient.h"
 
 int main()
 {
-	return 0;
+//    MyVec<int>::Test();
+    MyDataParser::Test();
+    return 0;
 }

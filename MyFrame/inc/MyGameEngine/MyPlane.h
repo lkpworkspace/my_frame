@@ -4,7 +4,7 @@
 class MyPlane : public MyGameObj
 {
 public:
-    CLASS_IDENTIFICATION( 'RCAT', MyPlane )
+    CLASS_IDENTIFICATION( 'PLAN', MyPlane )
     enum ECatReplicationState
     {
         ECRS_Pose = 1 << 0,
@@ -24,7 +24,7 @@ public:
     virtual uint32_t	Write( MyOutputStream& inOutputStream, uint32_t inDirtyState ) const;
 protected:
     MyPlane(){}
-private:
+
     uint32_t mPlayerId;
 
     MyVec3 mVelocity;
@@ -32,6 +32,8 @@ private:
     float mThrustDir;
 
     int mHealth;
+private:
+
 };
 
 #endif

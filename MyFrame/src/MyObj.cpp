@@ -1,8 +1,5 @@
 #include "MyObj.h"
-#include "MyLog.h"
 #include <string.h>
-
-USING_MYFRAME;
 
 std::unordered_set<std::string> MyObj::l_obj_name;
 std::unordered_set<int> MyObj::l_tag;
@@ -83,7 +80,7 @@ int MyObj::SetObjUniqueTag()
         l_tag.insert(m_tag);
     else
     {
-        MyDebugPrint("[Warning]: Object has tag [%d]\n",m_tag);
+        printf("[MyObj::SetObjUniqueTag Warning]: Object has tag [%d]\n",m_tag);
         m_tag = -1;
     }
 

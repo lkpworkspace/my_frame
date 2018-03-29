@@ -73,7 +73,8 @@ MyGameServer* MyGameServer::sInstance = nullptr;
 
 MyGameServer::MyGameServer()
 {
-    //TODO(lkp): server init ...
+    MyWorld::sInstance->RegisterCreationFunction('PLAN',MyPlaneServer::StaticCreate);
+
     MyNetworkManagerServer::StaticInit();
 
     mMsgPool.RegMsg("MSG_GameMsg",MyGameMsg::StaticCreate);
