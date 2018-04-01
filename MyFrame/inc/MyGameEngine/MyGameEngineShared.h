@@ -42,4 +42,5 @@ class MyGameObj;
 
 #include "MyPlane.h"
 
+#include "MyEngine.h"
 #endif

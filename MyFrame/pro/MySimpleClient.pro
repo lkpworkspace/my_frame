@@ -7,13 +7,17 @@ INCLUDEPATH += ../inc ../inc/MySimpleClient
 
 SOURCES += \
     ../src/MySimpleClient/main.cpp \
-    ../src/MySimpleClient/MyEasyTcpClient.cpp \
-    ../src/MyNet.cpp
+    ../src/MySimpleClient/MySimpleTcpClient.cpp \
+    ../src/MyNet.cpp \
+    ../src/MyDataParser.cpp \
+    ../src/MyIOStream.cpp
 
 HEADERS += \
-    ../inc/MySimpleClient/MyEasyTcpClient.h \
+    ../inc/MySimpleClient/MySimpleTcpClient.h \
     ../inc/MyNet.h \
-    ../inc/MyVec.h
+    ../inc/MyVec.h \
+    ../inc/MyDataParser.h \
+    ../inc/MyIOStream.h
 
 unix {
     #LIBS += -lrt

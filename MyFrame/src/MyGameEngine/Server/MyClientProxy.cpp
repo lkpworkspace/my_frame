@@ -9,16 +9,19 @@
  */
 int MyClientProxy::Frame(const char* buf, int len)
 {
-    //MyGameMsg* msg = new MyGameMsg();
     MyGameMsg* msg = (MyGameMsg*)MyGameServer::sInstance->mMsgPool.Get("MSG_GameMsg");
 
     if(len == 0)
     {
-        MyDebugPrint("client quit\n");
+        MyDebugPrint("player %d client quit\n", mPlayerId);
+        mIsClientQuit = true;
+        msg->SetBuffer(buf,len * 8);
+        msg->SetClientProxy(this);
+        msg->SetSendIdentify(MyGameServer::sInstance->mGameEngineTaskId);
+        AddSendEv(msg);
         return false;
     }
-
-    MyDebugPrint("Get Msg: %s, %p\n",buf,msg);
+    MyDebugPrint("player %d client get msg: %s, pointer %p\n",buf,msg);
     msg->SetBuffer(buf,len * 8);
     msg->SetClientProxy(this);
     msg->SetSendIdentify(MyGameServer::sInstance->mGameEngineTaskId);

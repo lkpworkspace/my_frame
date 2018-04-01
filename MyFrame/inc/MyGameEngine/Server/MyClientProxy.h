@@ -10,7 +10,8 @@ public:
         :MyEasyTcpSocket(fd, addr),
           mName(""),
           mPlayerId(-1),
-          mIsLogin(false)
+          mIsLogin(false),
+          mIsClientQuit(false)
     {
 
     }
@@ -24,6 +25,7 @@ public:
     const	std::string&	GetName()			const	{ return mName; }
     bool IsLogin() { return mIsLogin; }
     void SetLogin(bool b) { mIsLogin = b; }
+    bool IsQuit(){ return mIsClientQuit; }
 
     void SetPlayerId( int inPlayerId) { mPlayerId = inPlayerId; }
     void SetName(const std::string inName){ mName = inName; }
@@ -34,10 +36,11 @@ public:
 
     MyList mUnProcessMsgs;
 private:
-    MyReplicationManagerServer	mReplicationManagerServer;
-    std::string			mName;
-    int				mPlayerId;
+    MyReplicationManagerServer mReplicationManagerServer;
+    std::string mName;
+    int mPlayerId;
     bool mIsLogin;
+    bool mIsClientQuit;
 
 };
 

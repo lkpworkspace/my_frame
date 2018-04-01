@@ -14,8 +14,10 @@ public:
 
     virtual void	ProcessPacket( MyInputStream* inGameMsg) = 0;
 
-    void	ProcessIncomingPackets(MyList* inList);
+    void ProcessIncomingPackets(MyList* inList);
     inline	MyGameObj*	GetGameObject( int inNetworkId ) const;
+    void AddToNetworkIdToGameObjectMap( MyGameObj* inGameObject );
+    void RemoveFromNetworkIdToGameObjectMap( MyGameObj* inGameObject );
 protected:
     IntToGameObjectMap_t mNetworkIdToGameObjectMap;
 private:

@@ -1,6 +1,5 @@
-#include "MySimpleClient/MyEasyTcpClient.h"
+#include "MySimpleClient/MySimpleTcpClient.h"
 #include "MyVec.h"
-#include "MyEasyTcpClient.h"
 
 int main()
 {

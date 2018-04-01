@@ -42,7 +42,6 @@ contains(DEFINES,mygameengine){
         ../inc/MyGameEngine/MyGameMsg.h \
         ../inc/MyGameEngine/MyGameObj.h \
         ../inc/MyGameEngine/MyWorld.h \
-        ../inc/MyGameEngine/MyEngine.h \
         ../inc/MyGameEngine/MyInputState.h \
         ../inc/MyGameEngine/MyMove.h \
         ../inc/MyGameEngine/MyMoveList.h \
@@ -50,16 +49,18 @@ contains(DEFINES,mygameengine){
         ../inc/MyGameEngine/MyGameEngineShared.h \
         ../inc/MyGameEngine/MyNetworkManager.h \
         ../inc/MyGameEngine/MyPlane.h \
+        ../inc/MyGameEngine/MyReplicationCommand.h \
         ../inc/MyGameEngine/Client/MyGameClientShared.h \
         ../inc/MyGameEngine/Client/MyNetworkManagerClient.h \
+        ../inc/MyGameEngine/Client/MyGameClient.h \
         ../inc/MyGameEngine/Client/MyPlaneClient.h \
+        ../inc/MyGameEngine/Client/MyReplicationManagerClient.h \
 		../inc/MySimpleClient/MySimpleTcpClient.h
 
     SOURCES += \
         ../src/MyGameEngine/MyGameMsg.cpp \
         ../src/MyGameEngine/MyGameObj.cpp \
         ../src/MyGameEngine/MyWorld.cpp \
-        ../src/MyGameEngine/MyEngine.cpp \
         ../src/MyGameEngine/MyInputState.cpp \
         ../src/MyGameEngine/MyMove.cpp \
         ../src/MyGameEngine/MyMoveList.cpp \
@@ -68,7 +69,9 @@ contains(DEFINES,mygameengine){
         ../src/MyGameEngine/MyPlane.cpp \
         ../src/MyGameEngine/Client/MyPlaneClient.cpp \
         ../src/MyGameEngine/Client/MyNetworkManagerClient.cpp \
+        ../src/MyGameEngine/Client/MyGameClient.cpp \
         ../src/MyGameEngine/Client/main.cpp \
+        ../src/MyGameEngine/Client/MyReplicationManagerClient.cpp \
         ../src/MySimpleClient/MySimpleTcpClient.cpp
 
 }else{

@@ -1,7 +1,7 @@
 #ifndef MyServerShared_H
 #define MyServerShared_H
 
-#if 1
+#if 0
 #define IP "127.0.0.1"
 #else
 #define IP "172.16.212.139"

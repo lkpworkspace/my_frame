@@ -2,6 +2,19 @@
 
 MyNetworkManagerServer* MyNetworkManagerServer::sInstance = nullptr;
 
+void PrintInputStream(MyInputStream* inInputStream)
+{
+#if 1 // test
+    const char* buf = inInputStream->GetBufferPtr();
+    const int len = inInputStream->GetByteLength();
+    for(int i = 0; i < len; ++i)
+    {
+        printf("0x%X\t",buf[i]);
+    }
+    printf("\n");
+#endif
+}
+
 MyNetworkManagerServer::MyNetworkManagerServer()
     :mNewPlayerId(0),
       mNewNetworkId(0)
@@ -15,16 +28,30 @@ bool MyNetworkManagerServer::StaticInit()
     return true;
 }
 
+// TODO(lkp)...
+void MyNetworkManagerServer::HandleClientDisconnected( MyClientProxy* inClientProxy )
+{
+    mPlayerIdToClientMap.erase( inClientProxy->GetPlayerId() );
+    //static_cast< Server* > ( Engine::sInstance.get() )->HandleLostClient( inClientProxy );
+}
 
-void	MyNetworkManagerServer::ProcessPacket( MyInputStream* inGameMsg)
+void MyNetworkManagerServer::ProcessPacket( MyInputStream* inGameMsg)
 {
     MyGameMsg* msg = (MyGameMsg*)inGameMsg;
     MyClientProxy* client = (MyClientProxy*)msg->GetClientProxy();
-    MyDebugPrint("kHelloCC 0x%08X\n",kHelloCC);
-    MyDebugPrint("kInputCC 0x%08X\n",kInputCC);
+    // client quit
+    if(client->IsQuit())
+    {
+        HandleClientDisconnected(client);
+        return;
+    }
     //TODO(lkp): server process ...
     uint32_t	packetType;
     msg->Read( packetType );
+    MyDebugPrint("kHelloCC 0x%08X\n",kHelloCC);
+    MyDebugPrint("kWelcomeCC 0x%08X\n",kWelcomeCC);
+    MyDebugPrint("kInputCC 0x%08X\n",kInputCC);
+    MyDebugPrint("kStateCC 0x%08X\n",kStateCC);
     MyDebugPrint("packetType 0x%08X\n",packetType);
     switch( packetType )
     {
@@ -38,16 +65,7 @@ void	MyNetworkManagerServer::ProcessPacket( MyInputStream* inGameMsg)
         MyDebugPrint( "Unknown packet type received from %s", client->GetIp().c_str());
         break;
     }
-    //MyGameServer::sInstance->mMsgPool.Free(msg);
-#if 0 // test
-    const char* buf = msg->GetBufferPtr();
-    const int len = msg->GetByteLength();
-    for(int i = 0; i < len; ++i)
-    {
-        printf("0x%X\t",buf[i]);
-    }
-    MyDebugPrint("\n");
-#endif
+    MyGameServer::sInstance->mMsgPool.Free(msg);
 }
 
 void MyNetworkManagerServer::HandleHelloPack(MyGameMsg* inGameMsg, MyClientProxy* inClient)

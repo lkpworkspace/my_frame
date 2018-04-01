@@ -137,6 +137,7 @@ void MyInputStream::SetBuffer(const char* inBuffer, uint32_t inBitCount)
 
     //handle realloc failure
     //...
+    mBitHead = 0;
     mBitCapacity = inBitCount;
 }
 

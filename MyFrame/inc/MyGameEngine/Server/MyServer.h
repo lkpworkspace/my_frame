@@ -60,9 +60,8 @@ class MyGameServer : MyEngine
 {
     friend class MyGameEngineTask;
 public:
-
-    static bool StaticInit();
     static MyGameServer* sInstance;
+    static bool StaticInit();
 
     int Go();
 

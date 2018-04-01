@@ -4,7 +4,7 @@
 class MyPlaneClient : public MyPlane
 {
 public:
-    static	MyGameObj* StaticCreate() { return  new MyPlaneClient(); }
+    static	MyGameObj* StaticCreate() { return  (MyGameObj*)new MyPlaneClient(); }
 
     virtual void Update();
     //virtual void HandleDying() override;

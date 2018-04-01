@@ -14,6 +14,16 @@ void	MyNetworkManager::ReadIncomingPacketsIntoQueue(MyList* inList)
     mPacketQueue.Append(inList);
 }
 
+void MyNetworkManager::AddToNetworkIdToGameObjectMap( MyGameObj* inGameObject )
+{
+    mNetworkIdToGameObjectMap[ inGameObject->GetNetworkId() ] = inGameObject;
+}
+
+void MyNetworkManager::RemoveFromNetworkIdToGameObjectMap( MyGameObj* inGameObject )
+{
+    mNetworkIdToGameObjectMap.erase( inGameObject->GetNetworkId() );
+}
+
 void	MyNetworkManager::ProcessQueuedPackets()
 {
     MyNode* begin;

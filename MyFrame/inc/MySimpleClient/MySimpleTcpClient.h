@@ -10,11 +10,13 @@
 class MySimpleTcpClient
 {
 public:
+    MySimpleTcpClient();
     MySimpleTcpClient(MyAddrInfo& inAddrInfo);
     virtual ~MySimpleTcpClient();
 
     int Connect();
     int SetReuseSock();
+    void SetAddrInfo(MyAddrInfo& info);
 
     int32_t EasySend(const char* inData, size_t inLen);
     void EasyRecv();

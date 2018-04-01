@@ -23,6 +23,7 @@ private:
     void HandleNewClient( MyClientProxy* inClientProxy );
     void HandleLostClient( MyClientProxy* inClientProxy );
 
+    void HandleClientDisconnected( MyClientProxy* inClientProxy );
 private:
     int				mNewPlayerId;
     int				mNewNetworkId;

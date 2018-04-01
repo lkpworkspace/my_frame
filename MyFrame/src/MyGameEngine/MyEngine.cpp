@@ -1,6 +1,4 @@
 #include "MyGameEngineShared.h"
-#include "MyEngine.h"
-
 
 MyEngine::MyEngine()
 {
@@ -11,9 +9,6 @@ MyEngine::MyEngine()
     srand( static_cast< uint32_t >( time( nullptr ) ) );
 
     GameObjectRegistry::StaticInit();
-
-
-
 
     ScoreBoardManager::StaticInit();
 

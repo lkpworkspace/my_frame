@@ -1,5 +1,5 @@
 #include "MySimpleClient/MySimpleTcpClient.h"
-
+#include <stdio.h>
 #ifdef linux
 #include <unistd.h>
 #include <fcntl.h>
@@ -9,9 +9,11 @@
 #define FRAME_BUFFER_SIZE 65535
 
 
-
-
-
+MySimpleTcpClient::MySimpleTcpClient()
+{
+    Init();
+    Socket();
+}
 
 MySimpleTcpClient::MySimpleTcpClient(MyAddrInfo &inAddrInfo)
     :mAddrInfo(inAddrInfo)
@@ -43,14 +45,16 @@ int MySimpleTcpClient::Connect()
 int MySimpleTcpClient::SetNonBlocking(bool b)
 {
 #ifdef linux
-    int flags = fcntl( mSock, F_GETFL, 0 );
-    flags = b ? ( flags | O_NONBLOCK ) : ( flags & ~O_NONBLOCK);
-    int result = fcntl( mSock, F_SETFL, flags );
+    int flags = fcntl(mSock, F_GETFL, 0);
+    if(b)
+        flags |= O_NONBLOCK;
+    else
+        flags &= ~O_NONBLOCK;
+    return fcntl(mSock, F_SETFL, flags);
 #else
     u_long arg = b ? 1 : 0;
-    int result = ioctlsocket( mSock, FIONBIO, &arg );
+    return ioctlsocket( mSock, FIONBIO, &arg );
 #endif
-    return result;
 }
 
 int MySimpleTcpClient::SetReuseSock()
@@ -58,9 +62,18 @@ int MySimpleTcpClient::SetReuseSock()
     return MyNet::SetReuseSock(mSock);
 }
 
+void MySimpleTcpClient::SetAddrInfo(MyAddrInfo& info)
+{
+    mAddrInfo = info;
+}
+
 int32_t MySimpleTcpClient::Send(const char* inData, size_t inLen)
 {
+#ifdef linux
+    int bytesSentCount = write( mSock, (const void*)inData, inLen);
+#else
     int bytesSentCount = send( mSock, static_cast< const char* >( inData ), inLen, 0 );
+#endif
     if( bytesSentCount < 0 )
     {
         printf( "[MyEasyTcpClient::Send]: Send %d bytes\n", bytesSentCount );
@@ -70,11 +83,17 @@ int32_t MySimpleTcpClient::Send(const char* inData, size_t inLen)
 
 int32_t MySimpleTcpClient::Recv(void* inData, size_t inLen)
 {
-    int bytesReceivedCount = recv( mSock, static_cast< char* >( inData ), inLen, 0 );
+#ifdef linux
+    int bytesReceivedCount = read( mSock, (char*)inData, inLen);
+#else
+    int bytesReceivedCount = recv( mSock, (char*)inData, inLen, 0 );
+#endif
     if( bytesReceivedCount < 0 )
     {
-        printf( "[MyEasyTcpClient::Recv]: Receive %d bytes\n", bytesReceivedCount );
+        perror("recv");
+        printf( "[MyEasyTcpClient::Recv]: Receive %d bytes, error %d\n", bytesReceivedCount ,errno);
     }
+    printf( "[MyEasyTcpClient::Recv]: Receive %d bytes, error %d\n", bytesReceivedCount ,errno);
     return bytesReceivedCount;
 }
 
@@ -88,23 +107,30 @@ int32_t MySimpleTcpClient::EasySend(const char* inData, size_t inLen)
 void MySimpleTcpClient::EasyRecv()
 {
     int len = Recv(mParser.mRecvCache,FRAME_BUFFER_SIZE);
-    mParser.GetDataFromSocket(mParser.mRecvCache,len);
+    if(len > 0)
+        mParser.GetDataFromSocket(mParser.mRecvCache,len);
+    else if(len == 0)
+    {
+        printf("disconnect from server\n");
+    }
 }
 
 int MySimpleTcpClient::GetFrame(MyInputStream& outInputStream)
 {
     char* buf = nullptr;
     uint32_t len = mParser.GetFrame(&buf);
-    outInputStream.SetBuffer(buf,len*8);
+    if(len > 0)
+        outInputStream.SetBuffer(buf,len*8);
     return len;
 }
 
 int MySimpleTcpClient::Socket()
 {
-    mSock = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
 #ifdef linux
+    mSock = socket( AF_INET, SOCK_STREAM, 0 );
     if( mSock == -1 )
 #else
+    mSock = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
     if( mSock == INVALID_SOCKET )
 #endif
     {

@@ -70,7 +70,6 @@ void MyGameEngineTask::Update(MyList *evs)
 }
 //////////////////////////////////////////////////// MyGameServer
 MyGameServer* MyGameServer::sInstance = nullptr;
-
 MyGameServer::MyGameServer()
 {
     MyWorld::sInstance->RegisterCreationFunction('PLAN',MyPlaneServer::StaticCreate);
@@ -84,17 +83,16 @@ MyGameServer::MyGameServer()
 bool MyGameServer::StaticInit()
 {
     if(sInstance == nullptr)
-        sInstance = new MyGameServer();
+        sInstance = (MyGameServer*)new MyGameServer();
     return true;
 }
 
 int MyGameServer::Go()
 {
-    SetupWorld();
-
     //MyHelp::DaemonInit();
     MyApp app(2);
 
+    SetupWorld();
     // process task
     MyGameEngineTask* ges = new MyGameEngineTask();
     mGameEngineTaskId = ges->GetIdentify();
