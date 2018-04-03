@@ -1,4 +1,4 @@
-#include "Client/MyGameClientShared.h"
+#include "MyGameClientShared.h"
 
 void MyPlaneClient::Update()
 {

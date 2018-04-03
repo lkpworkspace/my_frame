@@ -1,4 +1,4 @@
-#include "../inc/MyList.h"
+#include "MyList.h"
 
 // init
 void MyList::__Init()

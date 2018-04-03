@@ -21,9 +21,10 @@ HEADERS += \
     ../inc/MyList.h \
     ../inc/MyEvent.h \
     ../inc/MyVec.h \
+    ../inc/MyNet.h \
     ../inc/MyMath.h \
     ../inc/MyIOStream.h \
-	../inc/MyDataParser.h
+    ../inc/MyDataParser.h
 
 unix {
     DISTFILES +=
@@ -36,6 +37,7 @@ unix {
 contains(DEFINES,mygameengine){
     message('[DEFINES]: use_mygameengine')
     INCLUDEPATH += ../inc/MyGameEngine
+    INCLUDEPATH += ../inc/MyGameEngine/Client
     INCLUDEPATH += ../inc/MySimpleClient
 
     HEADERS += \

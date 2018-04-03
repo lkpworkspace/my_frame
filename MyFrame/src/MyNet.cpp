@@ -1,4 +1,4 @@
-#include "../inc/MyNet.h"
+#include "MyNet.h"
 #include <assert.h>
 
 /*

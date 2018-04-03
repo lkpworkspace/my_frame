@@ -1,4 +1,4 @@
-#include "../inc/MyEvent.h"
+#include "MyEvent.h"
 
 USING_MYFRAME;
 

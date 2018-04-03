@@ -1,6 +1,10 @@
 #ifndef MYEVENT_H
 #define MYEVENT_H
+
+#ifdef linux
 #include <sys/epoll.h>
+#endif
+
 #include "MyCommon.h"
 #include "MyList.h"
 #include "MyObj.h"

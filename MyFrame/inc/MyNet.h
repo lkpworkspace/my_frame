@@ -10,7 +10,6 @@
 #include "WinSock2.h"
 #include "Ws2tcpip.h"
 typedef int socklen_t;
-//typedef char* receiveBufer_t;
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <sys/types.h>

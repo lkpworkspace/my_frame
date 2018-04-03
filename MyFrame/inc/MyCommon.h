@@ -10,9 +10,6 @@
 #include <string>
 // win or linux
 #ifdef WIN32
-#include <Windows.h>
-#include <WinSock2.h>
-#pragma comment(lib,"ws2_32.lib")
 #else
 #include <unistd.h>
 #include "MyHelp.h"

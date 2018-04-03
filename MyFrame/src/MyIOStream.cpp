@@ -1,4 +1,5 @@
 #include "MyIOStream.h"
+#include <algorithm>
 
 void MyOutputStream::WriteBits( uint8_t inData,
                                       uint32_t inBitCount )

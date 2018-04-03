@@ -1,4 +1,4 @@
-#include "MySimpleClient/MySimpleTcpClient.h"
+#include "MySimpleTcpClient.h"
 #include <stdio.h>
 #ifdef linux
 #include <unistd.h>

@@ -1,4 +1,4 @@
-#include "MyGameEngine/Client/MyGameClientShared.h"
+#include "MyGameClientShared.h"
 
 #if 1
 #define IP "127.0.0.1"

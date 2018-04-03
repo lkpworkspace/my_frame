@@ -63,6 +63,7 @@ unix {
 contains(DEFINES,mygameengine){
     message('[DEFINES]: use_mygameengine')
     INCLUDEPATH += ../inc/MyGameEngine
+    INCLUDEPATH += ../inc/MyGameEngine/Server
     # engine <-- server
     HEADERS += \
         ../inc/MyGameEngine/MyGameMsg.h \

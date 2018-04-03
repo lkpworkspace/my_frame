@@ -26,6 +26,8 @@ int MyEngine::Run()
     MyTiming::sInstance.Update();
 
     DoFrame();
+
+	return 0;
 #if 0
     // Main message loop
     bool quit = false;
