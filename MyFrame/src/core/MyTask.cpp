@@ -1,6 +1,6 @@
-#include "../inc/MyTask.h"
-#include "../inc/MyApp.h"
-#include "../inc/MyLog.h"
+#include "MyTask.h"
+#include "MyApp.h"
+#include "MyLog.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 

@@ -1,6 +1,5 @@
-#ifndef MY_HEAP_HPP
-#define MY_HEAP_HPP
-namespace my_master {
+#ifndef __MYHEAP_H__
+#define __MYHEAP_H__
 
 /*
     最大堆与最小堆：
@@ -349,5 +348,6 @@ void MyHeap<T>::__AdjustDel()
     __HeapAdjust(0);
 }
 #endif
-} // end namespace
+
+
 #endif

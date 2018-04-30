@@ -14,7 +14,6 @@ bool MyGameClient::StaticInit(const std::string &inName, MyAddrInfo &info)
 MyGameClient::MyGameClient()
 {
     MyWorld::StaticInit();
-    MyWorld::sInstance->RegisterCreationFunction('PLAN',MyPlaneClient::StaticCreate);
 }
 
 void MyGameClient::CollectEvent(MyList* inEvs)

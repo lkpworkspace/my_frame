@@ -1,5 +1,5 @@
-#ifndef MYEVENT_H
-#define MYEVENT_H
+#ifndef __MYEVENT_H__
+#define __MYEVENT_H__
 
 #ifdef linux
 #include <sys/epoll.h>

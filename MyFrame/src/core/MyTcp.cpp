@@ -1,7 +1,7 @@
-#include "../inc/MyTcp.h"
-#include "../inc/MyApp.h"
-#include "../inc/MyAllEvent.h"
-#include "../inc/MyUdp.h"
+#include "MyTcp.h"
+#include "MyApp.h"
+#include "MyAllEvent.h"
+#include "MyUdp.h"
 
 USING_MYFRAME;
 ////////////////////////////////////////////////////
@@ -158,7 +158,14 @@ again:
     res = WriteBuf(&temp[count],index - count);
     if(res == -1)
     {
-        //MyDebugPrint("write buf fail\n");
+        if(errno == EPIPE)
+        {
+            MyDebugPrint("write socket error EPIPE\n");
+            MyDebug("write socket EPIPE");
+            goto end;
+        }
+        MyDebugPrint("write socket fail, errno %d\n",errno);
+        MyDebug("write socket fail, errno %d\n",errno);
         usleep(1000 * 10);
         goto again;
     }else
@@ -172,6 +179,9 @@ again:
     }
     MySelfProtocol::FreeBuf(temp);
     return (res - sizeof(len));
+end:
+    MySelfProtocol::FreeBuf(temp);
+    return -1;
 }
 
 /// TODO...

@@ -1,4 +1,4 @@
-#include "../inc/MyLog.h"
+#include "MyLog.h"
 #include <time.h>
 #include <stdio.h>
 

@@ -1,6 +1,6 @@
 #include "MyGameEngineShared.h"
 
-float kDesiredFrameTime = 0.0166f;
+float kDesiredFrameTime = 0.0333f; ///0.0166f;
 
 #include <chrono>
 using namespace std::chrono;
@@ -25,7 +25,7 @@ void MyTiming::Update()
 
     mDeltaTime = ( float ) ( currentTime - mLastFrameStartTime );
 
-	//frame lock at 60fps
+    //frame lock at (kDesiredFrameTime) fps
 	while( mDeltaTime < kDesiredFrameTime )
 	{
 		currentTime = GetTime();

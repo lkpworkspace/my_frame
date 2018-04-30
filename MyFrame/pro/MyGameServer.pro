@@ -5,51 +5,51 @@ CONFIG -= qt
 
 DEFINES += mygameengine
 
-INCLUDEPATH += ../inc ../example ../../3rd_src/
+INCLUDEPATH += ../inc/core ../example ../../3rd_src/
 
 SOURCES += \
-    ../src/MyCommon.cpp \
-    ../src/MyObj.cpp \
-    ../src/MyThread.cpp \
-    ../src/MyEvent.cpp \
-    ../src/MyMsgPool.cpp \
-    ../src/MyApp.cpp \
-    ../src/MyLog.cpp \
-    ../src/MyHelp.cpp \
-    ../src/MyTask.cpp \
-    ../src/MyList.cpp \
-    ../src/MyNet.cpp \
-    ../src/MySock.cpp \
-    ../src/MyUdp.cpp \
-    ../src/MyTcp.cpp \
-    ../src/MyNormalEvent.cpp \
-    ../src/MyTimer.cpp \
-    ../src/MyIOStream.cpp \
-    ../src/MyDataParser.cpp \
-    ../src/MyMath.cpp
+    ../src/core/MyCommon.cpp \
+    ../src/core/MyObj.cpp \
+    ../src/core/MyThread.cpp \
+    ../src/core/MyEvent.cpp \
+    ../src/core/MyMsgPool.cpp \
+    ../src/core/MyApp.cpp \
+    ../src/core/MyLog.cpp \
+    ../src/core/MyHelp.cpp \
+    ../src/core/MyTask.cpp \
+    ../src/core/MyList.cpp \
+    ../src/core/MyNet.cpp \
+    ../src/core/MySock.cpp \
+    ../src/core/MyUdp.cpp \
+    ../src/core/MyTcp.cpp \
+    ../src/core/MyNormalEvent.cpp \
+    ../src/core/MyTimer.cpp \
+    ../src/core/MyIOStream.cpp \
+    ../src/core/MyDataParser.cpp \
+    ../src/core/MyMath.cpp
 
 HEADERS += \
-    ../inc/MyCommon.h \
-    ../inc/MyObj.h \
-    ../inc/MyHelp.h \
-    ../inc/MyLog.h \
-    ../inc/MyFrame.h \
-    ../inc/MyApp.h \
-    ../inc/MyVec.h \
-    ../inc/MyList.h \
-    ../inc/MyTask.h \
-    ../inc/MyThread.h \
-    ../inc/MyEvent.h \
-    ../inc/MyMsgPool.h \
-    ../inc/MyTimer.h \
-    ../inc/MySock.h \
-    ../inc/MyNet.h \
-    ../inc/MyUdp.h \
-    ../inc/MyTcp.h \
-    ../inc/MyNormalEvent.h \
-    ../inc/MyIOStream.h \
-    ../inc/MyDataParser.h \
-    ../inc/MyMath.h \
+    ../inc/core/MyCommon.h \
+    ../inc/core/MyObj.h \
+    ../inc/core/MyHelp.h \
+    ../inc/core/MyLog.h \
+    ../inc/core/MyFrame.h \
+    ../inc/core/MyApp.h \
+    ../inc/core/MyVec.h \
+    ../inc/core/MyList.h \
+    ../inc/core/MyTask.h \
+    ../inc/core/MyThread.h \
+    ../inc/core/MyEvent.h \
+    ../inc/core/MyMsgPool.h \
+    ../inc/core/MyTimer.h \
+    ../inc/core/MySock.h \
+    ../inc/core/MyNet.h \
+    ../inc/core/MyUdp.h \
+    ../inc/core/MyTcp.h \
+    ../inc/core/MyNormalEvent.h \
+    ../inc/core/MyIOStream.h \
+    ../inc/core/MyDataParser.h \
+    ../inc/core/MyMath.h
 
 unix {
 
@@ -62,22 +62,22 @@ unix {
 
 contains(DEFINES,mygameengine){
     message('[DEFINES]: use_mygameengine')
-    INCLUDEPATH += ../inc/MyGameEngine
+    INCLUDEPATH += ../inc/MyGameEngine/Common
     INCLUDEPATH += ../inc/MyGameEngine/Server
     # engine <-- server
     HEADERS += \
-        ../inc/MyGameEngine/MyGameMsg.h \
-        ../inc/MyGameEngine/MyGameObj.h \
-        ../inc/MyGameEngine/MyWorld.h \
-        ../inc/MyGameEngine/MyEngine.h \
-        ../inc/MyGameEngine/MyInputState.h \
-        ../inc/MyGameEngine/MyMove.h \
-        ../inc/MyGameEngine/MyMoveList.h \
-        ../inc/MyGameEngine/MyTiming.h \
-        ../inc/MyGameEngine/MyGameEngineShared.h \
-        ../inc/MyGameEngine/MyNetworkManager.h \
-        ../inc/MyGameEngine/MyReplicationCommand.h \
-        ../inc/MyGameEngine/MyPlane.h \
+        ../inc/MyGameEngine/Common/MyGameMsg.h \
+        ../inc/MyGameEngine/Common/MyGameObj.h \
+        ../inc/MyGameEngine/Common/MyWorld.h \
+        ../inc/MyGameEngine/Common/MyEngine.h \
+        ../inc/MyGameEngine/Common/MyInputState.h \
+        ../inc/MyGameEngine/Common/MyMove.h \
+        ../inc/MyGameEngine/Common/MyMoveList.h \
+        ../inc/MyGameEngine/Common/MyTiming.h \
+        ../inc/MyGameEngine/Common/MyGameEngineShared.h \
+        ../inc/MyGameEngine/Common/MyNetworkManager.h \
+        ../inc/MyGameEngine/Common/MyReplicationCommand.h \
+        ../inc/MyGameEngine/Common/MyPlane.h \
         ../inc/MyGameEngine/Server/MyClientProxy.h \
         ../inc/MyGameEngine/Server/MyNetworkManagerServer.h \
         ../inc/MyGameEngine/Server/MyServer.h \
@@ -86,16 +86,16 @@ contains(DEFINES,mygameengine){
         ../inc/MyGameEngine/Server/MyPlaneServer.h
 
     SOURCES += \
-        ../src/MyGameEngine/MyGameMsg.cpp \
-        ../src/MyGameEngine/MyGameObj.cpp \
-        ../src/MyGameEngine/MyWorld.cpp \
-        ../src/MyGameEngine/MyEngine.cpp \
-        ../src/MyGameEngine/MyInputState.cpp \
-        ../src/MyGameEngine/MyMove.cpp \
-        ../src/MyGameEngine/MyMoveList.cpp \
-        ../src/MyGameEngine/MyTiming.cpp \
-        ../src/MyGameEngine/MyNetworkManager.cpp \
-        ../src/MyGameEngine/MyPlane.cpp \
+        ../src/MyGameEngine/Common/MyGameMsg.cpp \
+        ../src/MyGameEngine/Common/MyGameObj.cpp \
+        ../src/MyGameEngine/Common/MyWorld.cpp \
+        ../src/MyGameEngine/Common/MyEngine.cpp \
+        ../src/MyGameEngine/Common/MyInputState.cpp \
+        ../src/MyGameEngine/Common/MyMove.cpp \
+        ../src/MyGameEngine/Common/MyMoveList.cpp \
+        ../src/MyGameEngine/Common/MyTiming.cpp \
+        ../src/MyGameEngine/Common/MyNetworkManager.cpp \
+        ../src/MyGameEngine/Common/MyPlane.cpp \
         ../src/MyGameEngine/Server/MyClientProxy.cpp \
         ../src/MyGameEngine/Server/MyNetworkManagerServer.cpp \
         ../src/MyGameEngine/Server/MyServer.cpp \

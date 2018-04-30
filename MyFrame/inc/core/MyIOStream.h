@@ -1,5 +1,5 @@
-#ifndef MyIOStream_H
-#define MyIOStream_H
+#ifndef __MyIOStream_H__
+#define __MyIOStream_H__
 
 #include <string.h>
 
@@ -10,6 +10,9 @@
 #include "MyMath.h"
 #include "MyEvent.h"
 
+/**
+ * NOTE THAT: 类中的输入输出操作均是采用bit流的方式操作， 注意长度是比特
+ */
 
 inline uint32_t ConvertToFixed( float inNumber, float inMin, float inPrecision )
 {
@@ -125,10 +128,10 @@ public:
 
     ~MyInputStream()	{ if( mIsBufferOwner ) { free( mBuffer ); }; }
 
-    /* 重写MyEvent的虚函数 */
-    EVENT_TYPE GetEventType(){ return EV_MSG; }
+    /* 重写 MyEvent 的虚函数 */
+    virtual EVENT_TYPE GetEventType() override { return EV_MSG; }
     /* MyEvent 对象的回调函数 */
-    void* CallBackFunc(MyEvent*){ return nullptr; }
+    virtual void* CallBackFunc(MyEvent*) override { return nullptr; }
     /* do nothing */
     void Reset(){ return; }
     /* 获得buf指针 */
@@ -147,6 +150,7 @@ public:
     void		ReadBits( uint8_t& outData, uint32_t inBitCount );
     void		ReadBits( void* outData, uint32_t inBitCount );
     void		ReadBytes( void* outData, uint32_t inByteCount )		{ ReadBits( outData, inByteCount << 3 ); }
+
     template< typename T >
     void Read( T& inData, uint32_t inBitCount = sizeof( T ) * 8 )
     {
@@ -155,7 +159,7 @@ public:
                       "Generic Read only supports primitive data types" );
         ReadBits( &inData, inBitCount );
     }
-
+    /*
     void		Read( uint32_t& outData, uint32_t inBitCount = 32 )		{ ReadBits( &outData, inBitCount ); }
     void		Read( int& outData, uint32_t inBitCount = 32 )			{ ReadBits( &outData, inBitCount ); }
     void		Read( float& outData )									{ ReadBits( &outData, 32 ); }
@@ -164,6 +168,8 @@ public:
     void		Read( int16_t& outData, uint32_t inBitCount = 16 )		{ ReadBits( &outData, inBitCount ); }
 
     void		Read( uint8_t& outData, uint32_t inBitCount = 8 )		{ ReadBits( &outData, inBitCount ); }
+    */
+
     void		Read( bool& outData )									{ ReadBits( &outData, 1 ); }
 
     void		Read( MyQuaternion& outQuat );

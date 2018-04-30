@@ -1,6 +1,6 @@
-#include "../inc/MyApp.h"
-#include "../inc/MyTask.h"
-#include "../inc/MyLog.h"
+#include "MyApp.h"
+#include "MyTask.h"
+#include "MyLog.h"
 
 #include <signal.h>
 #include <sys/types.h>

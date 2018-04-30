@@ -1,5 +1,5 @@
-#ifndef MyServerShared_H
-#define MyServerShared_H
+#ifndef __MyServerShared_H__
+#define __MyServerShared_H__
 
 #if 0
 #define IP "127.0.0.1"
@@ -12,12 +12,12 @@
 #include "MyGameEngineShared.h"
 
 
-#include "Server/MyReplicationManagerServer.h"
+#include "MyReplicationManagerServer.h"
 
-#include "Server/MyClientProxy.h"
-#include "Server/MyNetworkManagerServer.h"
-#include "Server/MyServer.h"
+#include "MyClientProxy.h"
+#include "MyNetworkManagerServer.h"
+#include "MyServer.h"
 
-#include "Server/MyPlaneServer.h"
+#include "MyPlaneServer.h"
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef MY_LIST_HPP
-#define MY_LIST_HPP
+#ifndef __MYLIST_H__
+#define __MYLIST_H__
 /*
  *  demo:
  *      双向循环链表

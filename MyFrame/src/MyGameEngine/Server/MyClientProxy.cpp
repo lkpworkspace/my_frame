@@ -1,5 +1,13 @@
-#include "Server/MyServerShared.h"
+#include "MyServerShared.h"
 
+void PrintBuf(const char* inBuf, int inLen)
+{
+    for(int i = 0; i < inLen; ++i)
+    {
+        printf("0x%02X\t",(char)inBuf[i]);
+    }
+    printf("\n");
+}
 
 /**
  * Frame()
@@ -21,7 +29,10 @@ int MyClientProxy::Frame(const char* buf, int len)
         AddSendEv(msg);
         return false;
     }
-    MyDebugPrint("player %d client get msg: %s, pointer %p\n",buf,msg);
+#if 1
+    //MyDebugPrint("player %d client get msg: %s, pointer %p\n",mPlayerId, buf,msg);
+    PrintBuf(buf,len);
+#endif
     msg->SetBuffer(buf,len * 8);
     msg->SetClientProxy(this);
     msg->SetSendIdentify(MyGameServer::sInstance->mGameEngineTaskId);

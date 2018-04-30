@@ -21,7 +21,10 @@ public:
     virtual void* CallBackFunc(MyEvent *ev);
 };
 
-
+/**
+ * @brief The MyGameEngineTask class
+ * 游戏主循环线程
+ */
 class MyGameEngineTask : public MyTask
 {
 public:

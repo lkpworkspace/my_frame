@@ -1,6 +1,6 @@
 #include "MyGameEngineShared.h"
 
-const MyMove& MoveList::AddMove( const MyInputState& inInputState, float inTimestamp )
+const MyMove& MyMoveList::AddMove( const MyInputState& inInputState, float inTimestamp )
 {
 	//first move has 0 time. it's okay, it only happens once
 	float deltaTime = mLastMoveTimestamp >= 0.f ? inTimestamp - mLastMoveTimestamp : 0.f;
@@ -12,7 +12,7 @@ const MyMove& MoveList::AddMove( const MyInputState& inInputState, float inTimes
 	return mMoves.back();
 }
 
-bool MoveList::AddMove( const MyMove& inMove )
+bool MyMoveList::AddMove( const MyMove& inMove )
 {
 	//adjust the delta time and then place!
 	float timeStamp = inMove.GetTimestamp();
@@ -22,7 +22,7 @@ bool MoveList::AddMove( const MyMove& inMove )
 	return true;
 }
 
-void	MoveList::RemovedProcessedMoves( float inLastMoveProcessedOnServerTimestamp )
+void	MyMoveList::RemovedProcessedMoves( float inLastMoveProcessedOnServerTimestamp )
 {
 	while( !mMoves.empty() && mMoves.front().GetTimestamp() <= inLastMoveProcessedOnServerTimestamp )
 	{

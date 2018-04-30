@@ -9,7 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
     InitUI();
     m_isOpen = false;
     m_client = new QTcpSocket(this);
+    m_sendLoop = new QTimer(this);
 
+    connect(m_sendLoop,SIGNAL(timeout()),this,SLOT(SendLoop()));
     connect(m_client,SIGNAL(readyRead()),this,SLOT(ReadMessage()));
     connect(m_client,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(DisplayError(QAbstractSocket::SocketError)));
 }
@@ -178,6 +180,12 @@ void MainWindow::on_listWidget_Recv_itemClicked(QListWidgetItem *item)
     ShowBuf(buf,len);
 }
 
+void MainWindow::SendLoop()
+{
+    if(ui->pushButton_Send->isEnabled())
+        on_pushButton_Send_clicked();
+}
+
 void MainWindow::on_pushButton_Send_clicked()
 {
     char* buf = NULL;
@@ -262,4 +270,17 @@ void MainWindow::on_comboBox_Protocol_currentIndexChanged(int index)
 void MainWindow::on_pushButton_Save_clicked()
 {
     QMessageBox::information(this,"Save",_C("Save buf?"));
+}
+
+void MainWindow::on_checkBox_SendLoop_clicked(bool checked)
+{
+    if(checked && m_isOpen && ui->pushButton_Send->isEnabled())
+    {
+        ui->textEdit_Tips->append(_C("Send Loop Begin"));
+        m_sendLoop->start(ui->spinBox_Interval->value());
+    }else
+    {
+        ui->textEdit_Tips->append(_C("Send Loop Stop"));
+        m_sendLoop->stop();
+    }
 }

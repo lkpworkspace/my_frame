@@ -1,4 +1,17 @@
-#include "MyGameEngine/MyGameEngineShared.h"
+#include "MyGameEngineShared.h"
+
+MyPlane::MyPlane() :
+    MyGameObj(),
+    mMaxRotationSpeed( 5.f ),
+    mMaxLinearSpeed( 50.f ),
+    mVelocity( MyVec3::Zero ),
+    mThrustDir( 0.f ),
+    mPlayerId( -1 ),
+    mIsShooting( false ),
+    mHealth( 10 )
+{
+
+}
 
 uint32_t MyPlane::Write( MyOutputStream& inOutputStream, uint32_t inDirtyState ) const
 {
@@ -75,4 +88,38 @@ uint32_t MyPlane::Write( MyOutputStream& inOutputStream, uint32_t inDirtyState )
 
 
     return writtenState;
+}
+
+void MyPlane::ProcessInput( float inDeltaTime, const MyInputState& inInputState )
+{
+    //process our input....
+
+    //turning...
+    float newRotation = GetRotation() + inInputState.GetDesiredHorizontalDelta() * mMaxRotationSpeed * MyTiming::sInstance.GetDeltaTime();
+    SetRotation( newRotation );
+
+    //moving...
+    float inputForwardDelta = inInputState.GetDesiredVerticalDelta();
+    mThrustDir = inputForwardDelta;
+
+
+    mIsShooting = inInputState.IsShooting();
+}
+
+void MyPlane::AdjustVelocityByThrust( float inDeltaTime )
+{
+    //just set the velocity based on the thrust direction -- no thrust will lead to 0 velocity
+    //simulating acceleration makes the client prediction a bit more complex
+    MyVec3 forwardVector = GetForwardVector();
+    mVelocity = forwardVector * ( mThrustDir * inDeltaTime * mMaxLinearSpeed );
+}
+
+void MyPlane::SimulateMovement( float inDeltaTime )
+{
+    //simulate us...
+    AdjustVelocityByThrust( MyTiming::sInstance.GetDeltaTime() );
+
+    SetLocation( GetLocation() + mVelocity * MyTiming::sInstance.GetDeltaTime() );
+
+    //ProcessCollisions();
 }

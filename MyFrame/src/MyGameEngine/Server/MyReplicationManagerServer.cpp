@@ -1,4 +1,4 @@
-#include "Server/MyServerShared.h"
+#include "MyServerShared.h"
 
 
 void MyReplicationManagerServer::ReplicateCreate( int inNetworkId, uint32_t inInitialDirtyState )

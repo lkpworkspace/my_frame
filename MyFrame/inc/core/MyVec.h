@@ -1,5 +1,5 @@
-#ifndef MYVEC_HPP
-#define MYVEC_HPP
+#ifndef __MYVEC_H__
+#define __MYVEC_H__
 
 #include <iostream>
 

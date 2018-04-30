@@ -48,6 +48,9 @@ private slots:
     void NewConnect(QString IP, int port);
     void ReadMessage();
     void DisplayError(QAbstractSocket::SocketError);
+    void on_checkBox_SendLoop_clicked(bool checked);
+
+    void SendLoop();
 private:
     void InitUI();
     void ShowBuf(const char* buf, int len);
@@ -61,6 +64,7 @@ private:
     quint16 m_blocksize;
     QByteArray m_message;
     QWidget* m_scrollWidget;
+    QTimer* m_sendLoop;
 };
 
 #endif // MAINWINDOW_H

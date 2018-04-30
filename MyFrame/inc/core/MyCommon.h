@@ -45,4 +45,23 @@
 #define NS_MYFRAME_BEGIN    namespace myframe {
 #define NS_MYFRAME_END      }
 
+/**
+ * 定义一些全局需要使用的函数
+ */
+NS_MYFRAME_BEGIN
+
+/**
+ * 获得任务名对应的任务ID
+ *      一般通过该函数获得要发送消息的任务ID
+ */
+int GetTaskIdentify(const char* inTaskName);
+
+/**
+ * 设置任务名对应的任务ID
+ */
+void SetTaskIdentifyWithName(const char* inTaskName, int inTaskId);
+
+
+NS_MYFRAME_END
+
 #endif // COMMON_H

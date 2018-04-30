@@ -1,4 +1,5 @@
-#include "../inc/MyApp.h"
+#include "MyApp.h"
+//#include "MyFrame.h"
 
 USING_MYFRAME;
 

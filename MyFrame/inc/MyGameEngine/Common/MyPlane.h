@@ -14,16 +14,23 @@ public:
 
         ECRS_AllState = ECRS_Pose | ECRS_Color | ECRS_PlayerId | ECRS_Health
     };
+    virtual uint32_t GetAllStateMask() const override { return ECRS_AllState; }
+
+    void ProcessInput( float inDeltaTime, const MyInputState& inInputState );
+    void SimulateMovement( float inDeltaTime );
 
     void		SetPlayerId( uint32_t inPlayerId )			{ mPlayerId = inPlayerId; }
     uint32_t	GetPlayerId()						const 	{ return mPlayerId; }
 
-    void			SetVelocity( const MyVec3& inVelocity )	{ mVelocity = inVelocity; }
-    const MyVec3&	GetVelocity()						const	{ return mVelocity; }
+//    void ProcessCollisions();
+//	void ProcessCollisionsWithScreenWalls();
+
+    void SetVelocity( const MyVec3& inVelocity )	{ mVelocity = inVelocity; }
+    const MyVec3&	GetVelocity() const { return mVelocity; }
 
     virtual uint32_t	Write( MyOutputStream& inOutputStream, uint32_t inDirtyState ) const;
 protected:
-    MyPlane(){}
+    MyPlane();
 
     uint32_t mPlayerId;
 
@@ -33,7 +40,15 @@ protected:
 
     int mHealth;
 private:
+    void AdjustVelocityByThrust( float inDeltaTime );
 
+    float mMaxLinearSpeed;
+    float mMaxRotationSpeed;
+
+//    float mWallRestitution;
+//    float mCatRestitution;
+
+    bool mIsShooting;
 };
 
 #endif

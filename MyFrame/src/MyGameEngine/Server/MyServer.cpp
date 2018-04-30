@@ -1,4 +1,4 @@
-#include "Server/MyServerShared.h"
+#include "MyServerShared.h"
 #include "MyFrame.h"
 
 #include <thread>
@@ -27,6 +27,10 @@ void* MyGameTcpServer::CallBackFunc(MyEvent *ev)
                fd,
                info.GetPort(),
                info.GetIp().c_str());
+        MyDebug("get client connect fd : %d, port %u, ip %s\n",
+               fd,
+               info.GetPort(),
+               info.GetIp().c_str());
 
         MyApp::theApp->AddEvent(recv);
     }
@@ -41,7 +45,7 @@ MyGameEngineTask::MyGameEngineTask()
      * 设置线程是帧循环的，而不是基于事件驱动的
      */
     // 调试阶段不使用帧循环驱动，而是用事件驱动(default)
-    //SetLoop(true);
+    SetLoop(true);
 
     /**
      * 设置该线程只处理指定自己ID的事件
@@ -53,20 +57,23 @@ MyGameEngineTask::~MyGameEngineTask()
 {
 }
 
+/**
+ * @brief MyGameEngineTask::Update
+ * @param evs 从客户端收到的数据
+ * 游戏服务器循环
+ */
 void MyGameEngineTask::Update(MyList *evs)
 {
-    MyGameServer::sInstance->mGmameMsgs.Append(evs);
-
-#if 1
+#if 0
+    MyDebugPrint("get client msg count %d\n",evs->Count());
     static int counter = 0;
     MyDebug("loop %d\n", counter);
     MyDebugPrint("loop %d\n", counter);
     ++counter;
 #endif
+    MyGameServer::sInstance->mGmameMsgs.Append(evs);
 
     MyGameServer::sInstance->Run();
-
-//    usleep(1000*1000);
 }
 //////////////////////////////////////////////////// MyGameServer
 MyGameServer* MyGameServer::sInstance = nullptr;
@@ -77,7 +84,6 @@ MyGameServer::MyGameServer()
     MyNetworkManagerServer::StaticInit();
 
     mMsgPool.RegMsg("MSG_GameMsg",MyGameMsg::StaticCreate);
-
 }
 
 bool MyGameServer::StaticInit()
@@ -92,13 +98,15 @@ int MyGameServer::Go()
     //MyHelp::DaemonInit();
     MyApp app(2);
 
+    /// 设置游戏世界的初始化游戏对象
     SetupWorld();
-    // process task
+
+    /// 添加游戏循环线程
     MyGameEngineTask* ges = new MyGameEngineTask();
     mGameEngineTaskId = ges->GetIdentify();
     MyApp::theApp->AddEvent(ges);
 
-    // tcp server
+    /// 开启游戏服务器TCP监听
     MyGameTcpServer* server = new MyGameTcpServer();
     server->SetReuseSock();
     server->Bind();

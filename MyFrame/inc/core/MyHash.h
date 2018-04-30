@@ -1,5 +1,5 @@
-#ifndef MYHASH_HPP
-#define MYHASH_HPP
+#ifndef __MYHASH_H__
+#define __MYHASH_H__
 
 //static inline u32 hash_32(u32 val, unsigned int bits)
 //{

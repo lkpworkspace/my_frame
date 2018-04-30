@@ -1,9 +1,9 @@
-#include "../inc/MySock.h"
+#include "MySock.h"
 #include <fcntl.h>
 #include <assert.h>
-#include "../inc/MyEvent.h"
-#include "../inc/MyAllEvent.h"
-#include "../inc/MyLog.h"
+#include "MyEvent.h"
+#include "MyAllEvent.h"
+#include "MyLog.h"
 
 USING_MYFRAME;
 

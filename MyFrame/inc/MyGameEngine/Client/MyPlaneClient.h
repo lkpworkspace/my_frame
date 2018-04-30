@@ -12,7 +12,7 @@ public:
     virtual void Read( MyInputStream& inInputStream ) override;
 
 protected:
-    MyPlaneClient(){}
+	MyPlaneClient();
 
 };
 

@@ -1,14 +1,14 @@
 #ifndef MyMoveList_H
 #define MyMoveList_H
 
-class MoveList
+class MyMoveList
 {
 public:
 
     typedef deque< MyMove >::const_iterator			const_iterator;
     typedef deque< MyMove >::const_reverse_iterator	const_reverse_iterator;
 	
-	MoveList():
+    MyMoveList():
 		mLastMoveTimestamp( -1.f )
 	{}
 	

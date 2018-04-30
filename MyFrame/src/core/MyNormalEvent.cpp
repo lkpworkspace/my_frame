@@ -1,8 +1,8 @@
-#include "../inc/MyNormalEvent.h"
-#include "../inc/MyLog.h"
+#include "MyNormalEvent.h"
+#include "MyLog.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
-#include "../inc/MyApp.h"
+#include "MyApp.h"
 #include <string.h>
 
 USING_MYFRAME;

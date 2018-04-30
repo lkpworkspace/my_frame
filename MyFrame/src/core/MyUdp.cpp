@@ -1,6 +1,6 @@
-#include "../inc/MyUdp.h"
-#include "../inc/MyLog.h"
-#include "../inc/MyApp.h"
+#include "MyUdp.h"
+#include "MyLog.h"
+#include "MyApp.h"
 
 USING_MYFRAME;
 

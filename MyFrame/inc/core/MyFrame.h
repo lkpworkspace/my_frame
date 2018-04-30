@@ -1,5 +1,5 @@
-#ifndef MYFRAME_H
-#define MYFRAME_H
+#ifndef __MYFRAME_H__
+#define __MYFRAME_H__
 
 #include "MyCommon.h"
 
@@ -9,10 +9,14 @@
 #include "MyVec.h"
 #include "MyList.h"
 
-// base class
-#include "MyLog.h"
+// help and log class
 #include "MyHelp.h"
+#include "MyLog.h"
+
+// base class
 #include "MyObj.h"
+#include "MyDataParser.h"
+#include "MyMath.h"
 #include "MyEvent.h"
 #include "MyMsgPool.h"
 #include "MyIOStream.h"
@@ -26,7 +30,7 @@
 // thread
 #include "MyThread.h"
 #include "MyTask.h"
-#include "MyAllEvent.h"
+//#include "MyAllEvent.h"
 
 // network
 #include "MyNet.h"
