@@ -79,7 +79,8 @@ void MyGameEngineTask::Update(MyList *evs)
 MyGameServer* MyGameServer::sInstance = nullptr;
 MyGameServer::MyGameServer()
 {
-    MyWorld::sInstance->RegisterCreationFunction('PLAN',MyPlaneServer::StaticCreate);
+    //MyWorld::sInstance->RegisterCreationFunction('PLAN',MyPlaneServer::StaticCreate);
+    MyWorld::sInstance->RegisterCreationFunction('TEST',MyGameObjCtrl_test::StaticCreate);
 
     MyNetworkManagerServer::StaticInit();
 

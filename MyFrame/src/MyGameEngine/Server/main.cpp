@@ -30,19 +30,18 @@ int main()
 //    {
 //        printf("some%d %d\n", pair.first, pair.second);
 //    }
-    MyOutputStream o;
-    int state = 0x00;
-    o.Write(state);
-    o.Write(3,16);
 
-    MyInputStream i(o.GetBufferPtr(),o.GetBitLength());
+//    MyOutputStream o;
+//    int state = 0x00;
+//    o.Write(state);
+//    o.Write(3,16);
 
-    int count = 0;
-    i.Read(state);
-    i.Read(count, 16);
+//    MyInputStream i(o.GetBufferPtr(),o.GetBitLength());
 
-    printf("count %d\n",count);
+//    int count = 0;
+//    i.Read(state);
+//    i.Read(count, 16);
 
-
+//    printf("count %d\n",count);
 #endif
 }

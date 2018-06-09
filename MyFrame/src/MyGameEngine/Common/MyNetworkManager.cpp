@@ -3,15 +3,9 @@
 
 void	MyNetworkManager::ProcessIncomingPackets(MyList *inList)
 {
-    ReadIncomingPacketsIntoQueue(inList);
+    mPacketQueue.Append(inList);
 
     ProcessQueuedPackets();
-}
-
-
-void	MyNetworkManager::ReadIncomingPacketsIntoQueue(MyList* inList)
-{
-    mPacketQueue.Append(inList);
 }
 
 void	MyNetworkManager::ProcessQueuedPackets()

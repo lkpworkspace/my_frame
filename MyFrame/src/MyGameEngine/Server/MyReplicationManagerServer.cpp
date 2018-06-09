@@ -37,7 +37,7 @@ void MyReplicationManagerServer::Write(MyOutputStream &inOutputStream )
 
             //only need 2 bits for action...
             ReplicationAction action = replicationCommand.GetAction();
-            inOutputStream.Write( action, 2 );
+            inOutputStream.Write( action, 2 * 8 );
 
             uint32_t writtenState = 0;
             uint32_t dirtyState = replicationCommand.GetDirtyState();

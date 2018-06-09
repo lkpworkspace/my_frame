@@ -127,11 +127,13 @@ void MyNetworkManagerServer::HandleInputPack(MyGameMsg* inGameMsg, MyClientProxy
     {
         if( move.Read( (MyInputStream&)*inGameMsg ) )
         {
+#if 0
             MyDebugPrint("count %d, h %f, v %f\n", moveCount, move.GetInputState().GetDesiredHorizontalDelta(),
                          move.GetInputState().GetDesiredVerticalDelta());
+#endif
             if( inClient->GetUnprocessedMoveList().AddMove( move ) )
             {
-                MyDebugPrint("server get input\n");
+                //MyDebugPrint("server get input\n");
                 //inClientProxy->SetIsLastMoveTimestampDirty( true );
             }
         }
@@ -181,7 +183,7 @@ void MyNetworkManagerServer::SendStatePacketToClient( MyClientProxy* inClientPro
 void MyNetworkManagerServer::HandleNewClient( MyClientProxy* inClientProxy )
 {
     int playerId = inClientProxy->GetPlayerId();
-
+#if 0
     //ScoreBoardManager::sInstance->AddEntry( playerId, inClientProxy->GetName() );
     //SpawnCatForPlayer( playerId );
     MyPlane* plane = (MyPlane*)( MyWorld::sInstance->CreateGameObject( 'PLAN' ) );
@@ -189,8 +191,15 @@ void MyNetworkManagerServer::HandleNewClient( MyClientProxy* inClientProxy )
     plane->SetPlayerId( playerId );
     //gotta pick a better spawn location than this...
     plane->SetLocation( MyVec3( 0.5f, 0.f, 0.f ) );
-
     inClientProxy->SetPlayer(plane);
+#else
+    MyGameObjCtrl_test* test = (MyGameObjCtrl_test*)( MyWorld::sInstance->CreateGameObject( 'TEST' ) );
+    //plane->SetColor( ScoreBoardManager::sInstance->GetEntry( inPlayerId )->GetColor() );
+    test->SetPlayerId( playerId );
+    //gotta pick a better spawn location than this...
+    test->SetLocation( MyVec3( 0.5f, 0.f, 0.f ) );
+    inClientProxy->SetPlayer(test);
+#endif
 }
 
 

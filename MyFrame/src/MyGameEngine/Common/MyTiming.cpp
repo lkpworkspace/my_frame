@@ -1,6 +1,6 @@
 #include "MyGameEngineShared.h"
 
-float kDesiredFrameTime = 0.0333f; ///0.0166f;
+float kDesiredFrameTime = 0.0166f;
 
 #include <chrono>
 using namespace std::chrono;
