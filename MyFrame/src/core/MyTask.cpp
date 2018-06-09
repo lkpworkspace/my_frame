@@ -47,6 +47,7 @@ void MyTask::Run()
     WaitEvent();
     TaskWork();
     Update(&m_ev_que);
+    m_send.Append(&m_ev_send_que);
 }
 
 

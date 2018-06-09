@@ -20,7 +20,8 @@ int main()
 {
 //    MyNuklearTest::Test();
 //    MyTaskTest::Test();
-    MyVec<int>::Test();
+//    MyVec<int>::Test();
+    MyTaskTest::Test();
     return 0;
 }
 
