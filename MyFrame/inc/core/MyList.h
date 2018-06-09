@@ -32,6 +32,7 @@ public:
     MyNode()
         :prev(nullptr),next(nullptr)
     {}
+    virtual ~MyNode(){}
     MyNode* prev;
     MyNode* next;
 };

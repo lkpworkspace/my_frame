@@ -1,7 +1,7 @@
 #ifndef MYSQLITE3_H
 #define MYSQLITE3_H
 #include "MyCommon.h"
-#include "../../3rd_src/Sqlite3/sqlite3.h"
+#include "sqlite3.h"
 #include <vector>
 
 NS_MYFRAME_BEGIN

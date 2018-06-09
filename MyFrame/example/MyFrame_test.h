@@ -92,7 +92,6 @@ public:
      */
     virtual int Frame(const char* buf, int len)
     {
-//        MyMsgTest* met = new MyMsgTest();
         MyMsgTest* met = (MyMsgTest*)g_msgpool.Get("MYMSG_test");
         MyDebug("Get Msg: %s\n",buf);
         MyDebugPrint("Get Msg: %s, %p\n",buf,met);
@@ -111,21 +110,17 @@ public:
 /**
  * 创建一个TCP服务器对象，
  * 任务是接受客户端请求的连接，
- * 并将连接对象 加入到监听队列中
+ * 并将连接对象加入到监听队列中
  */
 class MyTcpServerTest : public MyTcpServer
 {
 public:
     MyTcpServerTest()
         :MyTcpServer(IP,PORT)
-    {
-
-    }
+    {}
 
     virtual ~MyTcpServerTest()
-    {
-
-    }
+    {}
 
     virtual void* CallBackFunc(MyEvent *ev)
     {
@@ -155,20 +150,15 @@ class MyTaskTest : public MyTask
 public:
     MyTaskTest()
     {
-        /**
-         * 设置线程是帧循环的，而不是基于事件驱动的
-         */
+        /* 设置线程是帧循环的，而不是基于事件驱动的 */
         //SetLoop(true);
 
-        /**
-         * 设置该线程只处理指定自己ID的事件
-         */
+        /* 设置该线程只处理指定自己ID的事件 */
         SetSpecifledEv(true);
     }
 
     virtual ~MyTaskTest()
-    {
-    }
+    {}
 
     ///////////////////////////////////////////////// 可以重写的函数
     /**
@@ -209,26 +199,25 @@ public:
             begin = next;
         }
 
-
-        // TODO...
+        // TODO begin
 #if 1
         static int counter = 0;
         MyDebug("loop %d\n", counter);
         MyDebugPrint("loop %d\n", counter);
         ++counter;
 #endif
-        //usleep(1000 * 1000 * 60 * 60);
+        //usleep(1000 * 1000);
 
         // TODO end
     }
 
 
-    /**
-     * 入口函数
-     */
+    /* 入口函数 */
     static void Test()
     {
+        // 守护进程后台运行
         //MyHelp::DaemonInit();
+
         MyApp app(4);
 
         // msgpool register
@@ -237,7 +226,7 @@ public:
         // process task
         MyTaskTest* tt = new MyTaskTest();
         MyMsgTest::m_send_task = tt->GetIdentify();
-        MyApp::theApp->AddEvent(tt);
+        app.AddEvent(tt);
 
         // tcp server
         MyTcpServerTest* server = new MyTcpServerTest();
@@ -247,10 +236,9 @@ public:
         server->SetNonblock(true);
         app.AddEvent(server);
 
+        // main thread loop
         app.Exec();
     }
-
-private:
 };
 
 

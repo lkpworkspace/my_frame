@@ -18,9 +18,10 @@ typedef int socklen_t;
 #include <arpa/inet.h>
 #include <sys/epoll.h>
 #include <sys/un.h>
+#include <net/if.h>
+#include <net/if_arp.h>
 #include <netinet/tcp.h>
 #include <netdb.h>
-
 typedef int SOCKET;
 #endif
 
@@ -32,7 +33,7 @@ class MyNet
 public:
     MyNet();
     ~MyNet();
-
+    static int GetLocalIp(const char* eth, char* ip);
     // useful
     static std::string GetAddrIp(sockaddr_in* addr);
     static unsigned short GetAddrPort(sockaddr_in* addr);

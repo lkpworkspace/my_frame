@@ -36,12 +36,9 @@ public:
     virtual ~MyTcpSocket();
     ////////////////////////////////////
     /// override MyEvent method
-    int GetEventFd(){ return m_sock; }
-    EVENT_TYPE GetEventType(){ return EVENT_TYPE::EV_SOCKFD; }
-    uint32_t GetEpollEventType(){ return EPOLLIN; }
-    ////////////////////////////////////
-    /// virtual method
-    virtual void* CallBackFunc(MyEvent *);
+    virtual int GetEventFd() final { return m_sock; }
+    virtual EVENT_TYPE GetEventType() final { return EVENT_TYPE::EV_SOCKFD; }
+    virtual uint32_t GetEpollEventType() final { return EPOLLIN; }
 
     MyTcpSocket& operator=(MyTcpSocket& other);
 
@@ -50,6 +47,11 @@ public:
 
     std::string GetIp();
     unsigned short GetPort();
+protected:
+    ////////////////////////////////////
+    /// virtual method
+    virtual void* CallBackFunc(MyEvent *);
+
 private:
     int m_sock;
     sockaddr_in m_addr;

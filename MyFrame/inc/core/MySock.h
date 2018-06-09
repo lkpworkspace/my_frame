@@ -15,20 +15,24 @@ public:
     MySock(std::string ip,uint16_t port,int type, int protol = 0);
     virtual ~MySock();
     //////////////////////////////////// override MyEvent method
-    int GetEventFd(){ return m_sock; }
-    EVENT_TYPE GetEventType(){ return EVENT_TYPE::EV_SOCKFD; }
-    virtual uint32_t GetEpollEventType(){ return EPOLLIN; }
-    virtual void* CallBackFunc(MyEvent *);
-public:
+    virtual int GetEventFd() final { return m_sock; }
+    virtual EVENT_TYPE GetEventType() override { return EVENT_TYPE::EV_SOCKFD; }
+    virtual uint32_t GetEpollEventType() override { return EPOLLIN; }
+
     int Bind();
     int Close();
     int SetReuseSock();
     int SetNonblock(bool b = true);
+
 protected:
+    //////////////////////////////////// override MyEvent method
+    virtual void* CallBackFunc(MyEvent *) override;
+
     int m_sock;                    // socket file descritor.
     std::string m_ip;              // if server, bind ip; if client, connect ip.
     uint16_t m_port;               // if server, bind port; if client, connect port.
     struct sockaddr_in m_addr;     // if server, save self addr; if client, save client addr.
+
 private:
     int Socket(int domin, int type, int protocol);
 };

@@ -21,7 +21,7 @@ public:
      */
     explicit MyObj();
     MyObj(std::string key);
-    ~MyObj();
+    virtual ~MyObj();
 
     /**
      * 名字或者标签设置失败会返回错误，并不会覆盖原来的设置

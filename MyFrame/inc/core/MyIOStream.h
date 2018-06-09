@@ -25,7 +25,7 @@ inline float ConvertFromFixed( uint32_t inNumber, float inMin, float inPrecision
 }
 
 
-class MyOutputStream
+class MyOutputStream : public myframe::MyEvent
 {
 public:
 
@@ -37,6 +37,11 @@ public:
     }
 
     ~MyOutputStream()	{ std::free( mBuffer ); }
+
+    /* 重写 MyEvent 的虚函数 */
+    virtual EVENT_TYPE GetEventType() override { return EV_MSG; }
+    /* MyEvent 对象的回调函数 */
+    virtual void* CallBackFunc(MyEvent*) override { return nullptr; }
 
     void		WriteBits( uint8_t inData, uint32_t inBitCount );
     void		WriteBits( const void* inData, uint32_t inBitCount );
@@ -132,8 +137,7 @@ public:
     virtual EVENT_TYPE GetEventType() override { return EV_MSG; }
     /* MyEvent 对象的回调函数 */
     virtual void* CallBackFunc(MyEvent*) override { return nullptr; }
-    /* do nothing */
-    void Reset(){ return; }
+
     /* 获得buf指针 */
     const 	char*	GetBufferPtr()		const	{ return mBuffer; }
     /* 获得buf长度 */

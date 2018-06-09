@@ -5,10 +5,6 @@
 #include <string.h>
 #include <errno.h>
 
-#include "MyHelp.h"
-
-
-
 #define LOG_NAME "myframe.log"
 #define MAX_PATH 255
 

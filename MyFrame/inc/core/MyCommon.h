@@ -48,7 +48,7 @@
 /**
  * 定义一些全局需要使用的函数
  */
-NS_MYFRAME_BEGIN
+
 
 /**
  * 获得任务名对应的任务ID
@@ -61,7 +61,5 @@ int GetTaskIdentify(const char* inTaskName);
  */
 void SetTaskIdentifyWithName(const char* inTaskName, int inTaskId);
 
-
-NS_MYFRAME_END
 
 #endif // COMMON_H

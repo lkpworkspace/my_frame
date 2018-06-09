@@ -2,7 +2,7 @@
 #define __MyWriteable_test_h__
 #include "MyFrame.h"
 #include "MyTest.h"
-#include "../inc/MyWriteable.h"
+#include "MyWriteable.h"
 
 using namespace my_master;
 
@@ -19,13 +19,13 @@ public:
         void *p = &a;
 
         MyWriteable w;
-        w.AddWriteEvent((my_master::MyEvent*)p);
+        w.AddWriteEvent((myframe::MyEvent*)p);
 
         std::thread thr([&](){
             while(true)
             {
                 sleep(1);
-                sem_t* temp = w.SemFind((my_master::MyEvent*)p);
+                sem_t* temp = w.SemFind((myframe::MyEvent*)p);
                 sem_post(temp);
             }
         });
@@ -33,7 +33,7 @@ public:
 
         while(true)
         {
-            w.WaitWriteable((my_master::MyEvent*)p);
+            w.WaitWriteable((myframe::MyEvent*)p);
             printf("aaaa\n");
         }
     }
