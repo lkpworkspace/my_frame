@@ -1,6 +1,10 @@
 #include "MyNet.h"
 #include <assert.h>
 
+
+#include <sys/ioctl.h>
+#include <string.h>
+#include <unistd.h>
 /*
  *  net error: h_error
  *      HOST_NOT_FOUND
@@ -15,6 +19,22 @@ MyNet::MyNet()
 
 MyNet::~MyNet()
 {}
+
+int MyNet::GetLocalIp(const char* eth, char* ip)
+{
+    struct sockaddr_in *addr;
+    struct ifreq req;
+    int fd;
+
+    memset(&req, 0, sizeof(req));
+    fd = socket(AF_INET, SOCK_STREAM, 0);
+    strcpy(req.ifr_name, eth);
+    ioctl(fd, SIOCGIFADDR, &req);
+    addr = (struct sockaddr_in*)&req.ifr_addr;
+    strcpy(ip,inet_ntoa(addr->sin_addr));
+    close(fd);
+    return 0;
+}
 
 std::string MyNet::GetAddrIp(sockaddr_in* addr)
 {
