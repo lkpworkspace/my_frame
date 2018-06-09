@@ -77,13 +77,15 @@ contains(DEFINES,mygameengine){
         ../inc/MyGameEngine/Common/MyGameEngineShared.h \
         ../inc/MyGameEngine/Common/MyNetworkManager.h \
         ../inc/MyGameEngine/Common/MyReplicationCommand.h \
+        ../inc/MyGameEngine/Common/MyGameObjCtrl.h \
         ../inc/MyGameEngine/Common/MyPlane.h \
         ../inc/MyGameEngine/Server/MyClientProxy.h \
         ../inc/MyGameEngine/Server/MyNetworkManagerServer.h \
         ../inc/MyGameEngine/Server/MyServer.h \
         ../inc/MyGameEngine/Server/MyServerShared.h \
         ../inc/MyGameEngine/Server/MyReplicationManagerServer.h \
-        ../inc/MyGameEngine/Server/MyPlaneServer.h
+        ../inc/MyGameEngine/Server/MyPlaneServer.h \
+        ../inc/MyGameEngine/Server/MyGameObjCtrl_test.h
 
     SOURCES += \
         ../src/MyGameEngine/Common/MyGameMsg.cpp \
@@ -95,6 +97,7 @@ contains(DEFINES,mygameengine){
         ../src/MyGameEngine/Common/MyMoveList.cpp \
         ../src/MyGameEngine/Common/MyTiming.cpp \
         ../src/MyGameEngine/Common/MyNetworkManager.cpp \
+        ../src/MyGameEngine/Common/MyGameObjCtrl.cpp \
         ../src/MyGameEngine/Common/MyPlane.cpp \
         ../src/MyGameEngine/Server/MyClientProxy.cpp \
         ../src/MyGameEngine/Server/MyNetworkManagerServer.cpp \

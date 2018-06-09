@@ -19,5 +19,5 @@
 #include "MyServer.h"
 
 #include "MyPlaneServer.h"
-
+#include "MyGameObjCtrl_test.h"
 #endif

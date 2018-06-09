@@ -40,6 +40,7 @@ class MyGameObj;
 #include "MyNetworkManager.h"
 #include "MyReplicationCommand.h"
 
+#include "MyGameObjCtrl.h"
 #include "MyPlane.h"
 
 #include "MyEngine.h"

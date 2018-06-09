@@ -16,18 +16,14 @@ public:
     MyGameObj();
     virtual ~MyGameObj() {}
 
-//    virtual	RoboCat*	GetAsCat()	{ return nullptr; }
-
     virtual uint32_t GetAllStateMask()	const { return 0; }
-
-    //return whether to keep processing collision
-//    virtual bool	HandleCollisionWithCat( RoboCat* inCat ) { ( void ) inCat; return true; }
 
     virtual void	Update();
 
-    /* 挂掉后的处理函数 */
+            /* 挂掉后的处理函数 */
     virtual void	HandleDying() {}
 
+            /* MyWorld类 管理游戏对象使用 */
             void	SetIndexInWorld( int inIndex )						{ mIndexInWorld = inIndex; }
             int		GetIndexInWorld()				const				{ return mIndexInWorld; }
 
@@ -39,7 +35,6 @@ public:
             void	SetScale( float inScale )							{ mScale = inScale; }
             float	GetScale()						const				{ return mScale; }
 
-
             /* 设置/获得 位置 */
     const MyVec3&		GetLocation()				const				{ return mLocation; }
             void		SetLocation( const MyVec3& inLocation )		{ mLocation = inLocation; }
@@ -47,8 +42,6 @@ public:
             /* 设置/获得 碰撞半径 */
             float		GetCollisionRadius()		const				{ return mCollisionRadius; }
             void		SetCollisionRadius( float inRadius )			{ mCollisionRadius = inRadius; }
-
-            MyVec3		GetForwardVector()			const;
 
             /* 设置/获得 clolor */
             void		SetColor( const MyVec3& inColor )					{ mColor = inColor; }
@@ -62,6 +55,9 @@ public:
             int			GetNetworkId()				const				{ return mNetworkId; }
             void		SetNetworkId( int inNetworkId );
 
+            MyVec3		GetForwardVector()			const;
+
+            /* need override method */
     virtual uint32_t	Write( MyOutputStream& inOutputStream, uint32_t inDirtyState ) const	{  ( void ) inOutputStream; ( void ) inDirtyState; return 0; }
     virtual void		Read( MyInputStream& inInputStream )									{ ( void ) inInputStream; }
 
@@ -76,12 +72,12 @@ protected:
     float  mRotation;
     /* 缩放比例 */
     float  mScale;
-    int    mIndexInWorld;
-
+    /* 挂掉了没 */
     bool   mDoesWantToDie;
     /* 网络标识 */
     int    mNetworkId;
 
+    int    mIndexInWorld;
 };
 
 typedef std::shared_ptr< MyGameObj >	MyGameObjPtr;
