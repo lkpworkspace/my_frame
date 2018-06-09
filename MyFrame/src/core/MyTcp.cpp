@@ -1,3 +1,5 @@
+#include "MyVec.h"
+#include "MyDataParser.h"
 #include "MyTcp.h"
 #include "MyApp.h"
 #include "MyAllEvent.h"
@@ -123,6 +125,142 @@ int MyTcpSocket::Write(const char* buf, int len)
     return write(m_sock,buf,len);
 }
 
+///////////////////////////////////////////////////////////////////
+/// MyEasyTcpClient
+MyEasyTcpClient::MyEasyTcpClient(std::string ip, uint16_t port)
+    :MyTcpClient(ip,port)
+{}
+
+MyEasyTcpClient::~MyEasyTcpClient(){}
+
+void* MyEasyTcpClient::CallBackFunc(MyEvent *ev)
+{
+    static char read_cache[65535];
+    char* frame = nullptr;
+    int isOk = true;
+    int read_len = MyHelp::BytesAvailable(GetEventFd());
+
+    int res = Read(read_cache,read_len > 65535 ? 65535 : read_len);
+    if(res == 0)
+    {
+        isOk = Frame(nullptr, 0);
+        isOk = false;
+        MyDebugPrint("server %s:%d quit\n", GetIp().c_str(), GetPort());
+        goto end;
+    }else if(res == -1)
+    {
+        goto end;
+    }
+    mDataParser.GetDataFromSocket(read_cache, res);
+    res = mDataParser.GetFrame(&frame);
+    if(res > 0)
+        isOk = Frame(frame, res);
+
+end:
+    if(isOk)
+        MyApp::theApp->AddEvent(ev);
+    return nullptr;
+}
+
+int MyEasyTcpClient::EasyWrite(const char* buf, uint16_t len)
+{
+    static char *write_cache = nullptr;
+    int write_len = 0;
+    int index = 0;
+    int res = 0;
+
+    write_len = mDataParser.WriteFrame(buf,len,&write_cache);
+
+    while(write_len)
+    {
+        res = Write(&write_cache[index],write_len);
+        if(res == -1)
+        {
+            if(errno == EPIPE)
+            {
+                MyDebugPrint("write socket error EPIPE\n");
+                MyDebug("write socket EPIPE");
+                return -1;
+            }
+            MyDebugPrint("write socket fail, errno %d\n",errno);
+            MyDebug("write socket fail, errno %d\n",errno);
+            usleep(1000 * 10);
+        }
+        write_len -= res;
+        index += res;
+    }
+    return write_len;
+}
+
+
+//////////////////////////////////////////////////////////////////
+/// MyEasyTcpSocket
+MyEasyTcpSocket::MyEasyTcpSocket(int fd, sockaddr_in addr)
+    :MyTcpSocket(fd,addr)
+{}
+
+MyEasyTcpSocket::~MyEasyTcpSocket(){}
+
+void* MyEasyTcpSocket::CallBackFunc(MyEvent *ev)
+{
+    static char read_cache[65535];
+    char* frame = nullptr;
+    int isOk = true;
+    int read_len = MyHelp::BytesAvailable(GetEventFd());
+
+    int res = Read(read_cache,read_len > 65535 ? 65535 : read_len);
+    if(res == 0)
+    {
+        isOk = Frame(nullptr, 0);
+        isOk = false;
+        MyDebugPrint("client %s:%d quit\n", GetIp().c_str(), GetPort());
+        goto end;
+    }else if(res == -1)
+    {
+        goto end;
+    }
+    mDataParser.GetDataFromSocket(read_cache, res);
+    res = mDataParser.GetFrame(&frame);
+    if(res > 0)
+        isOk = Frame(frame, res);
+
+end:
+    if(isOk)
+        MyApp::theApp->AddEvent(ev);
+    return nullptr;
+}
+
+int MyEasyTcpSocket::EasyWrite(const char* buf, uint16_t len)
+{
+    static char *write_cache = nullptr;
+    int write_len = 0;
+    int index = 0;
+    int res = 0;
+
+    write_len = mDataParser.WriteFrame(buf,len,&write_cache);
+
+    while(write_len)
+    {
+        res = Write(&write_cache[index],write_len);
+        if(res == -1)
+        {
+            if(errno == EPIPE)
+            {
+                MyDebugPrint("write socket error EPIPE\n");
+                MyDebug("write socket EPIPE");
+                return -1;
+            }
+            MyDebugPrint("write socket fail, errno %d\n",errno);
+            MyDebug("write socket fail, errno %d\n",errno);
+            usleep(1000 * 10);
+        }
+        write_len -= res;
+        index += res;
+    }
+    return write_len;
+}
+
+#if 0
 /////////////////////////////////////////////////////////////
 /// MyTcpFrame
 
@@ -362,7 +500,7 @@ void* MyEasyTcpClient::CallBackFunc(MyEvent *ev)
 }
 
 
-
+#endif
 
 
 

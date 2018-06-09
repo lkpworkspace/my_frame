@@ -62,6 +62,7 @@ SOURCES += \
     ../../../MyFrame/src/core/MyObj.cpp \
     ../../../MyFrame/src/core/MyThread.cpp \
     ../../../MyFrame/src/core/MyEvent.cpp \
+    ../../../MyFrame/src/core/MyDataParser.cpp \
     ../../../MyFrame/src/core/MyMsgPool.cpp \
     ../../../MyFrame/src/core/MyApp.cpp \
     ../../../MyFrame/src/core/MyLog.cpp \
@@ -75,7 +76,6 @@ SOURCES += \
     ../../../MyFrame/src/core/MyNormalEvent.cpp \
     ../../../MyFrame/src/core/MyTimer.cpp \
     ../../../MyFrame/src/core/MyIOStream.cpp \
-    ../../../MyFrame/src/core/MyDataParser.cpp \
     ../../../MyFrame/src/core/MyMath.cpp
 
 HEADERS += \
@@ -84,6 +84,7 @@ HEADERS += \
     ../../../MyFrame/inc/core/MyHelp.h \
     ../../../MyFrame/inc/core/MyLog.h \
     ../../../MyFrame/inc/core/MyFrame.h \
+    ../../../MyFrame/inc/core/MyDataParser.h \
     ../../../MyFrame/inc/core/MyApp.h \
     ../../../MyFrame/inc/core/MyVec.h \
     ../../../MyFrame/inc/core/MyList.h \

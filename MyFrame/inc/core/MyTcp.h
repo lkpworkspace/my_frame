@@ -2,6 +2,7 @@
 #define MYTCP_H
 #include "MyCommon.h"
 #include "MySock.h"
+
 #include <queue>
 
 NS_MYFRAME_BEGIN
@@ -57,6 +58,39 @@ private:
     sockaddr_in m_addr;
 };
 
+class MyEasyTcpSocket : public MyTcpSocket
+{
+public:
+    MyEasyTcpSocket(int fd, sockaddr_in addr);
+    virtual ~MyEasyTcpSocket();
+
+    virtual int Frame(const char* buf, int len) = 0;
+    int EasyWrite(const char* buf, uint16_t len);
+
+protected:
+    virtual void* CallBackFunc(MyEvent *);
+
+private:
+    MyDataParser mDataParser;
+};
+
+class MyEasyTcpClient : public MyTcpClient
+{
+public:
+    MyEasyTcpClient(std::string ip, uint16_t port);
+    virtual ~MyEasyTcpClient();
+
+    virtual int Frame(const char* buf, int len) = 0;
+    int EasyWrite(const char* buf, uint16_t len);
+
+protected:
+    virtual void* CallBackFunc(MyEvent *);
+
+private:
+    MyDataParser mDataParser;
+};
+
+#if 0
 // change tcp data stream to one frame
 class MyTcpFrame
 {
@@ -115,6 +149,9 @@ private:
     virtual int WriteBuf(const char* buf, int len);
     virtual void* CallBackFunc(MyEvent *);
 };
+#endif
+
+
 
 NS_MYFRAME_END // end namespace
 #endif // MYTCP_H

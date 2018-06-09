@@ -24,6 +24,8 @@ public:
     int SetReuseSock();
     int SetNonblock(bool b = true);
 
+    std::string& GetIp() { return m_ip; }
+    uint16_t GetPort() { return m_port; }
 protected:
     //////////////////////////////////// override MyEvent method
     virtual void* CallBackFunc(MyEvent *) override;

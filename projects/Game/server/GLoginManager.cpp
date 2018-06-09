@@ -6,14 +6,11 @@ void GLoginManager::ProcessFunc(GMsg* inMsg)
     std::string password;
 
     GClientProxy* c = (GClientProxy*)inMsg->GetClientProxy();
-    IGClientProxy* ic = (IGClientProxy*)inMsg->GetClientProxy();
-    MyEvent* e = (MyEvent*)inMsg->GetClientProxy();
+    //TODO(lkp) bug: 使用IGClientproxy不能正确访问到函数
+    //    IGClientProxy* ic = (IGClientProxy*)inMsg->GetClientProxy();
+    //    MyEvent* e = (MyEvent*)inMsg->GetClientProxy();
 
     if(c == nullptr) return;
-    e->GetEventFd();
-    ic->SetPlayerId(mNewPlayerId);
-    ic->SetState(IGClientProxy::EPS_LOGIN);
-
     /* set login state, assign player id */
     c->SetPlayerId(mNewPlayerId);
     c->SetState(IGClientProxy::EPS_LOGIN);
