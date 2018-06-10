@@ -47,12 +47,53 @@ void TestLogin(GNetManager* netmanager, GLoginManager* loginmanager)
     netmanager->ProcessPacket(msg);
 }
 
+class A{
+public:
+    virtual void func1() = 0;
+};
+
+class B : public A
+{
+public:
+    virtual void func1()
+    {
+        printf("B func1\n");
+    }
+    virtual void func2()
+    {
+        printf("B func2\n");
+    }
+};
+
+class C : public B
+{
+public:
+    virtual void func2()
+    {
+        printf("C func2\n");
+    }
+    virtual void func1()
+    {
+        printf("C func1\n");
+    }
+    virtual void func3()
+    {
+        printf("C func3\n");
+    }
+};
+
 void TestFunc()
 {
-#if 0
+#if 1
     char local_ip[16];
     MyNet::GetLocalIp("wlp2s0", local_ip);
     MyDebugPrint("local ip %s\n",local_ip);
+
+    /// 指针经过两次类型转换后 会出现虚函数调用错误的情况。
+    C c;
+    void* x = &c;
+    B* b = (B*)x;
+    b->func1();
 #else
     GNetManager netmanager;
     GRPCManager rpcmanager;

@@ -1,4 +1,5 @@
 #include "MyIOStream.h"
+#include "IGClientProxy.h"
 #include "GMsg.h"
 
 myframe::MyEvent* GMsg::StaticCreate()

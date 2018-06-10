@@ -7,6 +7,7 @@
 #include "GUtils.h"
 
 #include "IGMsgProcess.h"
+#include "IGClientProxy.h"
 #include "GNetManager.h"
 
 #endif

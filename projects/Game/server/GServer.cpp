@@ -19,6 +19,12 @@ GServer::GServer()
     SetTaskIdentifyWithName("GServer", GetIdentify());
 }
 
+void GServer::OnInit()
+{
+    MyTask::OnInit();
+    printf("hello,world\n");
+}
+
 
 void GServer::Update(MyList *evs)
 {

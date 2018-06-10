@@ -30,7 +30,6 @@ HEADERS += \
     GReply.h \
     GScene.h \
     GServer.h \
-    IGClientProxy.h \
     GLoginManager.h \
     GMatchingManager.h \
     GRPCManager.h \
@@ -52,6 +51,7 @@ HEADERS += \
     ../common/GMsgType.h \
     ../common/GUtils.h \
     ../common/IGMsgProcess.h \
+    ../common/IGClientProxy.h \
     ../common/GNetManager.h
 
 

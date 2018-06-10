@@ -5,7 +5,7 @@ void GLoginManager::ProcessFunc(GMsg* inMsg)
     std::string account;
     std::string password;
 
-    GClientProxy* c = (GClientProxy*)inMsg->GetClientProxy();
+    IGClientProxy* c = inMsg->GetClientProxy();
     //TODO(lkp) bug: 使用IGClientproxy不能正确访问到函数
     //    IGClientProxy* ic = (IGClientProxy*)inMsg->GetClientProxy();
     //    MyEvent* e = (MyEvent*)inMsg->GetClientProxy();

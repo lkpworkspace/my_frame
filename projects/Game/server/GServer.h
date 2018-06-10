@@ -5,7 +5,7 @@
 
 #include "GCommon.h"
 
-#include "IGClientProxy.h"
+
 
 #include "GClientProxy.h"
 #include "GReply.h"
@@ -41,7 +41,7 @@ public:
      * 线程初始化函数，仅初始化调用一次，
      * note that: 需要调用父类中的方法
      */
-    //virtual void OnInit() override;
+    virtual void OnInit() override;
 
     /**
      * 线程退出函数，仅退出调用一次，
