@@ -26,8 +26,15 @@ public:
     IGClientProxy* GetClientProxy(){ return mClient; }
     void SetClientProxy(IGClientProxy* inClient){ mClient = inClient; }
 
+    void SetMsgTo(unsigned short inTo){ mMsgTo = inTo; }
+    unsigned short GetMsgTo(){ return mMsgTo; }
+
+    void SetMsgToId(unsigned short inToId){ mMsgId = inToId; }
+    unsigned short GetMsgToId(){ return mMsgId; }
 private:
     IGClientProxy* mClient;
+    unsigned short mMsgTo;
+    unsigned short mMsgId;
 };
 
 

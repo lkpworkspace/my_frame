@@ -28,27 +28,8 @@ void GServer::OnInit()
 
 void GServer::Update(MyList *evs)
 {
-    MyNode* begin = nullptr;
-    MyNode* end = nullptr;
-    MyNode* temp = nullptr;
-    GMsg* msg = nullptr;
-    begin = evs->Begin();
-    end = evs->End();
-
-    for(;begin != end;)
-    {
-        temp = begin->next;
-        evs->Del(begin);
-        msg = (GMsg*)begin;
-        ProcessMsg(msg);
-        begin = temp;
-    }
-}
-
-void GServer::ProcessMsg(GMsg* inMsg)
-{
     // 消息分发处理函数
-    GNetManager::sInstance->ProcessPacket(inMsg);
+    GNetManager::sInstance->ProcessPacket(evs);
     // 消息回复函数(将消息发送到写线程，并返回)
     GNetManager::sInstance->SendOutgoingMsgs(this);
 }

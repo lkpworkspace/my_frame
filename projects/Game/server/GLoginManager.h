@@ -20,17 +20,19 @@ public:
     };
 
     GLoginManager()
-        :mNewPlayerId(0)
     {}
 
     virtual ~GLoginManager(){}
 
-    virtual void ProcessFunc(GMsg* inMsg) override;
+    virtual void AppendMsg(GMsg* inMsg) override { mRecvMsgs.AddTail(inMsg); }
+
+    virtual void ProcessMsgs() override;
 
     virtual MyList* GetReplyMsg() override;
-
+protected:
+    void ProcessMsg(GMsg* inMsg);
 private:
-    int mNewPlayerId;
+    MyList mRecvMsgs;
     MyList mReplyMsgs;
 };
 

@@ -1,12 +1,24 @@
 #include "GServer.h"
 
+int GClientProxy::mNewPlayerId = 0;
+std::unordered_map<int, GClientProxy*> GClientProxy::mClientsMap;
+
+GClientProxy* GClientProxy::GetClient(int inPlayerId)
+{
+    if(mClientsMap.find(inPlayerId) == mClientsMap.end())
+        return nullptr;
+    return mClientsMap[inPlayerId];
+}
+
 int GClientProxy::Frame(const char* buf, int len)
 {
     // 客户端退出
     if(len == 0)
     {
         //TODO(lkp) 向LoginManager发送退出消息
-        MyDebugPrint("Client Quit\n");
+        //TODO(lkp) 还未在退出时进行删除客户端对象的操作
+        //TODO(lkp) ...
+        MyDebugPrint("Player [%d] Client Quit\n", mPlayerId);
         return false;
     }
     if(len < 2)
@@ -29,12 +41,11 @@ int GClientProxy::Frame(const char* buf, int len)
     case EMT_MATCHING:
         isOk = (mPlayerState == EPS_LOGIN);
         break;
-    case EMT_INPUT:
+    case EMT_SCENE:
         isOk = (mPlayerState == EPS_FINGHTING);
         break;
     case EMT_RPC:
         break;
-    case EMT_WORLD_STATE:break;
     default:
         MyDebugPrint("Unkonwn Message Type\n");
         break;

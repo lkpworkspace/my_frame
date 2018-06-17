@@ -55,11 +55,8 @@ public:
      * 所以需要在Update中加一点延时
      */
     virtual void Update(MyList *evs) override;
-protected:
-    void ProcessMsg(GMsg* inMsg);
 private:
-    /* 所有已经注册的场景类 */
-    std::unordered_map<int, GScene*> mScenesMap;
+
 };
 
 #endif

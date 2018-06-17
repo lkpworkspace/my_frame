@@ -35,6 +35,7 @@ void GReply::Update(MyList *evs)
         msg = (GReplyMsg*)begin;
         evs->Del(begin);
         client = (GClientProxy*)msg->GetClientProxy();
+        MyDebugPrint("Player [%d] Write Message To Client\n", client->GetPlayerId());
         client->EasyWrite(msg->GetBufferPtr(), msg->GetByteLength());
         FreeGReplyMsg(msg);
         begin = temp;

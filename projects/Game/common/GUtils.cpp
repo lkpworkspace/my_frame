@@ -24,13 +24,16 @@ void GGlobalInit()
 
     /* registe message manager */
     g_rpc = new GRPCManager();
-    GNetManager::sInstance->RegMsgProcessFunc(EMT_RPC, g_rpc,
-                                              PROCESS_FUNC(GRPCManager::ProcessFunc),
-                                              REPLY_FUNC(GRPCManager::GetReplyMsg));
+    GNetManager::sInstance->RegMsgProcesssManager(EMT_RPC, g_rpc);
+
     g_login = new GLoginManager();
-    GNetManager::sInstance->RegMsgProcessFunc(EMT_LOGIN, g_login,
-                                              PROCESS_FUNC(GLoginManager::ProcessFunc),
-                                              REPLY_FUNC(GLoginManager::GetReplyMsg));
+    GNetManager::sInstance->RegMsgProcesssManager(EMT_LOGIN, g_login);
+
+    g_match = new GMatchingManager();
+    GNetManager::sInstance->RegMsgProcesssManager(EMT_MATCHING, g_match);
+
+    g_scenes = new GSceneManager();
+    GNetManager::sInstance->RegMsgProcesssManager(EMT_SCENE, g_scenes);
 #else
 
 #endif
@@ -55,3 +58,64 @@ void FreeGReplyMsg(GReplyMsg* inMsg)
 {
     g_msgpool->Free(inMsg);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+//    GNetManager::sInstance->RegMsgProcessFunc(EMT_LOGIN, g_login,
+//                                              PROCESS_FUNC(GLoginManager::ProcessFunc),
+//                                              REPLY_FUNC(GLoginManager::GetReplyMsg));
+
+//    GNetManager::sInstance->RegMsgProcessFunc(EMT_RPC, g_rpc,
+//                                              PROCESS_FUNC(GRPCManager::ProcessFunc),
+//                                              REPLY_FUNC(GRPCManager::GetReplyMsg));

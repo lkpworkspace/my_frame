@@ -2,9 +2,10 @@
 #define __GRPCManager_H__
 
 class GMsg;
+class GReplyMsg;
 class MyList;
 
-typedef void (*RPCFunc_t)(GMsg* inMsg, GMsg* outMsg);
+typedef void (*RPCFunc_t)(GMsg* inMsg, GReplyMsg* outMsg);
 
 /**
  * @brief The GRPCManager class
@@ -28,17 +29,22 @@ public:
         EPRC_ARG_STRUCT, /* len + STRING + data */
     };
 
+    virtual void AppendMsg(GMsg* inMsg) override { mRecvMsgs.AddTail(inMsg); }
+
     /* call by GNetManager class */
-    virtual void ProcessFunc(GMsg* inMsg) override;
+    virtual void ProcessMsgs() override;
 
     /* call by replication class */
     virtual MyList* GetReplyMsg() override { return &mReplicationMsg; }
 
     /* Register func by name */
     bool RegRPCFunc(std::string inFuncName, RPCFunc_t inFunc);
+protected:
+    void ProcessMsg(GMsg* inMsg);
 private:
     std::unordered_map<std::string,RPCFunc_t> mRPCFuncsMap;
     MyList mReplicationMsg;
+    MyList mRecvMsgs;
 };
 
 #endif

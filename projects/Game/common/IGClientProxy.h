@@ -24,15 +24,16 @@ public:
     IGClientProxy(){}
     virtual ~IGClientProxy(){}
 
-    /* 设置/获得 玩家ID */
-    virtual void SetPlayerId( int inPlayerId) = 0;
+    /* 获得 玩家ID */
     virtual int  GetPlayerId() = 0;
+
+    /* 设置/获得 场景ID */
+    virtual void SetSceneId(int inSceneId) = 0;
+    virtual int GetSceneId() = 0;
 
     /* 设置/获得 客户端状态 */
     virtual void SetState(EPLAYER_STATE inPlayerState) = 0;
     virtual EPLAYER_STATE GetState() = 0;
-
-    /* 设置/获得 玩家 */
 
 };
 
