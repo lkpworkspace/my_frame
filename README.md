@@ -1,47 +1,33 @@
 # ![run](https://github.com/lkpworkspace/demo/blob/master/pics/icon3.png)MyFrame
 easy coding on linux
 
-## OS&IDE
+## OS&IDE&Language
 	Ubuntu
 	QtCreator
-## 该项目使用qmake进行管理
-    qmake
-    make
-    make clean
-## 如何使用QtCreator打开此项目
-    使用*.pro文件打开此项目
-## git管理
+	C++
+	
+## Build Projects
+
+* Terminal  
+  qmake  
+  make  
+  make clean  
+
+* Qtcreater  
+	open QtCreator IDE whth \*.pro file  
+	build
+
+## Git
 	SSH:git@github.com:lkpworkspace/my_frame.git
 	push an existing repo:
 		git remote add origin git@github.com:lkpworkspace/my_frame.git
 		git push -u origin master
 
-## 基于事件驱动的程序框架
+##  message-based and event-driven application framework
 
-|       类         |  block  |    说明                      |   继承                    | listen event|
-|-----------------|:--------|:----------------------------|:-------------------------|---------------|
-| MyEvent          |        |    抽象事件类                 |                          ||
-| MySock           |        |    抽象套接字类               |  MyEvent                 ||
-| MyUdp            |  yes   |    Udp事件类                 |  MySock                  | epollin |
-| MyTcpServer      |  yes   |    Tcp事件类                 |  MySock                  | epollin |
-| MyTcpClient      |  yes   |    Tcp事件类                 |  MySock                  | epollin |
-| MyTcpSocket      |  no    |    Tcp事件类                 |  MyEvent                 | epollin |
-| MyEasyTcpSocket  |  no    |   TCP socket                | MyTcpFrame，MyTcpSocket  | epollin |
-| MyEasyTcpClient  |  no    |   TCP client                | MyTcpFrame，MyTcpClient  | epollin |
-| MyNormalEvent    |  no    |    通用的事件类               | MyEvent                 | epollin |
-| MyTask           |        |任务类，用于处理套接字消息       | MyEvent， MyThread       | epoolin |
-| MyTimer          |        |    定时器类                  |                          ||
-| MyMsgPool        |        |消息池，用于管理线程间传递消息对象的创建和销毁 |                          ||
-| MyRawSock        |        |    // TODO...               |                          ||
-| MyFileEvent      |        |    // TODO...               |                          ||
-| MyKeyEvent       |        |    监听键盘消息的事件类 //TODO...|                         ||
-| MyMouseEvent     |        |    监听鼠标消息的事件类  //TODO...|                        ||
-| MyTFTP           |        |    TFTP事件类，继承MyUdp类 //TODO...|                     ||
-
-* block可以通过SetNonblock函数设置是否阻塞(默认为阻塞)
 * 该项目使用纯C/C++以及Linux api编写，只使用QtCreator作为开发IDE
 * 目前该框架主要用于网络服务器的快速开发
-* 优点:
+* Support:
 	- 使用线程池实现的应用程序框架，支持高并发
 	- 基于事件驱动的程序框架
 	- 支持线程间无锁通信，提高并发性能
@@ -50,18 +36,44 @@ easy coding on linux
 	- 支持消息嵌套
 	- 客户端支持Linux/Windows平台
 	- 框架集成TCP/UDP，可以快速开发网络服务器
-	- 支持事件扩展，通过重写实现MyEvent类中的虚函数实现(如 鼠标事件， 键盘事件，插拔事件...)
+	- 支持事件扩展，通过重写实现MyEvent类中的虚函数实现(eg: mouse event， keyboard event，hotplug event...)
 
-* 缺点:
-	- 服务器端尚不支持跨平台，只支持Linux
-	- 文档说明不多，主要靠源码注释(等待框架稳定后补全文档)
+* Defect:
+	- Only support linux
+	- No document (you can read the comment to understand the program)
 
+## class summary
 
-## 数据结构类
-	MyList                           双向循环链表
-	MyVec                            动态数组
-	MyHeap                           堆
-	MyHash                           散列表
+|       class     |  block  |    manual                     |   inherit                | listen event|
+|-----------------|:--------|:------------------------------|:-------------------------|---------------|
+| MyEvent         |        |    abstract class             |                          ||
+| MySock          |        |    abstract socket class      |  MyEvent                 ||
+| MyUdp           |  yes   |    UDP class                  |  MySock                  | epollin |
+| MyTcpServer     |  yes   |    TCP Server class           |  MySock                  | epollin |
+| MyTcpClient     |  yes   |    TCP Client class           |  MySock                  | epollin |
+| MyTcpSocket     |  no    |    TCP Clientproxy class      |  MyEvent                 | epollin |
+| MyEasyTcpSocket |  no    |    Easy TCP Clientproxy class |  MyTcpSocket             | epollin |
+| MyEasyTcpClient |  no    |    Easy TCP Client class      |  MyTcpClient             | epollin |
+| MyNormalEvent   |  no    |    Normal event class         |  MyEvent                 | epollin |
+| MyTask          |        |    Process event class        |  MyEvent MyThread        | epoolin |
+| MyTimer         |        |    Timer class                |                          ||
+| MyMsgPool       |        |    Message class manager      |                          ||
+| MyApp           |        |    Main loop class            |                          ||
+| MyIOStream      |        |    Build Buf class            |                          ||
+| MyLog           |        |    Log class                  |                          ||
+| MyRawSock       |        |    //TODO...                  |                          ||
+| MyFileEvent     |        |    //TODO...                  |                          ||
+| MyKeyEvent      |        |    //TODO...                  |                          ||
+| MyMouseEvent    |        |    //TODO...                  |                          ||
+| MyTFTP          |        |    //TODO...                  |                          ||
 
-## 调试笔记：
+* block (default: nonblock)
+
+## data struct class
+	MyList                           double link list
+	MyVec                            vector
+	MyHeap                           heap
+	MyHash                           hash table
+
+## debug note：
 * MyFrame/doc/debug.md
