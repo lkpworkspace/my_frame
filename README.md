@@ -40,7 +40,7 @@ easy coding on linux
 
 * Defect:
 	- Only support linux
-	- No document (you can read the comment to understand the program)
+	- No document (you can find more docs in the code)
 
 ## class summary
 
